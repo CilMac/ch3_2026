@@ -1,0 +1,10 @@
+{
+  "version": 1,
+  "entries": [],
+  "updatedAt": "2026-07-02T14:52:05.602Z",
+  "_lot1Test": {
+    "message": "ping de validation Lot 1",
+    "device": "appareil sans nom",
+    "at": "2026-07-02T14:52:05.602Z"
+  }
+}
