@@ -11,9 +11,20 @@
       "degre": 5,
       "type": "vin",
       "note": ""
+    },
+    {
+      "id": "c02a5516-8034-4b70-80ac-a779bee840d0",
+      "date": "2026-07-02T17:11:00.000Z",
+      "unites": 2.4,
+      "mode": "volume",
+      "volume": 25,
+      "poids": null,
+      "degre": 12,
+      "type": "autre",
+      "note": "TEST Lot 4 — à supprimer"
     }
   ],
-  "updatedAt": "2026-07-02T17:00:11.404Z",
+  "updatedAt": "2026-07-02T17:11:50.636Z",
   "_lot1Test": {
     "message": "ping de validation Lot 1",
     "device": "appareil sans nom",
