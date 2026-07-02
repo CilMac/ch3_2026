@@ -1,7 +1,19 @@
 {
   "version": 1,
-  "entries": [],
-  "updatedAt": "2026-07-02T14:52:05.602Z",
+  "entries": [
+    {
+      "id": "6f2be18a-fdec-4024-a84f-9713ef7476fc",
+      "date": "2026-07-02T16:55:00.000Z",
+      "unites": 2,
+      "mode": "volume",
+      "volume": 50,
+      "poids": null,
+      "degre": 5,
+      "type": "vin",
+      "note": ""
+    }
+  ],
+  "updatedAt": "2026-07-02T17:00:11.404Z",
   "_lot1Test": {
     "message": "ping de validation Lot 1",
     "device": "appareil sans nom",
