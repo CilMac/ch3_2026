@@ -14,6 +14,8 @@
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
 
+[hidden] { display: none !important; }
+
 body {
   min-height: 100vh;
   background: var(--bg);
@@ -256,4 +258,324 @@ button:disabled {
   font-size: .72rem;
   color: #8a7358;
   padding: 8px 16px 24px;
+}
+
+/* ── Calculateur ── */
+
+.segmented {
+  display: flex;
+  border: 1px solid rgba(90,52,24,.3);
+  border-radius: 10px;
+  overflow: hidden;
+  margin-bottom: 18px;
+}
+.seg-btn {
+  flex: 1;
+  padding: 10px 8px;
+  font-size: .85rem;
+  background: #f0ebe0;
+  color: var(--wood-dk);
+  border: none;
+}
+.seg-btn:not(:last-child) { border-right: 1px solid rgba(90,52,24,.3); }
+.seg-btn.active {
+  background: var(--wood-dk);
+  color: #e0c090;
+}
+
+.field-block {
+  margin-bottom: 20px;
+}
+
+.stepper-row {
+  display: flex;
+  align-items: stretch;
+  gap: 8px;
+  margin-top: 4px;
+}
+.btn-step {
+  width: 44px;
+  font-size: 1.2rem;
+  border-radius: 8px;
+  background: #f0ebe0;
+  color: var(--wood-dk);
+  border: 1px solid rgba(90,52,24,.3);
+}
+.btn-step:hover { background: #e4dccb; }
+#qty-input,
+#degre-input {
+  flex: 1;
+  text-align: center;
+  font-size: 1.05rem;
+}
+
+.preset-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 10px;
+}
+.preset-btn {
+  font-size: .75rem;
+  padding: 6px 10px;
+  border-radius: 999px;
+  background: #f0ebe0;
+  color: var(--wood-dk);
+  border: 1px solid rgba(90,52,24,.25);
+}
+.preset-btn:hover { background: #e4dccb; }
+.preset-btn.active {
+  background: var(--wood-mid);
+  color: #fff5e8;
+  border-color: var(--wood-mid);
+}
+
+.checkbox-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 12px;
+  font-size: .8rem;
+  color: #4a3624;
+}
+.checkbox-row input { width: auto; }
+
+.result-block {
+  text-align: center;
+  background: rgba(200,133,74,.15);
+  border: 1px solid rgba(90,52,24,.25);
+  border-radius: 10px;
+  padding: 16px;
+  margin-bottom: 14px;
+}
+.result-label {
+  display: block;
+  font-size: .78rem;
+  color: var(--amber);
+  margin-bottom: 4px;
+}
+.result-value {
+  font-family: 'DM Serif Display', serif;
+  font-size: 2.2rem;
+  color: var(--wood-dk);
+}
+.result-sub {
+  display: block;
+  font-size: .75rem;
+  color: #8a7358;
+  margin-top: 2px;
+}
+
+/* ── Archivage ── */
+
+.calc-summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  flex-wrap: wrap;
+  background: rgba(200,133,74,.12);
+  border: 1px solid rgba(90,52,24,.2);
+  border-radius: 8px;
+  padding: 10px 12px;
+  margin-bottom: 14px;
+  font-size: .85rem;
+  color: var(--wood-dk);
+}
+.btn-small {
+  padding: 6px 10px;
+  font-size: .72rem;
+  flex-shrink: 0;
+}
+
+.select-input {
+  width: 100%;
+  font-family: 'Shippori Mincho', serif;
+  font-size: .9rem;
+  padding: 9px 10px;
+  border: 1px solid rgba(90,52,24,.35);
+  border-radius: 8px;
+  background: #fffaf0;
+  color: var(--ink);
+}
+
+input[type="datetime-local"] {
+  width: 100%;
+  font-family: 'Shippori Mincho', serif;
+  font-size: .85rem;
+  padding: 9px 10px;
+  border: 1px solid rgba(90,52,24,.35);
+  border-radius: 8px;
+  background: #fffaf0;
+  color: var(--ink);
+}
+
+/* ── Détail / historique ── */
+
+.entry-list {
+  list-style: none;
+  margin-top: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.entry-item {
+  border: 1px solid rgba(90,52,24,.2);
+  border-radius: 10px;
+  padding: 12px 14px;
+  background: #fffaf0;
+}
+.entry-main {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 10px;
+}
+.entry-date {
+  font-size: .82rem;
+  color: var(--wood-dk);
+}
+.entry-unites {
+  font-family: 'DM Serif Display', serif;
+  font-size: 1.15rem;
+  color: var(--wood-dk);
+}
+.entry-sub {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 4px;
+  font-size: .78rem;
+  color: #6a5238;
+}
+.entry-note {
+  font-style: italic;
+}
+.entry-delete-btn {
+  margin-top: 8px;
+  font-size: .72rem;
+  padding: 5px 10px;
+  border-radius: 999px;
+  background: rgba(192,57,43,.1);
+  color: var(--red);
+  border: 1px solid rgba(192,57,43,.3);
+}
+.entry-delete-btn:hover { background: rgba(192,57,43,.2); }
+.entry-empty {
+  text-align: center;
+  color: #8a7358;
+  font-size: .85rem;
+  padding: 20px 0;
+}
+
+/* ── Synthèse ── */
+
+input[type="date"] {
+  width: 100%;
+  font-family: 'Shippori Mincho', serif;
+  font-size: .85rem;
+  padding: 9px 10px;
+  border: 1px solid rgba(90,52,24,.35);
+  border-radius: 8px;
+  background: #fffaf0;
+  color: var(--ink);
+  margin-bottom: 10px;
+}
+
+.stat-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin: 14px 0;
+}
+.stat-item {
+  background: rgba(200,133,74,.12);
+  border: 1px solid rgba(90,52,24,.2);
+  border-radius: 10px;
+  padding: 10px 12px;
+  text-align: center;
+}
+.stat-item-wide {
+  grid-column: 1 / -1;
+}
+.stat-label {
+  display: block;
+  font-size: .7rem;
+  color: var(--amber);
+  margin-bottom: 4px;
+}
+.stat-value {
+  font-family: 'DM Serif Display', serif;
+  font-size: 1.3rem;
+  color: var(--wood-dk);
+}
+
+.btn-danger {
+  color: var(--red);
+  border-color: rgba(192,57,43,.35);
+}
+.btn-danger:hover:not(:disabled) { background: rgba(192,57,43,.12); }
+
+.week-days {
+  list-style: none;
+  margin-top: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.week-day-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 8px 12px;
+  border-radius: 8px;
+  background: #fffaf0;
+  border: 1px solid rgba(90,52,24,.15);
+  font-size: .82rem;
+  color: var(--wood-dk);
+}
+.week-day-row.is-today {
+  border-color: var(--wood-mid);
+  background: rgba(200,133,74,.18);
+  font-weight: bold;
+}
+
+/* ── Graphique de tendance ── */
+
+.chart-container {
+  margin-top: 10px;
+}
+.weekly-chart {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+.chart-axis-label {
+  font-family: 'Shippori Mincho', serif;
+  font-size: 9px;
+  fill: #8a7358;
+}
+.chart-value-label {
+  font-family: 'Shippori Mincho', serif;
+  font-size: 9px;
+  fill: var(--wood-dk);
+}
+.chart-threshold-line {
+  stroke: var(--red);
+  stroke-width: 1;
+  stroke-dasharray: 4 3;
+  opacity: .6;
+}
+input[type="file"] {
+  width: 100%;
+  font-family: 'Shippori Mincho', serif;
+  font-size: .8rem;
+  padding: 8px 0;
+  color: #4a3624;
+}
+
+.chart-threshold-label {
+  font-family: 'Shippori Mincho', serif;
+  font-size: 9px;
+  fill: var(--red);
+  opacity: .8;
 }

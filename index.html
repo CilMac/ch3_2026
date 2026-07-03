@@ -14,57 +14,382 @@
   </header>
 
   <nav class="tab-nav" aria-label="Navigation principale">
-    <button class="tab-btn" disabled title="Lot suivant">Calcul</button>
-    <button class="tab-btn" disabled title="Lot suivant">Archivage</button>
-    <button class="tab-btn" disabled title="Lot suivant">Détail</button>
-    <button class="tab-btn" disabled title="Lot suivant">Synthèse</button>
-    <button class="tab-btn active" disabled>Configuration</button>
+    <button class="tab-btn active" data-target="calcul">Calcul</button>
+    <button class="tab-btn" data-target="archivage">Archivage</button>
+    <button class="tab-btn" data-target="detail">Détail</button>
+    <button class="tab-btn" data-target="synthese">Synthèse</button>
+    <button class="tab-btn" data-target="config">Configuration</button>
   </nav>
 
   <main>
 
-    <section class="panel">
-      <h2>Configuration — synchronisation GitHub</h2>
-      <p class="hint">
-        Colle ici ton jeton d'accès personnel GitHub (fine-grained, scope <strong>Contents: write</strong>
-        limité au dépôt <code>CilMac/ch3_2026</code>). Il reste stocké uniquement sur cet appareil
-        (<code>localStorage</code>), jamais committé ni envoyé ailleurs qu'à l'API GitHub.
-      </p>
+    <section class="view" data-view="calcul">
+      <div class="panel">
+        <h2>Calcul d'unités</h2>
 
-      <label for="token-input">Jeton d'accès</label>
-      <div class="input-row">
-        <input type="password" id="token-input" autocomplete="off" spellcheck="false" placeholder="github_pat_…">
-        <button type="button" id="toggle-token-visibility" class="btn-icon" aria-label="Afficher / masquer le jeton">👁</button>
-      </div>
-      <div class="btn-row">
-        <button type="button" id="save-token-btn" class="btn-primary">Enregistrer</button>
-        <button type="button" id="clear-token-btn" class="btn-secondary">Effacer</button>
-      </div>
-      <p id="token-status" class="status"></p>
+        <div class="segmented" role="group" aria-label="Mode de saisie">
+          <button type="button" class="seg-btn active" id="mode-volume-btn" data-mode="volume">Volume (cl)</button>
+          <button type="button" class="seg-btn" id="mode-poids-btn" data-mode="poids">Poids (g)</button>
+        </div>
 
-      <label for="device-label-input">Nom de cet appareil <span class="optional">(optionnel, aide au diagnostic)</span></label>
-      <input type="text" id="device-label-input" placeholder="ex. iPhone de Cil, MacBook…">
+        <div class="field-block">
+          <label id="qty-label" for="qty-input">Volume (cl)</label>
+          <div class="stepper-row">
+            <button type="button" class="btn-step" id="qty-minus-btn" aria-label="Diminuer">–</button>
+            <input type="number" id="qty-input" inputmode="decimal" value="25" min="0" step="1">
+            <button type="button" class="btn-step" id="qty-plus-btn" aria-label="Augmenter">+</button>
+          </div>
+          <div class="preset-row" id="volume-presets">
+            <button type="button" class="preset-btn" data-volume="25">25 cl</button>
+            <button type="button" class="preset-btn" data-volume="33">33 cl</button>
+            <button type="button" class="preset-btn" data-volume="50">50 cl</button>
+            <button type="button" class="preset-btn" data-volume="75">75 cl</button>
+          </div>
+        </div>
+
+        <div class="field-block">
+          <label for="degre-input">Degré d'alcool (°)</label>
+          <div class="stepper-row">
+            <button type="button" class="btn-step" id="degre-minus-btn" aria-label="Diminuer">–</button>
+            <input type="number" id="degre-input" inputmode="decimal" value="12" min="0" step="0.5">
+            <button type="button" class="btn-step" id="degre-plus-btn" aria-label="Augmenter">+</button>
+          </div>
+          <div class="preset-row">
+            <button type="button" class="preset-btn" data-degre="5">5° bière</button>
+            <button type="button" class="preset-btn" data-degre="12">12° vin</button>
+            <button type="button" class="preset-btn" data-degre="18">18° porto</button>
+            <button type="button" class="preset-btn" data-degre="40">40° spiritueux</button>
+          </div>
+          <label class="checkbox-row">
+            <input type="checkbox" id="degre-fine-step">
+            pas fin (0,1°) — sinon 0,5°
+          </label>
+        </div>
+
+        <div class="result-block">
+          <span class="result-label">Unités d'alcool</span>
+          <span id="unites-result" class="result-value">0,00</span>
+        </div>
+
+        <button type="button" id="calc-info-btn" class="btn-secondary">ℹ️ Repères officiels</button>
+        <p id="calc-info-text" class="hint" hidden>
+          Une unité = 10 g d'alcool pur.<br>
+          Repères (experts France, 2017) : maximum 10 unités par semaine, pas plus de 4 unités en une occasion,
+          et au moins 2 jours consécutifs sans consommation.
+        </p>
+      </div>
     </section>
 
-    <section class="panel">
-      <h2>Test de synchronisation <span class="tag">Lot 1</span></h2>
-      <p class="hint">
-        Vérifie que la lecture et l'écriture de <code>data/data.json</code> fonctionnent bien dans les
-        deux sens avant de passer à la suite.
-      </p>
-      <div class="btn-row">
-        <button type="button" id="test-read-btn" class="btn-secondary">Lire data/data.json</button>
-        <button type="button" id="test-write-btn" class="btn-primary" disabled>Écrire un test</button>
+    <section class="view" data-view="archivage" hidden>
+
+      <div class="panel">
+        <h2>Archiver une consommation</h2>
+
+        <div class="calc-summary" id="calc-summary">
+          <span id="calc-summary-text">—</span>
+          <button type="button" class="btn-secondary btn-small" data-target="calcul">Modifier dans Calcul</button>
+        </div>
+
+        <label for="entry-datetime">Date et heure</label>
+        <input type="datetime-local" id="entry-datetime">
+
+        <label for="entry-type">Type de boisson</label>
+        <select id="entry-type" class="select-input">
+          <option value="biere">Bière</option>
+          <option value="vin">Vin</option>
+          <option value="spiritueux">Spiritueux</option>
+          <option value="autre" selected>Autre</option>
+        </select>
+
+        <label for="entry-note">Note <span class="optional">(optionnel)</span></label>
+        <input type="text" id="entry-note" placeholder="ex. apéro entre amis…">
+
+        <div class="btn-row">
+          <button type="button" id="archive-btn" class="btn-primary" disabled>Archiver</button>
+        </div>
+        <p id="archive-status" class="status"></p>
       </div>
-      <pre id="sync-result" class="result-box">—</pre>
-      <h3>Journal</h3>
-      <ul id="sync-log" class="log-box"></ul>
+
+      <div class="panel">
+        <h2>Cumul de session <span class="tag">pour alcoolémie</span></h2>
+        <p class="hint">
+          Cumul temporaire (non enregistré) des unités consommées depuis le dernier RAZ — sert de base
+          au calcul d'alcoolémie ci-dessous.
+        </p>
+        <div class="result-block">
+          <span class="result-label">Total cumulé</span>
+          <span id="session-total" class="result-value">0,00</span>
+          <span class="result-sub" id="session-count">0 verre</span>
+        </div>
+        <div class="btn-row">
+          <button type="button" id="cumul-btn" class="btn-secondary">Cumuler la conso actuelle</button>
+          <button type="button" id="raz-btn" class="btn-secondary">RAZ</button>
+        </div>
+      </div>
+
+      <div class="panel">
+        <h2>Taux d'alcoolémie estimé</h2>
+        <p class="hint">
+          Estimation indicative (formule de Widmark simplifiée) à partir du cumul de session ci-dessus.
+          <strong>Ne remplace pas un éthylotest homologué — en cas de doute, ne prends pas le volant.</strong>
+        </p>
+
+        <label for="poids-input">Poids (kg)</label>
+        <input type="number" id="poids-input" value="70" min="30" max="200" step="1">
+
+        <label class="checkbox-row">
+          <input type="checkbox" id="a-mange-checkbox" checked>
+          J'ai mangé (sinon, absorption plus rapide mais délai de pic plus court)
+        </label>
+
+        <label for="seuil-legal-input">Seuil visé (g/L)</label>
+        <input type="number" id="seuil-legal-input" value="0.5" min="0" max="2" step="0.1">
+
+        <div class="stat-grid">
+          <div class="stat-item">
+            <span class="stat-label">Taux estimé — homme</span>
+            <span class="stat-value" id="taux-homme">—</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-label">Taux estimé — femme</span>
+            <span class="stat-value" id="taux-femme">—</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-label">Retour sous le seuil — homme</span>
+            <span class="stat-value" id="delai-homme">—</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-label">Retour sous le seuil — femme</span>
+            <span class="stat-value" id="delai-femme">—</span>
+          </div>
+        </div>
+      </div>
+
+    </section>
+
+    <section class="view" data-view="detail" hidden>
+
+      <div class="panel">
+        <h2>Historique</h2>
+
+        <div class="btn-row">
+          <button type="button" id="detail-refresh-btn" class="btn-secondary">↻ Actualiser</button>
+          <button type="button" id="detail-sort-btn" class="btn-secondary">Tri : plus récent d'abord</button>
+        </div>
+        <p id="detail-status" class="status"></p>
+
+        <ul id="detail-list" class="entry-list"></ul>
+      </div>
+
+    </section>
+
+    <section class="view" data-view="synthese" hidden>
+
+      <div class="panel">
+        <h2>Synthèse</h2>
+
+        <div class="segmented" role="group" aria-label="Période">
+          <button type="button" class="seg-btn active" id="periode-annee-btn" data-period="annee">Année en cours</button>
+          <button type="button" class="seg-btn" id="periode-tout-btn" data-period="tout">Tout</button>
+          <button type="button" class="seg-btn" id="periode-perso-btn" data-period="perso">Période…</button>
+        </div>
+
+        <div class="field-block" id="periode-perso-block" hidden>
+          <label for="periode-debut">Du</label>
+          <input type="date" id="periode-debut">
+          <label for="periode-fin">Au</label>
+          <input type="date" id="periode-fin">
+        </div>
+
+        <div class="btn-row">
+          <button type="button" id="synthese-refresh-btn" class="btn-secondary">↻ Actualiser</button>
+        </div>
+        <p id="synthese-status" class="status"></p>
+
+        <div class="stat-grid" id="synthese-content" hidden>
+          <div class="stat-item">
+            <span class="stat-label">Total unités</span>
+            <span class="stat-value" id="stat-total">—</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-label">Nb saisies</span>
+            <span class="stat-value" id="stat-saisies">—</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-label">Jours avec conso</span>
+            <span class="stat-value" id="stat-jours-conso">—</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-label">% jours avec conso</span>
+            <span class="stat-value" id="stat-taux">—</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-label">Nb semaines</span>
+            <span class="stat-value" id="stat-semaines">—</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-label">Moyenne hebdo</span>
+            <span class="stat-value" id="stat-moyenne">—</span>
+          </div>
+          <div class="stat-item stat-item-wide">
+            <span class="stat-label">Max quotidien</span>
+            <span class="stat-value" id="stat-max">—</span>
+          </div>
+        </div>
+
+        <button type="button" id="synthese-legende-btn" class="btn-secondary">ℹ️ Légende</button>
+        <p id="synthese-legende-text" class="hint" hidden>
+          Conso hebdo &lt; 5 unités -------------- 👍<br>
+          Seuils respectés (≤ 10 U/sem.) ------- 😇<br>
+          Dépassés de peu (&lt; 10 %) ------------- 🤔<br>
+          Dépassés ------------------------------- 😡<br><br>
+          Rappel des seuils : 10 unités maxi/semaine, 4 unités maxi/occasion, 2 jours consécutifs à 0.
+        </p>
+      </div>
+
+      <div class="panel">
+        <h2>Séries</h2>
+        <div class="stat-grid">
+          <div class="stat-item">
+            <span class="stat-label">Série en cours</span>
+            <span class="stat-value" id="streak-current">—</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-label">Record</span>
+            <span class="stat-value" id="streak-record">—</span>
+          </div>
+        </div>
+        <p class="hint">Jours consécutifs sans consommation, jusqu'à aujourd'hui inclus (sur tout l'historique, indépendamment du filtre de période ci-dessus).</p>
+      </div>
+
+      <div class="panel">
+        <h2>Bilan de la semaine</h2>
+
+        <div class="btn-row">
+          <button type="button" id="bilan-prev-btn" class="btn-secondary btn-small">◀ Précédente</button>
+          <button type="button" id="bilan-today-btn" class="btn-secondary btn-small">Semaine en cours</button>
+          <button type="button" id="bilan-next-btn" class="btn-secondary btn-small">Suivante ▶</button>
+        </div>
+        <p id="bilan-hebdo-label" class="hint">—</p>
+
+        <div class="stat-grid">
+          <div class="stat-item">
+            <span class="stat-label">Total semaine</span>
+            <span class="stat-value" id="bilan-total">—</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-label">Max quotidien</span>
+            <span class="stat-value" id="bilan-max">—</span>
+          </div>
+          <div class="stat-item stat-item-wide">
+            <span class="stat-label">2 jours consécutifs sans conso ?</span>
+            <span class="stat-value" id="bilan-deuxjours">—</span>
+          </div>
+        </div>
+
+        <ul class="week-days" id="bilan-days"></ul>
+      </div>
+
+      <div class="panel">
+        <h2>Tendance <span class="tag">12 dernières semaines</span></h2>
+        <div id="chart-container" class="chart-container"></div>
+        <p class="hint">Ligne pointillée = seuil recommandé (10 U/semaine). Couleur = repère (vert/bois/ambre/rouge).</p>
+      </div>
+
+      <div class="panel">
+        <h2>Bilan général <span class="tag">par semaine</span></h2>
+        <ul id="bilan-general-list" class="entry-list"></ul>
+      </div>
+
+      <div class="panel">
+        <h2>Réinitialisation</h2>
+        <p class="hint">
+          Efface définitivement tout l'historique dans <code>data/data.json</code>. Action irréversible
+          (pas de sauvegarde automatique).
+        </p>
+        <button type="button" id="reset-all-btn" class="btn-secondary btn-danger" disabled>Tout effacer</button>
+        <p id="reset-status" class="status"></p>
+      </div>
+
+    </section>
+
+    <section class="view" data-view="config" hidden>
+
+      <div class="panel">
+        <h2>Configuration — synchronisation GitHub</h2>
+        <p class="hint">
+          Colle ici ton jeton d'accès personnel GitHub (fine-grained, scope <strong>Contents: write</strong>
+          limité au dépôt <code>CilMac/ch3_2026</code>). Il reste stocké uniquement sur cet appareil
+          (<code>localStorage</code>), jamais committé ni envoyé ailleurs qu'à l'API GitHub.
+        </p>
+
+        <label for="token-input">Jeton d'accès</label>
+        <div class="input-row">
+          <input type="password" id="token-input" autocomplete="off" spellcheck="false" placeholder="github_pat_…">
+          <button type="button" id="toggle-token-visibility" class="btn-icon" aria-label="Afficher / masquer le jeton">👁</button>
+        </div>
+        <div class="btn-row">
+          <button type="button" id="save-token-btn" class="btn-primary">Enregistrer</button>
+          <button type="button" id="clear-token-btn" class="btn-secondary">Effacer</button>
+        </div>
+        <p id="token-status" class="status"></p>
+
+        <label for="device-label-input">Nom de cet appareil <span class="optional">(optionnel, aide au diagnostic)</span></label>
+        <input type="text" id="device-label-input" placeholder="ex. iPhone de Cil, MacBook…">
+      </div>
+
+      <div class="panel">
+        <h2>Export / Import</h2>
+        <p class="hint">
+          Sauvegarde locale de secours, utile si le jeton pose souci ou pour migrer manuellement.
+          La synchro normale se fait via GitHub — ceci n'est qu'un filet de sécurité.
+        </p>
+        <div class="btn-row">
+          <button type="button" id="export-btn" class="btn-secondary">⬇️ Exporter data.json</button>
+        </div>
+
+        <label for="import-file-input">Importer un fichier .json <span class="optional">(remplace tout l'historique actuel)</span></label>
+        <input type="file" id="import-file-input" accept="application/json">
+        <div class="btn-row">
+          <button type="button" id="import-btn" class="btn-primary btn-danger" disabled>Importer (remplace tout)</button>
+        </div>
+        <p id="export-import-status" class="status"></p>
+      </div>
+
+      <div class="panel">
+        <h2>À propos</h2>
+        <p class="hint">
+          CH3-CH2-OH — suivi personnel de consommation d'alcool. Page statique hébergée sur GitHub Pages ;
+          les données vivent uniquement dans <code>data/data.json</code> de ce dépôt, synchronisées via
+          l'API GitHub. Aucun tiers, aucun tracker.
+        </p>
+        <p class="hint">
+          Calculs indicatifs : 1 unité = 10 g d'alcool pur (densité éthanol 0,8). L'alcoolémie estimée
+          utilise une formule de Widmark simplifiée — elle ne remplace pas un éthylotest homologué.
+        </p>
+      </div>
+
+      <div class="panel">
+        <h2>Test de synchronisation <span class="tag">Lot 1</span></h2>
+        <p class="hint">
+          Vérifie que la lecture et l'écriture de <code>data/data.json</code> fonctionnent bien dans les
+          deux sens avant de passer à la suite.
+        </p>
+        <div class="btn-row">
+          <button type="button" id="test-read-btn" class="btn-secondary">Lire data/data.json</button>
+          <button type="button" id="test-write-btn" class="btn-primary" disabled>Écrire un test</button>
+        </div>
+        <pre id="sync-result" class="result-box">—</pre>
+        <h3>Journal</h3>
+        <ul id="sync-log" class="log-box"></ul>
+      </div>
+
     </section>
 
   </main>
 
   <footer class="app-footer">
-    <p>Lot 1 — fondations. Calculateur, archivage, détail et synthèse arrivent dans les lots suivants.</p>
+    <p>Lot 9 — extras (séries, export/import, à propos). Finition et déploiement à venir.</p>
   </footer>
 
   <script type="module" src="js/app.js"></script>
