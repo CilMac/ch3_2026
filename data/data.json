@@ -1,74 +1,7 @@
 {
   "version": 1,
-  "entries": [
-    {
-      "id": "6f2be18a-fdec-4024-a84f-9713ef7476fc",
-      "date": "2026-07-02T16:55:00.000Z",
-      "unites": 2,
-      "mode": "volume",
-      "volume": 50,
-      "poids": null,
-      "degre": 5,
-      "type": "vin",
-      "note": ""
-    },
-    {
-      "id": "2a47b90f-e852-4332-9288-f3dc97045464",
-      "date": "2026-07-02T17:21:00.000Z",
-      "unites": 2.4,
-      "mode": "volume",
-      "volume": 25,
-      "poids": null,
-      "degre": 12,
-      "type": "vin",
-      "note": ""
-    },
-    {
-      "id": "c719cbed-7c5b-4eb5-92bf-8e3569c028db",
-      "date": "2026-07-02T17:21:00.000Z",
-      "unites": 2.69,
-      "mode": "volume",
-      "volume": 28,
-      "poids": null,
-      "degre": 12,
-      "type": "vin",
-      "note": ""
-    },
-    {
-      "id": "8d4138b0-508f-45a0-9ff8-0c085ff1b1f1",
-      "date": "2026-07-03T16:44:00.000Z",
-      "unites": 1.32,
-      "mode": "volume",
-      "volume": 33,
-      "poids": null,
-      "degre": 5,
-      "type": "autre",
-      "note": ""
-    },
-    {
-      "id": "b64462e1-ab29-4d9f-b33f-c9ac54e6b178",
-      "date": "2026-07-03T16:48:00.000Z",
-      "unites": 1.44,
-      "mode": "volume",
-      "volume": 10,
-      "poids": null,
-      "degre": 18,
-      "type": "autre",
-      "note": ""
-    },
-    {
-      "id": "76b7ff7e-e3a3-4ed1-ae46-437d2132e4b3",
-      "date": "2026-07-03T17:09:00.000Z",
-      "unites": 2.7,
-      "mode": "volume",
-      "volume": 25,
-      "poids": null,
-      "degre": 13.5,
-      "type": "autre",
-      "note": ""
-    }
-  ],
-  "updatedAt": "2026-07-03T17:11:35.949Z",
+  "entries": [],
+  "updatedAt": "2026-07-03T20:46:05.031Z",
   "_lot1Test": {
     "message": "ping de validation Lot 1",
     "device": "appareil sans nom",
