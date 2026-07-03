@@ -259,6 +259,9 @@ button:disabled {
   color: #8a7358;
   padding: 8px 16px 24px;
 }
+.app-footer a {
+  color: var(--wood-mid);
+}
 
 /* ── Calculateur ── */
 
