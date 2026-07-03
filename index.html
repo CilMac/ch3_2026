@@ -313,9 +313,28 @@
         <h2>Réinitialisation</h2>
         <p class="hint">
           Efface définitivement tout l'historique dans <code>data/data.json</code>. Action irréversible
-          (pas de sauvegarde automatique).
+          (pas de sauvegarde automatique) — <strong>pense à exporter une copie avant</strong> (onglet
+          Configuration).
         </p>
-        <button type="button" id="reset-all-btn" class="btn-secondary btn-danger" disabled>Tout effacer</button>
+        <button type="button" id="reset-reveal-btn" class="btn-secondary btn-danger" disabled>Tout effacer…</button>
+
+        <div id="reset-confirm-block" hidden>
+          <p class="status error" id="reset-warning-text"></p>
+
+          <label class="checkbox-row">
+            <input type="checkbox" id="reset-ack-export">
+            J'ai exporté une sauvegarde, ou je n'en veux pas
+          </label>
+
+          <label for="reset-confirm-input">Tape <strong>EFFACER</strong> pour activer la confirmation</label>
+          <input type="text" id="reset-confirm-input" autocomplete="off" spellcheck="false" placeholder="EFFACER">
+
+          <div class="btn-row">
+            <button type="button" id="reset-confirm-btn" class="btn-primary btn-danger" disabled>Confirmer la suppression définitive</button>
+            <button type="button" id="reset-cancel-btn" class="btn-secondary">Annuler</button>
+          </div>
+        </div>
+
         <p id="reset-status" class="status"></p>
       </div>
 
