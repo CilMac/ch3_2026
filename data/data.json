@@ -11,9 +11,20 @@
       "degre": 39,
       "type": "autre",
       "note": "Inauguration CH3 sur page Web 💪"
+    },
+    {
+      "id": "6b7b7362-e780-4471-aa02-c294f44ff118",
+      "date": "2026-07-03T20:47:00.000Z",
+      "unites": 0.72,
+      "mode": "volume",
+      "volume": 5,
+      "poids": null,
+      "degre": 18,
+      "type": "spiritueux",
+      "note": "Porto"
     }
   ],
-  "updatedAt": "2026-07-03T20:47:36.636Z",
+  "updatedAt": "2026-07-03T20:48:43.508Z",
   "_lot1Test": {
     "message": "ping de validation Lot 1",
     "device": "appareil sans nom",
