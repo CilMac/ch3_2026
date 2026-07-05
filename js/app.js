@@ -1,3 +1,5 @@
+// Câblage DOM de l'appli : event listeners et rendu, pas de logique métier (voir les autres modules).
+
 import { getToken, setToken, clearToken, getDeviceLabel, setDeviceLabel, maskToken } from './config.js';
 import { readData, writeData } from './githubSync.js';
 import { getState, setMode, setVolume, setPoids, setDegre, formatFr } from './calc.js';
