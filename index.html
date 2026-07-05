@@ -30,9 +30,9 @@
     <button class="tab-btn tab-btn-icon" data-target="config" aria-label="Configuration">⚙️</button>
   </nav>
 
-  <button type="button" class="conn-badge" id="conn-badge" data-target="config" title="Aller à Configuration">
-    <span class="conn-dot" id="conn-badge-dot"></span>
-    <span id="conn-badge-text">Vérification…</span>
+  <button type="button" class="conn-badge" id="conn-badge" data-target="config" title="Aller à Configuration" hidden>
+    <span class="conn-dot"></span>
+    <span>Pas de jeton</span>
   </button>
 
   <main>
@@ -336,6 +336,7 @@
       <div class="subview" data-subview="bilan-general" hidden>
         <div class="panel">
           <h2>Bilan général <span class="tag">par semaine</span></h2>
+          <p class="hint" id="bilan-general-moyenne">—</p>
           <ul id="bilan-general-list" class="entry-list"></ul>
         </div>
       </div>

@@ -118,16 +118,37 @@ propos" qui vivait auparavant dans Configuration).
 
 ## Badge de connexion et raccourci "rejouer"
 
-Un badge cliquable (`#conn-badge`, hors de `<main>` donc visible sur tous les onglets) indique
-si un jeton est présent en `localStorage` — point vert "Jeton configuré" / point rouge "Pas de
-jeton" — sans vérifier sa validité réelle auprès de GitHub (juste sa présence). Clic dessus →
-`data-target="config"`, réutilise le mécanisme générique de navigation. Mis à jour dans
-`refreshTokenStatus()` (`js/app.js`).
+Un badge cliquable (`#conn-badge`, hors de `<main>` donc visible sur tous les onglets) n'apparaît
+que quand **aucun** jeton n'est présent en `localStorage` ("Pas de jeton") — masqué entièrement
+sinon (`hidden`), pas de vérification de validité réelle auprès de GitHub, juste la présence.
+Clic dessus → `data-target="config"`, réutilise le mécanisme générique de navigation. Mis à jour
+dans `refreshTokenStatus()` (`js/app.js`).
 
 Dans Archivage, le bouton "↺ Rejouer la dernière conso" (`#replay-last-btn`) relit
 `data/data.json`, prend l'entrée la plus récente et réapplique son mode/volume-ou-poids/degré/type
 au Calculateur (mêmes helpers `applyMode`/dispatch d'événements `input` que la saisie manuelle) —
 la date reste "maintenant", il faut toujours cliquer "Archiver" pour valider.
+
+## Invalidation du cache Synthèse/Détail
+
+`syntheseLoaded`/`detailLoaded` (flags qui évitent de refetch `data/data.json` à chaque changement
+d'onglet) doivent être remis à `false` après **toute** écriture qui change les entrées — sinon
+l'onglet qui n'a pas été rouvert affiche des données périmées jusqu'à un clic manuel sur
+"Actualiser". Reset déjà en place pour import/réinitialisation ; ajouté aussi après archivage
+(`archiveBtn` → reset des deux) et après suppression dans Détail (`deleteEntry` → reset de
+`syntheseLoaded`, `detailEntries` étant déjà à jour localement donc pas besoin de reset
+`detailLoaded`). Si un nouveau point d'écriture apparaît, penser à faire pareil.
+
+## Contraintes de saisie dans Archivage
+
+- Pas de date future : `entryDatetimeInput.max` est fixé à "maintenant" (recalculé à chaque
+  ouverture de l'onglet Archivage via `refreshEntryDatetimeMax()`), et `archiveBtn` revalide
+  côté JS avant tout `writeData` (le `max` HTML seul ne suffit pas à garantir la règle sur tous
+  les navigateurs/dates saisies au clavier).
+- La ligne "Moyenne hebdo sur *(période)*" en haut de **Bilan général** reprend le `consoHebdoMoy`
+  calculé pour la période choisie dans **Stats** (`periodeType`/`getPeriodStats()`, factorisé et
+  partagé entre `renderSynthese()` et `renderBilanGeneral()`) — se met à jour dès que la période
+  change dans Stats, même si on regarde Bilan général à ce moment-là.
 
 ## Backlog / pistes d'amélioration ergonomie (identifiées, pas encore faites)
 
