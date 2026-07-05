@@ -35,13 +35,10 @@ document.querySelectorAll('[data-target]').forEach((btn) => {
 
 // ── Badge de statut de connexion (visible sur tous les écrans) ──
 
-const connBadgeDot = document.getElementById('conn-badge-dot');
-const connBadgeText = document.getElementById('conn-badge-text');
+const connBadge = document.getElementById('conn-badge');
 
 function refreshConnBadge() {
-  const hasToken = !!getToken();
-  connBadgeDot.classList.toggle('ok', hasToken);
-  connBadgeText.textContent = hasToken ? 'Jeton configuré' : 'Pas de jeton';
+  connBadge.hidden = !!getToken();
 }
 
 // ── Calculateur ──
@@ -205,16 +202,26 @@ function refreshArchiveButtonState() {
   archiveBtn.disabled = !getToken();
 }
 
+function refreshEntryDatetimeMax() {
+  entryDatetimeInput.max = toDatetimeLocalValue(new Date());
+}
+
 entryDatetimeInput.value = toDatetimeLocalValue(new Date());
+refreshEntryDatetimeMax();
 
 archiveBtn.addEventListener('click', async () => {
   const token = getToken();
+  const date = entryDatetimeInput.value ? new Date(entryDatetimeInput.value) : new Date();
+  if (date > new Date()) {
+    archiveStatus.textContent = 'La date ne peut pas être dans le futur.';
+    archiveStatus.className = 'status error';
+    return;
+  }
   archiveBtn.disabled = true;
   archiveStatus.textContent = 'Écriture sur GitHub…';
   archiveStatus.className = 'status warn';
   try {
     const calcState = getState();
-    const date = entryDatetimeInput.value ? new Date(entryDatetimeInput.value) : new Date();
     const entry = buildEntry({
       date,
       unites: calcState.unites,
@@ -233,6 +240,8 @@ archiveBtn.addEventListener('click', async () => {
     archiveStatus.className = 'status ok';
     entryNoteInput.value = '';
     entryDatetimeInput.value = toDatetimeLocalValue(new Date());
+    detailLoaded = false;
+    syntheseLoaded = false;
   } catch (e) {
     archiveStatus.textContent = `Erreur : ${e.message}`;
     archiveStatus.className = 'status error';
@@ -287,6 +296,7 @@ onViewChange((name) => {
   if (name === 'archivage') {
     renderCalcSummary();
     refreshArchiveButtonState();
+    refreshEntryDatetimeMax();
     renderAlcoolemie();
   }
 });
@@ -389,6 +399,7 @@ async function deleteEntry(id) {
     detailStatus.textContent = 'Entrée supprimée.';
     detailStatus.className = 'status ok';
     renderDetailList();
+    syntheseLoaded = false;
   } catch (e) {
     detailStatus.textContent = `Erreur de suppression : ${e.message}`;
     detailStatus.className = 'status error';
@@ -448,16 +459,25 @@ function formatDateFr(d) {
   return d.toLocaleDateString('fr-FR');
 }
 
-function renderSynthese() {
+function getPeriodStats() {
   let customStart = null;
   let customEnd = null;
   if (periodeType === 'perso') {
     customStart = periodeDebutInput.value ? new Date(`${periodeDebutInput.value}T00:00:00`) : null;
     customEnd = periodeFinInput.value ? new Date(`${periodeFinInput.value}T23:59:59`) : null;
   }
-
   const { filtered, start, end } = filterByPeriod(syntheseEntries, periodeType, customStart, customEnd);
-  const stats = computeStats(filtered, start, end);
+  return { stats: computeStats(filtered, start, end), start, end };
+}
+
+const PERIODE_LABELS = {
+  annee: 'l’année en cours',
+  tout: 'tout l’historique',
+  perso: 'la période sélectionnée',
+};
+
+function renderSynthese() {
+  const { stats, start, end } = getPeriodStats();
 
   if (!stats) {
     syntheseContent.hidden = true;
@@ -495,6 +515,7 @@ const bilanTotalEl = document.getElementById('bilan-total');
 const bilanMaxEl = document.getElementById('bilan-max');
 const bilanDeuxJoursEl = document.getElementById('bilan-deuxjours');
 const bilanDaysList = document.getElementById('bilan-days');
+const bilanGeneralMoyenne = document.getElementById('bilan-general-moyenne');
 const bilanGeneralList = document.getElementById('bilan-general-list');
 const chartContainer = document.getElementById('chart-container');
 
@@ -525,6 +546,11 @@ function renderBilanHebdo() {
 }
 
 function renderBilanGeneral() {
+  const { stats } = getPeriodStats();
+  bilanGeneralMoyenne.textContent = stats
+    ? `Moyenne hebdo sur ${PERIODE_LABELS[periodeType]} : ${formatFr(stats.consoHebdoMoy, 2)} unités ${iconePourConsoHebdo(stats.consoHebdoMoy)} (réglable dans Stats)`
+    : `Moyenne hebdo sur ${PERIODE_LABELS[periodeType]} : pas de donnée sur cette période.`;
+
   const weeks = groupByWeek(syntheseEntries);
   bilanGeneralList.innerHTML = '';
 
@@ -604,11 +630,18 @@ periodeButtons.forEach((btn) => {
     periodeButtons.forEach((b) => b.classList.toggle('active', b.dataset.period === periodeType));
     periodePersoBlock.hidden = periodeType !== 'perso';
     renderSynthese();
+    renderBilanGeneral();
   });
 });
 
-periodeDebutInput.addEventListener('change', renderSynthese);
-periodeFinInput.addEventListener('change', renderSynthese);
+periodeDebutInput.addEventListener('change', () => {
+  renderSynthese();
+  renderBilanGeneral();
+});
+periodeFinInput.addEventListener('change', () => {
+  renderSynthese();
+  renderBilanGeneral();
+});
 
 syntheseRefreshBtn.addEventListener('click', loadSynthese);
 
