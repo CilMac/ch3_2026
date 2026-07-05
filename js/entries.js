@@ -3,6 +3,7 @@
 const TYPE_LABELS = {
   biere: 'Bière',
   vin: 'Vin',
+  sake: 'Saké',
   spiritueux: 'Spiritueux',
   autre: 'Autre',
 };

@@ -368,6 +368,17 @@ onViewChange((name) => {
 
 // ── Synthèse ──
 
+const syntheseSubnav = document.getElementById('synthese-subnav');
+const syntheseSubviews = document.querySelectorAll('.subview[data-subview]');
+
+syntheseSubnav.querySelectorAll('[data-subview]').forEach((btn) => {
+  btn.addEventListener('click', () => {
+    const target = btn.dataset.subview;
+    syntheseSubviews.forEach((v) => { v.hidden = v.dataset.subview !== target; });
+    syntheseSubnav.querySelectorAll('[data-subview]').forEach((b) => b.classList.toggle('active', b.dataset.subview === target));
+  });
+});
+
 const periodeButtons = document.querySelectorAll('[data-period]');
 const periodePersoBlock = document.getElementById('periode-perso-block');
 const periodeDebutInput = document.getElementById('periode-debut');
@@ -377,15 +388,6 @@ const syntheseStatus = document.getElementById('synthese-status');
 const syntheseContent = document.getElementById('synthese-content');
 const syntheseLegendeBtn = document.getElementById('synthese-legende-btn');
 const syntheseLegendeText = document.getElementById('synthese-legende-text');
-const resetRevealBtn = document.getElementById('reset-reveal-btn');
-const resetConfirmBlock = document.getElementById('reset-confirm-block');
-const resetWarningText = document.getElementById('reset-warning-text');
-const resetAckExport = document.getElementById('reset-ack-export');
-const resetConfirmInput = document.getElementById('reset-confirm-input');
-const resetConfirmBtn = document.getElementById('reset-confirm-btn');
-const resetCancelBtn = document.getElementById('reset-cancel-btn');
-const resetStatus = document.getElementById('reset-status');
-const RESET_CONFIRM_WORD = 'EFFACER';
 
 const statTotal = document.getElementById('stat-total');
 const statSaisies = document.getElementById('stat-saisies');
@@ -569,72 +571,6 @@ syntheseRefreshBtn.addEventListener('click', loadSynthese);
 
 syntheseLegendeBtn.addEventListener('click', () => {
   syntheseLegendeText.hidden = !syntheseLegendeText.hidden;
-});
-
-function refreshResetButtonState() {
-  resetRevealBtn.disabled = !getToken();
-}
-
-function closeResetConfirm() {
-  resetConfirmBlock.hidden = true;
-  resetAckExport.checked = false;
-  resetConfirmInput.value = '';
-  resetConfirmBtn.disabled = true;
-}
-
-function refreshResetConfirmButtonState() {
-  const wordMatches = resetConfirmInput.value.trim() === RESET_CONFIRM_WORD;
-  resetConfirmBtn.disabled = !(wordMatches && resetAckExport.checked);
-}
-
-resetRevealBtn.addEventListener('click', () => {
-  const count = syntheseEntries.length;
-  resetWarningText.textContent = count > 0
-    ? `⚠️ ${count} entrée(s) seront supprimées définitivement, sans aucune sauvegarde automatique.`
-    : `⚠️ Aucune entrée actuellement, mais cette action reste irréversible si de nouvelles données arrivent avant confirmation.`;
-  resetConfirmBlock.hidden = false;
-  resetAckExport.checked = false;
-  resetConfirmInput.value = '';
-  refreshResetConfirmButtonState();
-});
-
-resetCancelBtn.addEventListener('click', closeResetConfirm);
-
-resetAckExport.addEventListener('change', refreshResetConfirmButtonState);
-resetConfirmInput.addEventListener('input', refreshResetConfirmButtonState);
-
-resetConfirmBtn.addEventListener('click', async () => {
-  const token = getToken();
-  if (!token) return;
-  if (resetConfirmInput.value.trim() !== RESET_CONFIRM_WORD || !resetAckExport.checked) return;
-
-  const count = syntheseEntries.length;
-  if (!confirm(`Dernière étape : supprimer définitivement ${count} entrée(s) ? Il n’y a pas de retour en arrière possible.`)) return;
-
-  resetConfirmBtn.disabled = true;
-  resetStatus.textContent = 'Réinitialisation…';
-  resetStatus.className = 'status warn';
-  try {
-    await writeData(
-      (current) => ({ ...ensureShape(current), updatedAt: new Date().toISOString(), entries: [] }),
-      { message: 'réinitialisation complète', token }
-    );
-    resetStatus.textContent = 'Historique entièrement effacé.';
-    resetStatus.className = 'status ok';
-    syntheseEntries = [];
-    renderSynthese();
-    renderBilanHebdo();
-    renderBilanGeneral();
-    renderChart();
-    renderStreaks();
-    detailLoaded = false;
-    closeResetConfirm();
-  } catch (e) {
-    resetStatus.textContent = `Erreur : ${e.message}`;
-    resetStatus.className = 'status error';
-  } finally {
-    refreshResetButtonState();
-  }
 });
 
 onViewChange((name) => {
@@ -846,6 +782,84 @@ importBtn.addEventListener('click', async () => {
     exportImportStatus.className = 'status error';
   } finally {
     importBtn.disabled = !getToken() || !pendingImportData;
+  }
+});
+
+// ── Réinitialisation ──
+
+const resetRevealBtn = document.getElementById('reset-reveal-btn');
+const resetConfirmBlock = document.getElementById('reset-confirm-block');
+const resetWarningText = document.getElementById('reset-warning-text');
+const resetAckExport = document.getElementById('reset-ack-export');
+const resetConfirmInput = document.getElementById('reset-confirm-input');
+const resetConfirmBtn = document.getElementById('reset-confirm-btn');
+const resetCancelBtn = document.getElementById('reset-cancel-btn');
+const resetStatus = document.getElementById('reset-status');
+const RESET_CONFIRM_WORD = 'EFFACER';
+
+function refreshResetButtonState() {
+  resetRevealBtn.disabled = !getToken();
+}
+
+function closeResetConfirm() {
+  resetConfirmBlock.hidden = true;
+  resetAckExport.checked = false;
+  resetConfirmInput.value = '';
+  resetConfirmBtn.disabled = true;
+}
+
+function refreshResetConfirmButtonState() {
+  const wordMatches = resetConfirmInput.value.trim() === RESET_CONFIRM_WORD;
+  resetConfirmBtn.disabled = !(wordMatches && resetAckExport.checked);
+}
+
+resetRevealBtn.addEventListener('click', () => {
+  const count = syntheseEntries.length;
+  resetWarningText.textContent = count > 0
+    ? `⚠️ ${count} entrée(s) seront supprimées définitivement, sans aucune sauvegarde automatique.`
+    : `⚠️ Aucune entrée actuellement, mais cette action reste irréversible si de nouvelles données arrivent avant confirmation.`;
+  resetConfirmBlock.hidden = false;
+  resetAckExport.checked = false;
+  resetConfirmInput.value = '';
+  refreshResetConfirmButtonState();
+});
+
+resetCancelBtn.addEventListener('click', closeResetConfirm);
+
+resetAckExport.addEventListener('change', refreshResetConfirmButtonState);
+resetConfirmInput.addEventListener('input', refreshResetConfirmButtonState);
+
+resetConfirmBtn.addEventListener('click', async () => {
+  const token = getToken();
+  if (!token) return;
+  if (resetConfirmInput.value.trim() !== RESET_CONFIRM_WORD || !resetAckExport.checked) return;
+
+  const count = syntheseEntries.length;
+  if (!confirm(`Dernière étape : supprimer définitivement ${count} entrée(s) ? Il n’y a pas de retour en arrière possible.`)) return;
+
+  resetConfirmBtn.disabled = true;
+  resetStatus.textContent = 'Réinitialisation…';
+  resetStatus.className = 'status warn';
+  try {
+    await writeData(
+      (current) => ({ ...ensureShape(current), updatedAt: new Date().toISOString(), entries: [] }),
+      { message: 'réinitialisation complète', token }
+    );
+    resetStatus.textContent = 'Historique entièrement effacé.';
+    resetStatus.className = 'status ok';
+    syntheseEntries = [];
+    renderSynthese();
+    renderBilanHebdo();
+    renderBilanGeneral();
+    renderChart();
+    renderStreaks();
+    detailLoaded = false;
+    closeResetConfirm();
+  } catch (e) {
+    resetStatus.textContent = `Erreur : ${e.message}`;
+    resetStatus.className = 'status error';
+  } finally {
+    refreshResetButtonState();
   }
 });
 
