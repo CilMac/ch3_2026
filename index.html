@@ -48,6 +48,8 @@
             <button type="button" class="btn-step" id="qty-plus-btn" aria-label="Augmenter">+</button>
           </div>
           <div class="preset-row" id="volume-presets">
+            <button type="button" class="preset-btn" data-volume="6">6 cl saké</button>
+            <button type="button" class="preset-btn" data-volume="12">12 cl saké</button>
             <button type="button" class="preset-btn" data-volume="25">25 cl</button>
             <button type="button" class="preset-btn" data-volume="33">33 cl</button>
             <button type="button" class="preset-btn" data-volume="50">50 cl</button>
@@ -65,6 +67,7 @@
           <div class="preset-row">
             <button type="button" class="preset-btn" data-degre="5">5° bière</button>
             <button type="button" class="preset-btn" data-degre="12">12° vin</button>
+            <button type="button" class="preset-btn" data-degre="15">15° saké</button>
             <button type="button" class="preset-btn" data-degre="18">18° porto</button>
             <button type="button" class="preset-btn" data-degre="40">40° spiritueux</button>
           </div>
@@ -105,6 +108,7 @@
         <select id="entry-type" class="select-input">
           <option value="biere">Bière</option>
           <option value="vin">Vin</option>
+          <option value="sake">Saké</option>
           <option value="spiritueux">Spiritueux</option>
           <option value="autre" selected>Autre</option>
         </select>
@@ -193,149 +197,137 @@
 
     <section class="view" data-view="synthese" hidden>
 
-      <div class="panel">
-        <h2>Synthèse</h2>
-
-        <div class="segmented" role="group" aria-label="Période">
-          <button type="button" class="seg-btn active" id="periode-annee-btn" data-period="annee">Année en cours</button>
-          <button type="button" class="seg-btn" id="periode-tout-btn" data-period="tout">Tout</button>
-          <button type="button" class="seg-btn" id="periode-perso-btn" data-period="perso">Période…</button>
-        </div>
-
-        <div class="field-block" id="periode-perso-block" hidden>
-          <label for="periode-debut">Du</label>
-          <input type="date" id="periode-debut">
-          <label for="periode-fin">Au</label>
-          <input type="date" id="periode-fin">
-        </div>
-
-        <div class="btn-row">
-          <button type="button" id="synthese-refresh-btn" class="btn-secondary">↻ Actualiser</button>
-        </div>
-        <p id="synthese-status" class="status"></p>
-
-        <div class="stat-grid" id="synthese-content" hidden>
-          <div class="stat-item">
-            <span class="stat-label">Total unités</span>
-            <span class="stat-value" id="stat-total">—</span>
-          </div>
-          <div class="stat-item">
-            <span class="stat-label">Nb saisies</span>
-            <span class="stat-value" id="stat-saisies">—</span>
-          </div>
-          <div class="stat-item">
-            <span class="stat-label">Jours avec conso</span>
-            <span class="stat-value" id="stat-jours-conso">—</span>
-          </div>
-          <div class="stat-item">
-            <span class="stat-label">% jours avec conso</span>
-            <span class="stat-value" id="stat-taux">—</span>
-          </div>
-          <div class="stat-item">
-            <span class="stat-label">Nb semaines</span>
-            <span class="stat-value" id="stat-semaines">—</span>
-          </div>
-          <div class="stat-item">
-            <span class="stat-label">Moyenne hebdo</span>
-            <span class="stat-value" id="stat-moyenne">—</span>
-          </div>
-          <div class="stat-item stat-item-wide">
-            <span class="stat-label">Max quotidien</span>
-            <span class="stat-value" id="stat-max">—</span>
-          </div>
-        </div>
-
-        <button type="button" id="synthese-legende-btn" class="btn-secondary">ℹ️ Légende</button>
-        <p id="synthese-legende-text" class="hint" hidden>
-          Conso hebdo &lt; 5 unités -------------- 👍<br>
-          Seuils respectés (≤ 10 U/sem.) ------- 😇<br>
-          Dépassés de peu (&lt; 10 %) ------------- 🤔<br>
-          Dépassés ------------------------------- 😡<br><br>
-          Rappel des seuils : 10 unités maxi/semaine, 4 unités maxi/occasion, 2 jours consécutifs à 0.
-        </p>
+      <div class="segmented" role="group" aria-label="Sous-écran Synthèse" id="synthese-subnav">
+        <button type="button" class="seg-btn active" data-subview="stats">Stats</button>
+        <button type="button" class="seg-btn" data-subview="bilan-hebdo">Bilan hebdo</button>
+        <button type="button" class="seg-btn" data-subview="tendance">Tendance</button>
+        <button type="button" class="seg-btn" data-subview="bilan-general">Bilan général</button>
       </div>
 
-      <div class="panel">
-        <h2>Séries</h2>
-        <div class="stat-grid">
-          <div class="stat-item">
-            <span class="stat-label">Série en cours</span>
-            <span class="stat-value" id="streak-current">—</span>
+      <div class="subview" data-subview="stats">
+
+        <div class="panel">
+          <h2>Synthèse</h2>
+
+          <div class="segmented" role="group" aria-label="Période">
+            <button type="button" class="seg-btn active" id="periode-annee-btn" data-period="annee">Année en cours</button>
+            <button type="button" class="seg-btn" id="periode-tout-btn" data-period="tout">Tout</button>
+            <button type="button" class="seg-btn" id="periode-perso-btn" data-period="perso">Période…</button>
           </div>
-          <div class="stat-item">
-            <span class="stat-label">Record</span>
-            <span class="stat-value" id="streak-record">—</span>
+
+          <div class="field-block" id="periode-perso-block" hidden>
+            <label for="periode-debut">Du</label>
+            <input type="date" id="periode-debut">
+            <label for="periode-fin">Au</label>
+            <input type="date" id="periode-fin">
           </div>
-        </div>
-        <p class="hint">Jours consécutifs sans consommation, jusqu'à aujourd'hui inclus (sur tout l'historique, indépendamment du filtre de période ci-dessus).</p>
-      </div>
-
-      <div class="panel">
-        <h2>Bilan de la semaine</h2>
-
-        <div class="btn-row">
-          <button type="button" id="bilan-prev-btn" class="btn-secondary btn-small">◀ Précédente</button>
-          <button type="button" id="bilan-today-btn" class="btn-secondary btn-small">Semaine en cours</button>
-          <button type="button" id="bilan-next-btn" class="btn-secondary btn-small">Suivante ▶</button>
-        </div>
-        <p id="bilan-hebdo-label" class="hint">—</p>
-
-        <div class="stat-grid">
-          <div class="stat-item">
-            <span class="stat-label">Total semaine</span>
-            <span class="stat-value" id="bilan-total">—</span>
-          </div>
-          <div class="stat-item">
-            <span class="stat-label">Max quotidien</span>
-            <span class="stat-value" id="bilan-max">—</span>
-          </div>
-          <div class="stat-item stat-item-wide">
-            <span class="stat-label">2 jours consécutifs sans conso ?</span>
-            <span class="stat-value" id="bilan-deuxjours">—</span>
-          </div>
-        </div>
-
-        <ul class="week-days" id="bilan-days"></ul>
-      </div>
-
-      <div class="panel">
-        <h2>Tendance <span class="tag">12 dernières semaines</span></h2>
-        <div id="chart-container" class="chart-container"></div>
-        <p class="hint">Ligne pointillée = seuil recommandé (10 U/semaine). Couleur = repère (vert/bois/ambre/rouge).</p>
-      </div>
-
-      <div class="panel">
-        <h2>Bilan général <span class="tag">par semaine</span></h2>
-        <ul id="bilan-general-list" class="entry-list"></ul>
-      </div>
-
-      <div class="panel">
-        <h2>Réinitialisation</h2>
-        <p class="hint">
-          Efface définitivement tout l'historique dans <code>data/data.json</code>. Action irréversible
-          (pas de sauvegarde automatique) — <strong>pense à exporter une copie avant</strong> (onglet
-          Configuration).
-        </p>
-        <button type="button" id="reset-reveal-btn" class="btn-secondary btn-danger" disabled>Tout effacer…</button>
-
-        <div id="reset-confirm-block" hidden>
-          <p class="status error" id="reset-warning-text"></p>
-
-          <label class="checkbox-row">
-            <input type="checkbox" id="reset-ack-export">
-            J'ai exporté une sauvegarde, ou je n'en veux pas
-          </label>
-
-          <label for="reset-confirm-input">Tape <strong>EFFACER</strong> pour activer la confirmation</label>
-          <input type="text" id="reset-confirm-input" autocomplete="off" spellcheck="false" placeholder="EFFACER">
 
           <div class="btn-row">
-            <button type="button" id="reset-confirm-btn" class="btn-primary btn-danger" disabled>Confirmer la suppression définitive</button>
-            <button type="button" id="reset-cancel-btn" class="btn-secondary">Annuler</button>
+            <button type="button" id="synthese-refresh-btn" class="btn-secondary">↻ Actualiser</button>
           </div>
+          <p id="synthese-status" class="status"></p>
+
+          <div class="stat-grid" id="synthese-content" hidden>
+            <div class="stat-item">
+              <span class="stat-label">Total unités</span>
+              <span class="stat-value" id="stat-total">—</span>
+            </div>
+            <div class="stat-item">
+              <span class="stat-label">Nb saisies</span>
+              <span class="stat-value" id="stat-saisies">—</span>
+            </div>
+            <div class="stat-item">
+              <span class="stat-label">Jours avec conso</span>
+              <span class="stat-value" id="stat-jours-conso">—</span>
+            </div>
+            <div class="stat-item">
+              <span class="stat-label">% jours avec conso</span>
+              <span class="stat-value" id="stat-taux">—</span>
+            </div>
+            <div class="stat-item">
+              <span class="stat-label">Nb semaines</span>
+              <span class="stat-value" id="stat-semaines">—</span>
+            </div>
+            <div class="stat-item">
+              <span class="stat-label">Moyenne hebdo</span>
+              <span class="stat-value" id="stat-moyenne">—</span>
+            </div>
+            <div class="stat-item stat-item-wide">
+              <span class="stat-label">Max quotidien</span>
+              <span class="stat-value" id="stat-max">—</span>
+            </div>
+          </div>
+
+          <button type="button" id="synthese-legende-btn" class="btn-secondary">ℹ️ Légende</button>
+          <p id="synthese-legende-text" class="hint" hidden>
+            Conso hebdo &lt; 5 unités -------------- 👍<br>
+            Seuils respectés (≤ 10 U/sem.) ------- 😇<br>
+            Dépassés de peu (&lt; 10 %) ------------- 🤔<br>
+            Dépassés ------------------------------- 😡<br><br>
+            Rappel des seuils : 10 unités maxi/semaine, 4 unités maxi/occasion, 2 jours consécutifs à 0.
+          </p>
         </div>
 
-        <p id="reset-status" class="status"></p>
+        <div class="panel">
+          <h2>Séries</h2>
+          <div class="stat-grid">
+            <div class="stat-item">
+              <span class="stat-label">Série en cours</span>
+              <span class="stat-value" id="streak-current">—</span>
+            </div>
+            <div class="stat-item">
+              <span class="stat-label">Record</span>
+              <span class="stat-value" id="streak-record">—</span>
+            </div>
+          </div>
+          <p class="hint">Jours consécutifs sans consommation, jusqu'à aujourd'hui inclus (sur tout l'historique, indépendamment du filtre de période ci-dessus).</p>
+        </div>
+
+      </div>
+
+      <div class="subview" data-subview="bilan-hebdo" hidden>
+        <div class="panel">
+          <h2>Bilan de la semaine</h2>
+
+          <div class="btn-row">
+            <button type="button" id="bilan-prev-btn" class="btn-secondary btn-small">◀ Précédente</button>
+            <button type="button" id="bilan-today-btn" class="btn-secondary btn-small">Semaine en cours</button>
+            <button type="button" id="bilan-next-btn" class="btn-secondary btn-small">Suivante ▶</button>
+          </div>
+          <p id="bilan-hebdo-label" class="hint">—</p>
+
+          <div class="stat-grid">
+            <div class="stat-item">
+              <span class="stat-label">Total semaine</span>
+              <span class="stat-value" id="bilan-total">—</span>
+            </div>
+            <div class="stat-item">
+              <span class="stat-label">Max quotidien</span>
+              <span class="stat-value" id="bilan-max">—</span>
+            </div>
+            <div class="stat-item stat-item-wide">
+              <span class="stat-label">2 jours consécutifs sans conso ?</span>
+              <span class="stat-value" id="bilan-deuxjours">—</span>
+            </div>
+          </div>
+
+          <ul class="week-days" id="bilan-days"></ul>
+        </div>
+      </div>
+
+      <div class="subview" data-subview="tendance" hidden>
+        <div class="panel">
+          <h2>Tendance <span class="tag">12 dernières semaines</span></h2>
+          <div id="chart-container" class="chart-container"></div>
+          <p class="hint">Ligne pointillée = seuil recommandé (10 U/semaine). Couleur = repère (vert/bois/ambre/rouge).</p>
+        </div>
+      </div>
+
+      <div class="subview" data-subview="bilan-general" hidden>
+        <div class="panel">
+          <h2>Bilan général <span class="tag">par semaine</span></h2>
+          <ul id="bilan-general-list" class="entry-list"></ul>
+        </div>
       </div>
 
     </section>
@@ -381,6 +373,34 @@
           <button type="button" id="import-btn" class="btn-primary btn-danger" disabled>Importer (remplace tout)</button>
         </div>
         <p id="export-import-status" class="status"></p>
+      </div>
+
+      <div class="panel">
+        <h2>Réinitialisation</h2>
+        <p class="hint">
+          Efface définitivement tout l'historique dans <code>data/data.json</code>. Action irréversible
+          (pas de sauvegarde automatique) — <strong>pense à exporter une copie avant</strong> (ci-dessus).
+        </p>
+        <button type="button" id="reset-reveal-btn" class="btn-secondary btn-danger" disabled>Tout effacer…</button>
+
+        <div id="reset-confirm-block" hidden>
+          <p class="status error" id="reset-warning-text"></p>
+
+          <label class="checkbox-row">
+            <input type="checkbox" id="reset-ack-export">
+            J'ai exporté une sauvegarde, ou je n'en veux pas
+          </label>
+
+          <label for="reset-confirm-input">Tape <strong>EFFACER</strong> pour activer la confirmation</label>
+          <input type="text" id="reset-confirm-input" autocomplete="off" spellcheck="false" placeholder="EFFACER">
+
+          <div class="btn-row">
+            <button type="button" id="reset-confirm-btn" class="btn-primary btn-danger" disabled>Confirmer la suppression définitive</button>
+            <button type="button" id="reset-cancel-btn" class="btn-secondary">Annuler</button>
+          </div>
+        </div>
+
+        <p id="reset-status" class="status"></p>
       </div>
 
       <div class="panel">

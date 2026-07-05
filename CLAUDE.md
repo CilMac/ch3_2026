@@ -59,7 +59,7 @@ câblage DOM et appelle ces modules. Garder cette séparation pour tout ajout.
       "mode": "volume|poids",
       "volume": 25, "poids": null,
       "degre": 12,
-      "type": "biere|vin|spiritueux|autre",
+      "type": "biere|vin|sake|spiritueux|autre",
       "note": ""
     }
   ]
@@ -93,19 +93,22 @@ configurés). Workflow de contournement :
 - Pour tester une suppression/import réel : créer une entrée de test explicite, vérifier,
   supprimer, re-vérifier via l'API que `data/data.json` est revenu à l'état attendu.
 - L'utilisateur veut des confirmations multiples et explicites sur toute action destructive
-  (cf. le flux "Tout effacer" dans Synthèse : révéler → cocher → taper "EFFACER" → confirm()
+  (cf. le flux "Tout effacer" dans Configuration : révéler → cocher → taper "EFFACER" → confirm()
   natif final). Reproduire ce niveau de friction pour toute nouvelle action irréversible.
+
+## Sous-écrans de Synthèse
+
+Synthèse est découpée en 4 sous-écrans via une sous-navigation locale (`#synthese-subnav`,
+boutons `[data-subview]`, cf. `js/app.js`) plutôt qu'un seul long scroll : **Stats** (stats
+globales + filtre de période + Séries), **Bilan hebdo** (semaine sélectionnée, navigation
+préc/suiv), **Tendance** (graphique 12 semaines), **Bilan général** (liste complète par semaine).
+Le filtre de période ne s'affiche que dans l'onglet Stats, ce qui évite l'ambiguïté qu'il y avait
+avant (il ne s'appliquait qu'aux stats du haut mais apparaissait au-dessus de tout). Réinitialisation
+a été déplacée dans Configuration (entre Export/Import et À propos) — Synthèse est redevenue un
+écran de consultation pure.
 
 ## Backlog / pistes d'amélioration ergonomie (identifiées, pas encore faites)
 
-- Presets de Calcul et types de boisson dans Archivage ne couvrent pas le saké (habitude
-  réelle de l'utilisateur) — ajouter "Saké" au menu type + des presets volume/degré adaptés.
-- Détail : suppression uniquement, pas d'édition en place d'une entrée mal saisie.
-- Synthèse : très long scroll vertical (stats + séries + bilan hebdo + tendance + bilan général
-  + réinitialisation empilés) — l'appli iOS d'origine séparait ça en écrans distincts.
-  Le filtre de période en haut ne s'applique qu'aux stats du haut, pas aux sections suivantes
-  (bilan hebdo/général/tendance ont chacun leur périmètre fixe) — source de confusion possible.
-- Réinitialisation vit dans Synthèse (écran de consultation) plutôt que Configuration.
 - Aucun indicateur de statut de connexion/jeton visible hors de l'onglet Configuration.
 - Pas de raccourci "rejouer la dernière conso" pour un usage répétitif.
 
