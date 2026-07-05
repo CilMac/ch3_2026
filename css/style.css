@@ -91,6 +91,11 @@ body {
   white-space: nowrap;
   cursor: pointer;
 }
+.tab-btn-icon {
+  flex: 0.6;
+  font-size: 1.1rem;
+  padding: 8px 4px;
+}
 .tab-btn.active {
   background: var(--wood-dk);
   color: #e0c090;
