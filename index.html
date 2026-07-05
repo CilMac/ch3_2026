@@ -29,6 +29,11 @@
     <button class="tab-btn" data-target="config">Configuration</button>
   </nav>
 
+  <button type="button" class="conn-badge" id="conn-badge" data-target="config" title="Aller à Configuration">
+    <span class="conn-dot" id="conn-badge-dot"></span>
+    <span id="conn-badge-text">Vérification…</span>
+  </button>
+
   <main>
 
     <section class="view" data-view="calcul">
@@ -99,6 +104,10 @@
         <div class="calc-summary" id="calc-summary">
           <span id="calc-summary-text">—</span>
           <button type="button" class="btn-secondary btn-small" data-target="calcul">Modifier dans Calcul</button>
+        </div>
+
+        <div class="btn-row">
+          <button type="button" id="replay-last-btn" class="btn-secondary btn-small">↺ Rejouer la dernière conso</button>
         </div>
 
         <label for="entry-datetime">Date et heure</label>

@@ -107,10 +107,22 @@ avant (il ne s'appliquait qu'aux stats du haut mais apparaissait au-dessus de to
 a été déplacée dans Configuration (entre Export/Import et À propos) — Synthèse est redevenue un
 écran de consultation pure.
 
+## Badge de connexion et raccourci "rejouer"
+
+Un badge cliquable (`#conn-badge`, hors de `<main>` donc visible sur tous les onglets) indique
+si un jeton est présent en `localStorage` — point vert "Jeton configuré" / point rouge "Pas de
+jeton" — sans vérifier sa validité réelle auprès de GitHub (juste sa présence). Clic dessus →
+`data-target="config"`, réutilise le mécanisme générique de navigation. Mis à jour dans
+`refreshTokenStatus()` (`js/app.js`).
+
+Dans Archivage, le bouton "↺ Rejouer la dernière conso" (`#replay-last-btn`) relit
+`data/data.json`, prend l'entrée la plus récente et réapplique son mode/volume-ou-poids/degré/type
+au Calculateur (mêmes helpers `applyMode`/dispatch d'événements `input` que la saisie manuelle) —
+la date reste "maintenant", il faut toujours cliquer "Archiver" pour valider.
+
 ## Backlog / pistes d'amélioration ergonomie (identifiées, pas encore faites)
 
-- Aucun indicateur de statut de connexion/jeton visible hors de l'onglet Configuration.
-- Pas de raccourci "rejouer la dernière conso" pour un usage répétitif.
+(vide pour l'instant — tous les points identifiés lors du dernier passage en revue ont été traités)
 
 ## Historique des lots (pour contexte, ordre de construction)
 
