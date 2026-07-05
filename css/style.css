@@ -69,7 +69,6 @@ body {
   border-radius: 50%;
   background: var(--red);
 }
-.conn-dot.ok { background: var(--green); }
 
 .tab-nav {
   width: 100%;
