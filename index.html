@@ -26,7 +26,8 @@
     <button class="tab-btn" data-target="archivage">Archivage</button>
     <button class="tab-btn" data-target="detail">Détail</button>
     <button class="tab-btn" data-target="synthese">Synthèse</button>
-    <button class="tab-btn" data-target="config">Configuration</button>
+    <button class="tab-btn tab-btn-icon" data-target="info" aria-label="Info">ℹ️</button>
+    <button class="tab-btn tab-btn-icon" data-target="config" aria-label="Configuration">⚙️</button>
   </nav>
 
   <button type="button" class="conn-badge" id="conn-badge" data-target="config" title="Aller à Configuration">
@@ -341,6 +342,64 @@
 
     </section>
 
+    <section class="view" data-view="info" hidden>
+
+      <div class="panel">
+        <h2>Fonctionnalités</h2>
+
+        <h3>Calcul</h3>
+        <p class="hint">
+          Calcule les unités d'alcool d'une consommation à partir du volume (ou du poids) et du
+          degré, avec des presets pour les boissons courantes (bière, vin, saké, porto,
+          spiritueux…).
+        </p>
+
+        <h3>Archivage</h3>
+        <p class="hint">
+          Enregistre une consommation dans l'historique (date, type de boisson, note). Permet
+          aussi de cumuler les verres de la soirée pour une estimation d'alcoolémie indicative.
+        </p>
+
+        <h3>Détail</h3>
+        <p class="hint">
+          Consulte, trie et supprime les consommations déjà archivées.
+        </p>
+
+        <h3>Synthèse</h3>
+        <p class="hint">
+          Stats globales et séries sans consommation, bilan de la semaine sélectionnée, tendance
+          sur les 12 dernières semaines, et bilan général par semaine — répartis en sous-écrans
+          pour rester lisibles sur mobile.
+        </p>
+
+        <h3>Configuration</h3>
+        <p class="hint">
+          Jeton d'accès GitHub, export/import de sauvegarde, et réinitialisation complète de
+          l'historique.
+        </p>
+      </div>
+
+      <div class="panel">
+        <h2>Sous le capot</h2>
+        <p class="hint">
+          CH3-CH2-OH — suivi personnel de consommation d'alcool. Page statique hébergée sur GitHub
+          Pages ; les données vivent uniquement dans <code>data/data.json</code> de ce dépôt,
+          synchronisées via l'API GitHub. Aucun tiers, aucun tracker.
+        </p>
+        <p class="hint">
+          HTML/CSS/JavaScript natif, sans framework ni backend : toute la logique tourne dans le
+          navigateur, la seule dépendance externe est l'API GitHub pour lire et écrire
+          <code>data/data.json</code>.
+        </p>
+        <p class="hint">
+          Calculs indicatifs : 1 unité = 10 g d'alcool pur (densité éthanol 0,8). L'alcoolémie
+          estimée utilise une formule de Widmark simplifiée — elle ne remplace pas un éthylotest
+          homologué.
+        </p>
+      </div>
+
+    </section>
+
     <section class="view" data-view="config" hidden>
 
       <div class="panel">
@@ -410,19 +469,6 @@
         </div>
 
         <p id="reset-status" class="status"></p>
-      </div>
-
-      <div class="panel">
-        <h2>À propos</h2>
-        <p class="hint">
-          CH3-CH2-OH — suivi personnel de consommation d'alcool. Page statique hébergée sur GitHub Pages ;
-          les données vivent uniquement dans <code>data/data.json</code> de ce dépôt, synchronisées via
-          l'API GitHub. Aucun tiers, aucun tracker.
-        </p>
-        <p class="hint">
-          Calculs indicatifs : 1 unité = 10 g d'alcool pur (densité éthanol 0,8). L'alcoolémie estimée
-          utilise une formule de Widmark simplifiée — elle ne remplace pas un éthylotest homologué.
-        </p>
       </div>
 
       <div class="panel">

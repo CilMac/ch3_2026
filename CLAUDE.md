@@ -104,8 +104,17 @@ globales + filtre de période + Séries), **Bilan hebdo** (semaine sélectionné
 préc/suiv), **Tendance** (graphique 12 semaines), **Bilan général** (liste complète par semaine).
 Le filtre de période ne s'affiche que dans l'onglet Stats, ce qui évite l'ambiguïté qu'il y avait
 avant (il ne s'appliquait qu'aux stats du haut mais apparaissait au-dessus de tout). Réinitialisation
-a été déplacée dans Configuration (entre Export/Import et À propos) — Synthèse est redevenue un
-écran de consultation pure.
+a été déplacée dans Configuration (entre Export/Import et Test de synchronisation) — Synthèse est
+redevenue un écran de consultation pure.
+
+## Navigation : 6 onglets
+
+`Calcul | Archivage | Détail | Synthèse | ℹ️ Info | ⚙️ Configuration`. Info et Configuration sont
+des boutons icône seule (classe `.tab-btn-icon`, `aria-label` pour l'accessibilité puisqu'il n'y a
+pas de texte visible) — pas de logique JS spécifique, ils passent par le même mécanisme générique
+`[data-target]` / `.view[data-view]` que les autres onglets. Info contient deux panneaux : la
+description des fonctionnalités (public) et "Sous le capot" (contenu technique, ex-panneau "À
+propos" qui vivait auparavant dans Configuration).
 
 ## Badge de connexion et raccourci "rejouer"
 
