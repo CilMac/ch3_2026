@@ -48,6 +48,29 @@ body {
   margin-top: 2px;
 }
 
+.conn-badge {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  width: fit-content;
+  margin: 6px auto 0;
+  padding: 4px 12px;
+  border-radius: 999px;
+  border: 1px solid rgba(90,52,24,.25);
+  background: #f0ebe0;
+  color: var(--wood-dk);
+  font-size: .7rem;
+  cursor: pointer;
+}
+.conn-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--red);
+}
+.conn-dot.ok { background: var(--green); }
+
 .tab-nav {
   width: 100%;
   max-width: 640px;
