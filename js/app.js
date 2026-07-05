@@ -33,6 +33,17 @@ document.querySelectorAll('[data-target]').forEach((btn) => {
   btn.addEventListener('click', () => showView(btn.dataset.target));
 });
 
+// ── Badge de statut de connexion (visible sur tous les écrans) ──
+
+const connBadgeDot = document.getElementById('conn-badge-dot');
+const connBadgeText = document.getElementById('conn-badge-text');
+
+function refreshConnBadge() {
+  const hasToken = !!getToken();
+  connBadgeDot.classList.toggle('ok', hasToken);
+  connBadgeText.textContent = hasToken ? 'Jeton configuré' : 'Pas de jeton';
+}
+
 // ── Calculateur ──
 
 const modeVolumeBtn = document.getElementById('mode-volume-btn');
@@ -130,6 +141,7 @@ renderResult();
 // ── Archivage ──
 
 const calcSummaryText = document.getElementById('calc-summary-text');
+const replayLastBtn = document.getElementById('replay-last-btn');
 const entryDatetimeInput = document.getElementById('entry-datetime');
 const entryTypeSelect = document.getElementById('entry-type');
 const entryNoteInput = document.getElementById('entry-note');
@@ -151,6 +163,37 @@ function renderCalcSummary() {
   const qty = mode === 'volume' ? `${formatFr(volume, 0)} cl` : `${formatFr(poids, 0)} g`;
   calcSummaryText.textContent = `${qty} à ${formatFr(degre, 1)}° → ${formatFr(unites, 2)} unités`;
 }
+
+replayLastBtn.addEventListener('click', async () => {
+  replayLastBtn.disabled = true;
+  archiveStatus.textContent = 'Récupération de la dernière consommation…';
+  archiveStatus.className = 'status warn';
+  try {
+    const data = await readData();
+    const entries = (data && Array.isArray(data.entries)) ? data.entries : [];
+    if (entries.length === 0) {
+      archiveStatus.textContent = 'Aucune consommation enregistrée pour l’instant.';
+      archiveStatus.className = 'status warn';
+      return;
+    }
+    const [last] = sortEntries(entries, 'desc');
+    applyMode(last.mode);
+    qtyInput.value = last.mode === 'volume' ? last.volume : last.poids;
+    qtyInput.dispatchEvent(new Event('input'));
+    degreInput.value = last.degre;
+    degreInput.dispatchEvent(new Event('input'));
+    entryTypeSelect.value = last.type;
+    renderCalcSummary();
+    const qtyLabelTxt = last.mode === 'volume' ? `${formatFr(last.volume, 0)} cl` : `${formatFr(last.poids, 0)} g`;
+    archiveStatus.textContent = `Dernière conso rechargée : ${typeLabel(last.type)}, ${qtyLabelTxt} à ${formatFr(last.degre, 1)}°. Vérifie la date et archive si ça te va.`;
+    archiveStatus.className = 'status';
+  } catch (e) {
+    archiveStatus.textContent = `Erreur : ${e.message}`;
+    archiveStatus.className = 'status error';
+  } finally {
+    replayLastBtn.disabled = false;
+  }
+});
 
 function renderSession() {
   const { total, count } = getSession();
@@ -614,6 +657,7 @@ function refreshTokenStatus() {
   }
   refreshArchiveButtonState();
   refreshResetButtonState();
+  refreshConnBadge();
   document.querySelectorAll('.entry-delete-btn').forEach((b) => { b.disabled = !getToken(); });
 }
 
