@@ -66,20 +66,9 @@
       "degre": 7.5,
       "type": "autre",
       "note": ""
-    },
-    {
-      "id": "20e0feef-3c3f-4989-83c0-3dc3183e5c3f",
-      "date": "2026-06-25T09:37:00.000Z",
-      "unites": 6,
-      "mode": "volume",
-      "volume": 50,
-      "poids": null,
-      "degre": 15,
-      "type": "autre",
-      "note": ""
     }
   ],
-  "updatedAt": "2026-07-05T09:38:37.867Z",
+  "updatedAt": "2026-07-05T09:40:14.904Z",
   "_lot1Test": {
     "message": "ping de validation Lot 1",
     "device": "appareil sans nom",
