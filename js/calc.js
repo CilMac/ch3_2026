@@ -12,11 +12,15 @@ export function getState() {
   return { ...state, unites: computeUnites() };
 }
 
-export function computeUnites() {
-  const unites = state.mode === 'volume'
-    ? (state.volume * state.degre * 0.8) / 100
-    : (state.poids * state.degre) / 1000;
+export function computeUnitesFrom({ mode, volume, poids, degre }) {
+  const unites = mode === 'volume'
+    ? (volume * degre * 0.8) / 100
+    : (poids * degre) / 1000;
   return Math.round(unites * 100) / 100;
+}
+
+export function computeUnites() {
+  return computeUnitesFrom(state);
 }
 
 export function setMode(mode) {

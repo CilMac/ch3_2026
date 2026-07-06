@@ -3,7 +3,7 @@
 import { getToken, setToken, clearToken, getDeviceLabel, setDeviceLabel, maskToken } from './config.js';
 import { readData, writeData, SyncError } from './githubSync.js';
 import { getPendingEntries, queueEntry, removePendingEntry } from './offlineQueue.js';
-import { getState, setMode, setVolume, setPoids, setDegre, formatFr } from './calc.js';
+import { getState, setMode, setVolume, setPoids, setDegre, formatFr, computeUnitesFrom } from './calc.js';
 import { buildEntry, addEntry } from './dataStore.js';
 import { getSession, addToSession, resetSession } from './session.js';
 import { typeLabel, sortEntries, removeEntry } from './entries.js';
@@ -183,6 +183,7 @@ const favoriModePoidsBtn = document.getElementById('favori-mode-poids-btn');
 const favoriQtyLabel = document.getElementById('favori-qty-label');
 const favoriQtyInput = document.getElementById('favori-qty');
 const favoriDegreInput = document.getElementById('favori-degre');
+const favoriUnitesPreview = document.getElementById('favori-unites-preview');
 const favoriTypeSelect = document.getElementById('favori-type');
 const favoriAddBtn = document.getElementById('favori-add-btn');
 
@@ -190,16 +191,29 @@ let favoris = [];
 let favorisLoaded = false;
 let favoriMode = 'volume';
 
+function renderFavoriUnitesPreview() {
+  const unites = computeUnitesFrom({
+    mode: favoriMode,
+    volume: parseFloat(favoriQtyInput.value) || 0,
+    poids: parseFloat(favoriQtyInput.value) || 0,
+    degre: parseFloat(favoriDegreInput.value) || 0,
+  });
+  favoriUnitesPreview.textContent = formatFr(unites, 2);
+}
+
 function applyFavoriMode(mode) {
   favoriMode = mode === 'poids' ? 'poids' : 'volume';
   const isVolume = favoriMode === 'volume';
   favoriModeVolumeBtn.classList.toggle('active', isVolume);
   favoriModePoidsBtn.classList.toggle('active', !isVolume);
   favoriQtyLabel.textContent = isVolume ? 'Volume (cl)' : 'Poids (g)';
+  renderFavoriUnitesPreview();
 }
 
 favoriModeVolumeBtn.addEventListener('click', () => applyFavoriMode('volume'));
 favoriModePoidsBtn.addEventListener('click', () => applyFavoriMode('poids'));
+favoriQtyInput.addEventListener('input', renderFavoriUnitesPreview);
+favoriDegreInput.addEventListener('input', renderFavoriUnitesPreview);
 
 function refreshFavorisButtonState() {
   favoriAddBtn.disabled = !getToken();
@@ -234,14 +248,16 @@ function renderFavoris() {
     li.className = 'entry-item';
 
     const qty = fav.mode === 'poids' ? `${formatFr(fav.poids ?? 0, 0)} g` : `${formatFr(fav.volume ?? 0, 0)} cl`;
+    const unites = computeUnitesFrom({ mode: fav.mode, volume: fav.volume, poids: fav.poids, degre: fav.degre });
 
     li.innerHTML = `
       <div class="entry-main">
         <span class="entry-date">${fav.nom}</span>
-        <span class="entry-unites">${qty} à ${formatFr(fav.degre, 1)}°</span>
+        <span class="entry-unites">${formatFr(unites, 2)} unités</span>
       </div>
       <div class="entry-sub">
         <span>${typeLabel(fav.type)}</span>
+        <span>${qty} à ${formatFr(fav.degre, 1)}°</span>
       </div>
     `;
 
@@ -320,6 +336,7 @@ favoriAddBtn.addEventListener('click', async () => {
     favoriNomInput.value = '';
     favoriQtyInput.value = '';
     favoriDegreInput.value = '';
+    renderFavoriUnitesPreview();
   } catch (e) {
     favorisStatus.textContent = `Erreur : ${e.message}`;
     favorisStatus.className = 'status error';
@@ -352,6 +369,7 @@ async function deleteFavori(id) {
   }
 }
 
+renderFavoriUnitesPreview();
 loadFavoris();
 
 onViewChange((name) => {
@@ -813,7 +831,8 @@ const bilanTotalEl = document.getElementById('bilan-total');
 const bilanMaxEl = document.getElementById('bilan-max');
 const bilanDeuxJoursEl = document.getElementById('bilan-deuxjours');
 const bilanDaysList = document.getElementById('bilan-days');
-const bilanGeneralMoyenne = document.getElementById('bilan-general-moyenne');
+const bilanGeneralPeriodeTag = document.getElementById('bilan-general-periode-tag');
+const bilanGeneralMoyenneValue = document.getElementById('bilan-general-moyenne-value');
 const bilanGeneralList = document.getElementById('bilan-general-list');
 const chartContainer = document.getElementById('chart-container');
 const chartJourContainer = document.getElementById('chart-jour-container');
@@ -847,9 +866,10 @@ function renderBilanHebdo() {
 
 function renderBilanGeneral() {
   const { stats } = getPeriodStats();
-  bilanGeneralMoyenne.textContent = stats
-    ? `Moyenne hebdo sur ${PERIODE_LABELS[periodeType]} : ${formatFr(stats.consoHebdoMoy, 2)} unités ${iconePourConsoHebdo(stats.consoHebdoMoy)} (réglable dans Stats)`
-    : `Moyenne hebdo sur ${PERIODE_LABELS[periodeType]} : pas de donnée sur cette période.`;
+  bilanGeneralPeriodeTag.textContent = PERIODE_LABELS[periodeType];
+  bilanGeneralMoyenneValue.textContent = stats
+    ? `${formatFr(stats.consoHebdoMoy, 2)} U ${iconePourConsoHebdo(stats.consoHebdoMoy)}`
+    : '—';
 
   const weeks = groupByWeek(syntheseEntries);
   bilanGeneralList.innerHTML = '';

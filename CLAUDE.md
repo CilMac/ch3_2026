@@ -226,6 +226,20 @@ plus de `stats`/`start`/`end`) — la fonction partagée `onPeriodeChange()` fai
 boutons de période et les 4 rendus concernés (`renderSynthese`, `renderBilanGeneral`,
 `renderChartJour`, `renderChartType`), pour éviter de recopier ces 4 appels à chaque point d'entrée.
 
+## Unités d'alcool factorisées (`computeUnitesFrom`)
+
+`js/calc.js` expose `computeUnitesFrom({ mode, volume, poids, degre })`, une version pure de la
+formule (extraite de `computeUnites()`, qui délègue maintenant dessus avec l'état interne du
+Calculateur). Utilisée par le formulaire d'ajout de favori (aperçu des unités en direct pendant la
+saisie, `renderFavoriUnitesPreview()`) et par `renderFavoris()` (unités affichées comme titre de
+chaque carte, comme dans Détail) — ces deux usages ont leur propre mode/volume/poids/degré,
+indépendants de l'état du Calculateur principal, d'où l'intérêt de la version sans état partagé.
+
+La moyenne hebdo de **Bilan général** est mise en avant dans un `.result-block` (comme "Unités
+d'alcool" dans Calcul ou "Total cumulé" dans Archivage) plutôt qu'en simple texte — c'est
+l'indicateur que l'utilisateur suit le plus, ça justifie le traitement visuel le plus visible de
+l'écran.
+
 ## Backlog / pistes d'amélioration ergonomie (identifiées, pas encore faites)
 
 (vide pour l'instant — tous les points identifiés lors du dernier passage en revue ont été traités)

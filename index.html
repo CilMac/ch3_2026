@@ -128,6 +128,11 @@
           <label for="favori-degre">Degré d'alcool (°)</label>
           <input type="number" id="favori-degre" inputmode="decimal" min="0" step="0.5">
 
+          <div class="result-block">
+            <span class="result-label">Unités d'alcool</span>
+            <span id="favori-unites-preview" class="result-value">0,00</span>
+          </div>
+
           <label for="favori-type">Type de boisson</label>
           <select id="favori-type" class="select-input">
             <option value="biere">Bière</option>
@@ -394,7 +399,13 @@
       <div class="subview" data-subview="bilan-general" hidden>
         <div class="panel">
           <h2>Bilan général <span class="tag">par semaine</span></h2>
-          <p class="hint" id="bilan-general-moyenne">—</p>
+
+          <div class="result-block">
+            <span class="result-label">Moyenne hebdo <span id="bilan-general-periode-tag">—</span></span>
+            <span id="bilan-general-moyenne-value" class="result-value">—</span>
+          </div>
+          <p class="hint">Réglable dans l'onglet Stats.</p>
+
           <ul id="bilan-general-list" class="entry-list"></ul>
         </div>
       </div>
