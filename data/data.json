@@ -112,7 +112,7 @@
       "note": ""
     }
   ],
-  "updatedAt": "2026-07-06T21:19:19.733Z",
+  "updatedAt": "2026-07-06T21:20:39.369Z",
   "_lot1Test": {
     "message": "ping de validation Lot 1",
     "device": "appareil sans nom",
@@ -154,6 +154,15 @@
       "poids": null,
       "degre": 7.5,
       "type": "biere"
+    },
+    {
+      "id": "97af189e-1ac0-48ce-b352-9739cd4ce5b6",
+      "nom": "Mojito",
+      "mode": "poids",
+      "volume": null,
+      "poids": 60,
+      "degre": 55,
+      "type": "spiritueux"
     }
   ]
 }
