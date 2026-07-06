@@ -123,7 +123,7 @@
       "note": ""
     }
   ],
-  "updatedAt": "2026-07-06T13:16:39.001Z",
+  "updatedAt": "2026-07-06T13:17:36.185Z",
   "_lot1Test": {
     "message": "ping de validation Lot 1",
     "device": "appareil sans nom",
@@ -156,6 +156,15 @@
       "poids": null,
       "degre": 10,
       "type": "autre"
+    },
+    {
+      "id": "20908033-0f05-46a4-bf4c-a44beba0bdc1",
+      "nom": "1664",
+      "mode": "volume",
+      "volume": 33,
+      "poids": null,
+      "degre": 5.5,
+      "type": "biere"
     }
   ]
 }
