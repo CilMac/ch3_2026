@@ -38,99 +38,106 @@
   <main>
 
     <section class="view" data-view="calcul">
-      <div class="panel">
-        <h2>Calcul d'unités</h2>
 
-        <div class="segmented" role="group" aria-label="Mode de saisie">
-          <button type="button" class="seg-btn active" id="mode-volume-btn" data-mode="volume">Volume (cl)</button>
-          <button type="button" class="seg-btn" id="mode-poids-btn" data-mode="poids">Poids (g)</button>
-        </div>
-
-        <div class="field-block">
-          <label id="qty-label" for="qty-input">Volume (cl)</label>
-          <div class="stepper-row">
-            <button type="button" class="btn-step" id="qty-minus-btn" aria-label="Diminuer">–</button>
-            <input type="number" id="qty-input" inputmode="decimal" value="25" min="0" step="1">
-            <button type="button" class="btn-step" id="qty-plus-btn" aria-label="Augmenter">+</button>
-          </div>
-          <div class="preset-row" id="volume-presets">
-            <button type="button" class="preset-btn" data-volume="6">6 cl saké</button>
-            <button type="button" class="preset-btn" data-volume="12">12 cl saké</button>
-            <button type="button" class="preset-btn" data-volume="25">25 cl</button>
-            <button type="button" class="preset-btn" data-volume="33">33 cl</button>
-            <button type="button" class="preset-btn" data-volume="50">50 cl</button>
-            <button type="button" class="preset-btn" data-volume="75">75 cl</button>
-          </div>
-        </div>
-
-        <div class="field-block">
-          <label for="degre-input">Degré d'alcool (°)</label>
-          <div class="stepper-row">
-            <button type="button" class="btn-step" id="degre-minus-btn" aria-label="Diminuer">–</button>
-            <input type="number" id="degre-input" inputmode="decimal" value="12" min="0" step="0.5">
-            <button type="button" class="btn-step" id="degre-plus-btn" aria-label="Augmenter">+</button>
-          </div>
-          <div class="preset-row">
-            <button type="button" class="preset-btn" data-degre="5">5° bière</button>
-            <button type="button" class="preset-btn" data-degre="12">12° vin</button>
-            <button type="button" class="preset-btn" data-degre="15">15° saké</button>
-            <button type="button" class="preset-btn" data-degre="18">18° porto</button>
-            <button type="button" class="preset-btn" data-degre="40">40° spiritueux</button>
-          </div>
-          <label class="checkbox-row">
-            <input type="checkbox" id="degre-fine-step">
-            pas fin (0,1°) — sinon 0,5°
-          </label>
-        </div>
-
-        <div class="result-block">
-          <span class="result-label">Unités d'alcool</span>
-          <span id="unites-result" class="result-value">0,00</span>
-        </div>
-
-        <button type="button" id="calc-info-btn" class="btn-secondary">ℹ️ Repères officiels</button>
-        <p id="calc-info-text" class="hint" hidden>
-          Une unité = 10 g d'alcool pur.<br>
-          Repères (experts France, 2017) : maximum 10 unités par semaine, pas plus de 4 unités en une occasion,
-          et au moins 2 jours consécutifs sans consommation.
-        </p>
+      <div class="segmented" role="group" aria-label="Mode de saisie">
+        <button type="button" class="seg-btn active" id="mode-volume-btn" data-mode="volume">Volume (cl)</button>
+        <button type="button" class="seg-btn" id="mode-poids-btn" data-mode="poids">Poids (g)</button>
+        <button type="button" class="seg-btn" id="mode-favoris-btn" data-mode="favoris">Favoris</button>
       </div>
 
-      <div class="panel">
-        <h2>Mes conso favorites</h2>
-        <p class="hint">Un clic sur un favori pré-remplit le calculateur ci-dessus (volume/poids, degré, type) — vérifie puis archive comme d'habitude dans l'onglet Archivage.</p>
+      <div id="calc-panel">
+        <div class="panel">
+          <h2>Calcul d'unités</h2>
 
-        <ul id="favoris-list" class="entry-list"></ul>
-        <p id="favoris-status" class="status"></p>
+          <div class="field-block">
+            <label id="qty-label" for="qty-input">Volume (cl)</label>
+            <div class="stepper-row">
+              <button type="button" class="btn-step" id="qty-minus-btn" aria-label="Diminuer">–</button>
+              <input type="number" id="qty-input" inputmode="decimal" value="25" min="0" step="1">
+              <button type="button" class="btn-step" id="qty-plus-btn" aria-label="Augmenter">+</button>
+            </div>
+            <div class="preset-row" id="volume-presets">
+              <button type="button" class="preset-btn" data-volume="6">6 cl saké</button>
+              <button type="button" class="preset-btn" data-volume="12">12 cl saké</button>
+              <button type="button" class="preset-btn" data-volume="25">25 cl</button>
+              <button type="button" class="preset-btn" data-volume="33">33 cl</button>
+              <button type="button" class="preset-btn" data-volume="50">50 cl</button>
+              <button type="button" class="preset-btn" data-volume="75">75 cl</button>
+            </div>
+          </div>
 
-        <h3>Ajouter un favori</h3>
-        <label for="favori-nom">Nom</label>
-        <input type="text" id="favori-nom" placeholder="ex. Sancerre blanc">
+          <div class="field-block">
+            <label for="degre-input">Degré d'alcool (°)</label>
+            <div class="stepper-row">
+              <button type="button" class="btn-step" id="degre-minus-btn" aria-label="Diminuer">–</button>
+              <input type="number" id="degre-input" inputmode="decimal" value="12" min="0" step="0.5">
+              <button type="button" class="btn-step" id="degre-plus-btn" aria-label="Augmenter">+</button>
+            </div>
+            <div class="preset-row">
+              <button type="button" class="preset-btn" data-degre="5">5° bière</button>
+              <button type="button" class="preset-btn" data-degre="12">12° vin</button>
+              <button type="button" class="preset-btn" data-degre="15">15° saké</button>
+              <button type="button" class="preset-btn" data-degre="18">18° porto</button>
+              <button type="button" class="preset-btn" data-degre="40">40° spiritueux</button>
+            </div>
+            <label class="checkbox-row">
+              <input type="checkbox" id="degre-fine-step">
+              pas fin (0,1°) — sinon 0,5°
+            </label>
+          </div>
 
-        <div class="segmented" role="group" aria-label="Mode du favori">
-          <button type="button" class="seg-btn active" id="favori-mode-volume-btn" data-mode="volume">Volume (cl)</button>
-          <button type="button" class="seg-btn" id="favori-mode-poids-btn" data-mode="poids">Poids (g)</button>
-        </div>
+          <div class="result-block">
+            <span class="result-label">Unités d'alcool</span>
+            <span id="unites-result" class="result-value">0,00</span>
+          </div>
 
-        <label for="favori-qty" id="favori-qty-label">Volume (cl)</label>
-        <input type="number" id="favori-qty" inputmode="decimal" min="0" step="1">
-
-        <label for="favori-degre">Degré d'alcool (°)</label>
-        <input type="number" id="favori-degre" inputmode="decimal" min="0" step="0.5">
-
-        <label for="favori-type">Type de boisson</label>
-        <select id="favori-type" class="select-input">
-          <option value="biere">Bière</option>
-          <option value="vin">Vin</option>
-          <option value="sake">Saké</option>
-          <option value="spiritueux">Spiritueux</option>
-          <option value="autre" selected>Autre</option>
-        </select>
-
-        <div class="btn-row">
-          <button type="button" id="favori-add-btn" class="btn-primary" disabled>Ajouter aux favoris</button>
+          <button type="button" id="calc-info-btn" class="btn-secondary">ℹ️ Repères officiels</button>
+          <p id="calc-info-text" class="hint" hidden>
+            Une unité = 10 g d'alcool pur.<br>
+            Repères (experts France, 2017) : maximum 10 unités par semaine, pas plus de 4 unités en une occasion,
+            et au moins 2 jours consécutifs sans consommation.
+          </p>
         </div>
       </div>
+
+      <div id="favoris-panel" hidden>
+        <div class="panel">
+          <h2>Mes conso favorites</h2>
+          <p class="hint">Un clic sur un favori pré-remplit le calculateur (volume/poids, degré, type) — vérifie puis archive comme d'habitude dans l'onglet Archivage.</p>
+
+          <ul id="favoris-list" class="entry-list"></ul>
+          <p id="favoris-status" class="status"></p>
+
+          <h3>Ajouter un favori</h3>
+          <label for="favori-nom">Nom</label>
+          <input type="text" id="favori-nom" placeholder="ex. Sancerre blanc">
+
+          <div class="segmented" role="group" aria-label="Mode du favori">
+            <button type="button" class="seg-btn active" id="favori-mode-volume-btn" data-mode="volume">Volume (cl)</button>
+            <button type="button" class="seg-btn" id="favori-mode-poids-btn" data-mode="poids">Poids (g)</button>
+          </div>
+
+          <label for="favori-qty" id="favori-qty-label">Volume (cl)</label>
+          <input type="number" id="favori-qty" inputmode="decimal" min="0" step="1">
+
+          <label for="favori-degre">Degré d'alcool (°)</label>
+          <input type="number" id="favori-degre" inputmode="decimal" min="0" step="0.5">
+
+          <label for="favori-type">Type de boisson</label>
+          <select id="favori-type" class="select-input">
+            <option value="biere">Bière</option>
+            <option value="vin">Vin</option>
+            <option value="sake">Saké</option>
+            <option value="spiritueux">Spiritueux</option>
+            <option value="autre" selected>Autre</option>
+          </select>
+
+          <div class="btn-row">
+            <button type="button" id="favori-add-btn" class="btn-primary" disabled>Ajouter aux favoris</button>
+          </div>
+        </div>
+      </div>
+
     </section>
 
     <section class="view" data-view="archivage" hidden>

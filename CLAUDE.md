@@ -82,6 +82,16 @@ via les mêmes helpers que "Rejouer la dernière conso" — n'archive rien autom
 `ensureShape()` (`js/dataStore.js`) garantit que `favoris` est toujours un tableau, y compris sur
 un `data.json` créé avant l'existence de ce champ.
 
+**Structure de l'onglet Calcul** : le bandeau "Mode de saisie" (`#mode-volume-btn`/`#mode-poids-btn`)
+a été étendu à 3 boutons en ajoutant `#mode-favoris-btn`, pour éviter d'avoir à scroller vers le
+panneau favoris sur mobile. `showCalcSubview('volume'|'poids'|'favoris')` (`js/app.js`) bascule
+entre deux conteneurs frères (`#calc-panel` / `#favoris-panel`) et appelle `applyMode()` pour les
+deux premiers modes. Toute action qui modifie l'état du calculateur en arrière-plan (bouton
+"Utiliser" d'un favori, "Rejouer la dernière conso" dans Archivage) doit appeler `showCalcSubview()`
+et non `applyMode()` directement, sinon le résultat reste caché derrière le panneau resté actif.
+"Utiliser" un favori pré-remplit aussi la note d'Archivage avec `Favori : <nom>` (modifiable avant
+d'archiver), pour retrouver l'origine de l'entrée dans Détail.
+
 ## Contrainte d'environnement importante
 
 **`git push` échoue systématiquement dans cet environnement Claude Code** (pas de credentials
