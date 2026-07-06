@@ -112,7 +112,7 @@
       "note": ""
     }
   ],
-  "updatedAt": "2026-07-06T21:17:58.049Z",
+  "updatedAt": "2026-07-06T21:19:19.733Z",
   "_lot1Test": {
     "message": "ping de validation Lot 1",
     "device": "appareil sans nom",
@@ -144,6 +144,15 @@
       "volume": 33,
       "poids": null,
       "degre": 5,
+      "type": "biere"
+    },
+    {
+      "id": "f864ec33-05f2-47fc-9b7b-17b597c37171",
+      "nom": "Picon",
+      "mode": "volume",
+      "volume": 33.3,
+      "poids": null,
+      "degre": 7.5,
       "type": "biere"
     }
   ]
