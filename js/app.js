@@ -7,11 +7,11 @@ import { getState, setMode, setVolume, setPoids, setDegre, formatFr } from './ca
 import { buildEntry, addEntry } from './dataStore.js';
 import { getSession, addToSession, resetSession } from './session.js';
 import { typeLabel, sortEntries, removeEntry } from './entries.js';
-import { filterByPeriod, computeStats } from './stats.js';
+import { filterByPeriod, computeStats, statsParJourSemaine, statsParType, JOURS_SEMAINE } from './stats.js';
 import { iconePourConsoHebdo, iconePourConsoJour, ICONES } from './constants.js';
 import { ensureShape, isValidDataShape, buildFavori, addFavori, removeFavori } from './dataStore.js';
 import { mondayOf, addDays, isSameDay, groupByWeek, weekDetail, deuxJoursConsecutifsSans } from './bilans.js';
-import { weeklyBarChartSvg } from './chart.js';
+import { weeklyBarChartSvg, categoryBarChartSvg } from './chart.js';
 import { CONSO_SEMAINE_MAX } from './constants.js';
 import { calculAlcoolemie, formatDelai } from './alcoolemie.js';
 import { currentStreak, longestStreak } from './streaks.js';
@@ -42,6 +42,24 @@ const connBadge = document.getElementById('conn-badge');
 
 function refreshConnBadge() {
   connBadge.hidden = !!getToken();
+}
+
+const weekBadge = document.getElementById('week-badge');
+const weekBadgeText = document.getElementById('week-badge-text');
+
+let currentWeekTotal = null;
+
+function renderWeekBadge(total) {
+  currentWeekTotal = total;
+  weekBadge.hidden = false;
+  weekBadgeText.textContent = `Cette semaine : ${formatFr(total, 2)} / ${CONSO_SEMAINE_MAX} U ${iconePourConsoHebdo(total)}`;
+}
+
+function bumpWeekBadge(date, unites) {
+  if (currentWeekTotal === null) return; // pas encore chargé — se mettra à jour au prochain fetch
+  if (mondayOf(date).getTime() === mondayOf(new Date()).getTime()) {
+    renderWeekBadge(currentWeekTotal + unites);
+  }
 }
 
 // ── Calculateur ──
@@ -257,6 +275,11 @@ async function loadFavoris() {
     favoris = (data && Array.isArray(data.favoris)) ? data.favoris : [];
     favorisLoaded = true;
     renderFavoris();
+    // Même lecture réutilisée pour le badge "Cette semaine" (visible sur tous les écrans) —
+    // on inclut les conso en attente hors-ligne pour ne pas les sous-compter avant leur sync.
+    const entries = (data && Array.isArray(data.entries)) ? data.entries : [];
+    const { total } = weekDetail([...entries, ...getPendingEntries()], mondayOf(new Date()));
+    renderWeekBadge(total);
   } catch (e) {
     favorisStatus.textContent = `Erreur de lecture des favoris : ${e.message}`;
     favorisStatus.className = 'status error';
@@ -436,6 +459,7 @@ archiveBtn.addEventListener('click', async () => {
     addToSession(entry.unites);
     renderSession();
     renderAlcoolemie();
+    bumpWeekBadge(date, entry.unites);
     await writeData(
       (current) => addEntry(current, entry),
       { message: `archivage : ${formatFr(entry.unites, 2)} unités`, token }
@@ -741,7 +765,7 @@ function getPeriodStats() {
     customEnd = periodeFinInput.value ? new Date(`${periodeFinInput.value}T23:59:59`) : null;
   }
   const { filtered, start, end } = filterByPeriod(syntheseEntries, periodeType, customStart, customEnd);
-  return { stats: computeStats(filtered, start, end), start, end };
+  return { stats: computeStats(filtered, start, end), start, end, filtered };
 }
 
 const PERIODE_LABELS = {
@@ -792,10 +816,12 @@ const bilanDaysList = document.getElementById('bilan-days');
 const bilanGeneralMoyenne = document.getElementById('bilan-general-moyenne');
 const bilanGeneralList = document.getElementById('bilan-general-list');
 const chartContainer = document.getElementById('chart-container');
+const chartJourContainer = document.getElementById('chart-jour-container');
+const chartJourPeriodeTag = document.getElementById('chart-jour-periode-tag');
+const chartTypeContainer = document.getElementById('chart-type-container');
+const chartTypePeriodeTag = document.getElementById('chart-type-periode-tag');
 
 let bilanWeekStart = mondayOf(new Date());
-
-const JOURS_SEMAINE = ['Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi', 'Dimanche'];
 
 function renderBilanHebdo() {
   const { days, total, maxJour } = weekDetail(syntheseEntries, bilanWeekStart);
@@ -855,6 +881,21 @@ function renderChart() {
   chartContainer.innerHTML = svg || '<p class="entry-empty">Pas encore assez de données pour un graphique.</p>';
 }
 
+function renderChartJour() {
+  const { filtered } = getPeriodStats();
+  chartJourPeriodeTag.textContent = PERIODE_LABELS[periodeType];
+  const svg = categoryBarChartSvg(statsParJourSemaine(filtered || []));
+  chartJourContainer.innerHTML = svg || '<p class="entry-empty">Pas encore assez de données sur cette période.</p>';
+}
+
+function renderChartType() {
+  const { filtered } = getPeriodStats();
+  chartTypePeriodeTag.textContent = PERIODE_LABELS[periodeType];
+  const data = statsParType(filtered || []).map((d) => ({ label: typeLabel(d.type), total: d.total }));
+  const svg = categoryBarChartSvg(data);
+  chartTypeContainer.innerHTML = svg || '<p class="entry-empty">Pas encore assez de données sur cette période.</p>';
+}
+
 const streakCurrentEl = document.getElementById('streak-current');
 const streakRecordEl = document.getElementById('streak-record');
 
@@ -891,6 +932,8 @@ async function loadSynthese() {
     renderBilanHebdo();
     renderBilanGeneral();
     renderChart();
+    renderChartJour();
+    renderChartType();
     renderStreaks();
   } catch (e) {
     syntheseStatus.textContent = `Erreur de lecture : ${e.message}`;
@@ -898,24 +941,24 @@ async function loadSynthese() {
   }
 }
 
+function onPeriodeChange() {
+  renderSynthese();
+  renderBilanGeneral();
+  renderChartJour();
+  renderChartType();
+}
+
 periodeButtons.forEach((btn) => {
   btn.addEventListener('click', () => {
     periodeType = btn.dataset.period;
     periodeButtons.forEach((b) => b.classList.toggle('active', b.dataset.period === periodeType));
     periodePersoBlock.hidden = periodeType !== 'perso';
-    renderSynthese();
-    renderBilanGeneral();
+    onPeriodeChange();
   });
 });
 
-periodeDebutInput.addEventListener('change', () => {
-  renderSynthese();
-  renderBilanGeneral();
-});
-periodeFinInput.addEventListener('change', () => {
-  renderSynthese();
-  renderBilanGeneral();
-});
+periodeDebutInput.addEventListener('change', onPeriodeChange);
+periodeFinInput.addEventListener('change', onPeriodeChange);
 
 syntheseRefreshBtn.addEventListener('click', loadSynthese);
 

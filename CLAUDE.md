@@ -93,22 +93,24 @@ et non `applyMode()` directement, sinon le résultat reste caché derrière le p
 "Utiliser" un favori pré-remplit aussi la note d'Archivage avec `Favori : <nom>` (modifiable avant
 d'archiver), pour retrouver l'origine de l'entrée dans Détail.
 
-## Contrainte d'environnement importante
+## Déploiement
 
-**`git push` échoue systématiquement dans cet environnement Claude Code** (pas de credentials
-configurés). Workflow de contournement :
-1. Commiter localement normalement (fetch + rebase sur `origin/main` d'abord si l'utilisateur
-   a testé l'appli en live entre-temps — chaque archivage/suppression réel crée un commit direct
-   sur GitHub via l'API, invisible localement tant qu'on n'a pas fetch).
-2. Demander à l'utilisateur d'uploader les fichiers changés via l'interface web GitHub
-   ("Add file" → "Upload files"). **Ne jamais glisser le dossier `data/`** (vraies données,
-   aucune autre sauvegarde).
-3. **Vérifier après coup par SHA, pas par "ça a déployé".** L'upload manuel est source
-   d'erreurs vécues : fichier déposé à la racine au lieu du bon sous-dossier (il faut être
-   *dans* le dossier cible sur GitHub avant de cliquer Upload), ou mauvaise version glissée
-   par erreur (a cassé le site pour tout le monde en même temps, pas juste un appareil).
-   Toujours comparer le SHA git local (`sha1("blob " + len + "\0" + bytes)`) à celui renvoyé par
-   `GET /repos/CilMac/ch3_2026/contents/<path>` avant de déclarer un correctif résolu.
+**`git push` fonctionne normalement depuis le 2026-07-06** : un jeton fine-grained (`Contents:
+write`, limité à ce repo) est configuré dans l'URL du remote origin (`git remote -v` pour vérifier,
+ne pas l'afficher/reconfigurer sans raison). Commiter puis `git push origin main` directement ; en
+cas de rejet non-fast-forward (usage réel de l'appli entre-temps, qui crée des commits directs sur
+GitHub via l'API), `git fetch origin main && git merge --ff-only origin/main` puis repousser.
+
+**Le déploiement GitHub Pages lui-même reste capricieux** (indépendant du push) : le workflow
+"pages build and deployment" échoue parfois à l'étape "Deploy to GitHub Pages" avec le message
+générique "Deployment failed, try again later." alors que le build réussit. Vu plusieurs fois,
+avec une fréquence croissante. Remèdes par ordre d'essai : (1) "Re-run failed jobs" sur le run
+échoué (`github.com/CilMac/ch3_2026/actions`) — parfois suffisant ; (2) si ça échoue encore ou
+reste bloqué en "queued" indéfiniment, Settings → Pages → "Unpublish site", attendre, puis
+reconfigurer Source = "Deploy from a branch" / branche `main` / dossier `/(root)` et Save (au
+besoin, mettre la branche sur "None" puis la remettre sur `main` pour débloquer le bouton Save
+resté grisé). Vérifier après coup que le site sert le bon contenu (`curl` + SHA), pas juste que
+le run est vert.
 
 ## Tests / vérification
 
@@ -202,6 +204,27 @@ rien n'est encore sur GitHub). Important : `loadDetail()` doit appeler `renderDe
 son `catch` (lecture réseau échouée), sinon les conso en attente resteraient invisibles précisément
 dans le cas où c'est le plus utile (hors-ligne). Si un nouveau point d'écriture apparaît dans l'appli,
 il devrait suivre le même principe (tenter l'écriture, mettre en file sur échec non-`SyncError`).
+
+## Badge "Cette semaine" et graphiques par jour/type
+
+`#week-badge` (dans `.badges-row`, à côté de `#conn-badge`) affiche en permanence le total d'unités
+de la semaine calendaire en cours (lundi-dimanche, via `weekDetail`/`mondayOf` de `bilans.js`) et son
+icône de repère (`iconePourConsoHebdo`) — vue proactive, contrairement à Synthèse qui est
+rétrospective. Calculé dans `loadFavoris()` (renommage non fait, mais cette fonction fait maintenant
+double usage : favoris + badge semaine, pour ne pas dupliquer la lecture réseau) en fusionnant
+`data.entries` avec `getPendingEntries()` (sinon une conso hors-ligne non encore synchronisée
+sous-compterait le badge). `bumpWeekBadge(date, unites)` l'incrémente en mémoire immédiatement à
+l'archivage (même logique "avant l'écriture réseau" que le cumul de session) — jamais recalculé une
+deuxième fois par `trySyncPending()`, pour ne pas compter deux fois la même entrée.
+
+Dans Synthèse → Tendance, deux panneaux sous le graphique 12 semaines : "Par jour de la semaine"
+(`statsParJourSemaine`) et "Par type de boisson" (`statsParType`), tous deux dans `js/stats.js`,
+rendus via `categoryBarChartSvg` (`js/chart.js`, générique, sans ligne de seuil contrairement à
+`weeklyBarChartSvg`). Contrairement au graphique 12-semaines (périmètre fixe), ces deux-là suivent
+le filtre de période de Stats (même `getPeriodStats()`, qui expose maintenant aussi `filtered` en
+plus de `stats`/`start`/`end`) — la fonction partagée `onPeriodeChange()` fait le lien entre les 3
+boutons de période et les 4 rendus concernés (`renderSynthese`, `renderBilanGeneral`,
+`renderChartJour`, `renderChartType`), pour éviter de recopier ces 4 appels à chaque point d'entrée.
 
 ## Backlog / pistes d'amélioration ergonomie (identifiées, pas encore faites)
 

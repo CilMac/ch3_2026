@@ -30,10 +30,15 @@
     <button class="tab-btn tab-btn-icon" data-target="config" aria-label="Configuration">⚙️</button>
   </nav>
 
-  <button type="button" class="conn-badge" id="conn-badge" data-target="config" title="Aller à Configuration" hidden>
-    <span class="conn-dot"></span>
-    <span>Pas de jeton</span>
-  </button>
+  <div class="badges-row">
+    <button type="button" class="info-badge" id="conn-badge" data-target="config" title="Aller à Configuration" hidden>
+      <span class="conn-dot"></span>
+      <span>Pas de jeton</span>
+    </button>
+    <button type="button" class="info-badge" id="week-badge" data-target="synthese" title="Aller à Synthèse" hidden>
+      <span id="week-badge-text">—</span>
+    </button>
+  </div>
 
   <main>
 
@@ -373,6 +378,16 @@
           <h2>Tendance <span class="tag">12 dernières semaines</span></h2>
           <div id="chart-container" class="chart-container"></div>
           <p class="hint">Ligne pointillée = seuil recommandé (10 U/semaine). Couleur = repère (vert/bois/ambre/rouge).</p>
+        </div>
+
+        <div class="panel">
+          <h2>Par jour de la semaine <span class="tag" id="chart-jour-periode-tag">—</span></h2>
+          <div id="chart-jour-container" class="chart-container"></div>
+        </div>
+
+        <div class="panel">
+          <h2>Par type de boisson <span class="tag" id="chart-type-periode-tag">—</span></h2>
+          <div id="chart-type-container" class="chart-container"></div>
         </div>
       </div>
 

@@ -78,3 +78,26 @@ export function computeStats(entries, periodStart, periodEnd) {
     nbJoursDepuisDebut,
   };
 }
+
+export const JOURS_SEMAINE = ['Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi', 'Dimanche'];
+
+export function statsParJourSemaine(entries) {
+  const totals = [0, 0, 0, 0, 0, 0, 0];
+  entries.forEach((e) => {
+    const jsDay = new Date(e.date).getDay(); // 0 = dimanche .. 6 = samedi
+    const idx = jsDay === 0 ? 6 : jsDay - 1; // 0 = lundi .. 6 = dimanche
+    totals[idx] = round2(totals[idx] + e.unites);
+  });
+  return JOURS_SEMAINE.map((label, i) => ({ label, total: totals[i] }));
+}
+
+export function statsParType(entries) {
+  const totals = {};
+  entries.forEach((e) => {
+    const type = e.type || 'autre';
+    totals[type] = round2((totals[type] || 0) + e.unites);
+  });
+  return Object.entries(totals)
+    .map(([type, total]) => ({ type, total }))
+    .sort((a, b) => b.total - a.total);
+}

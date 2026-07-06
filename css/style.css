@@ -48,13 +48,20 @@ body {
   margin-top: 2px;
 }
 
-.conn-badge {
+.badges-row {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  width: 100%;
+  max-width: 640px;
+  margin: 6px auto 0;
+}
+.info-badge {
   display: flex;
   align-items: center;
-  justify-content: center;
   gap: 6px;
-  width: fit-content;
-  margin: 6px auto 0;
   padding: 4px 12px;
   border-radius: 999px;
   border: 1px solid rgba(90,52,24,.25);
