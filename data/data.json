@@ -143,20 +143,9 @@
       "degre": 12,
       "type": "autre",
       "note": ""
-    },
-    {
-      "id": "15521133-811f-4295-b685-f830bc5bff20",
-      "date": "2026-07-06T15:40:00.000Z",
-      "unites": 2.63,
-      "mode": "poids",
-      "volume": null,
-      "poids": 70,
-      "degre": 37.5,
-      "type": "spiritueux",
-      "note": "Favori : Gin tonic. TEST"
     }
   ],
-  "updatedAt": "2026-07-06T15:42:34.207Z",
+  "updatedAt": "2026-07-06T15:43:19.005Z",
   "_lot1Test": {
     "message": "ping de validation Lot 1",
     "device": "appareil sans nom",
