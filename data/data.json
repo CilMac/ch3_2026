@@ -112,7 +112,7 @@
       "note": ""
     }
   ],
-  "updatedAt": "2026-07-06T21:17:14.094Z",
+  "updatedAt": "2026-07-06T21:17:30.196Z",
   "_lot1Test": {
     "message": "ping de validation Lot 1",
     "device": "appareil sans nom",
@@ -136,15 +136,6 @@
       "poids": null,
       "degre": 7.5,
       "type": "biere"
-    },
-    {
-      "id": "80664eea-9ee0-49ba-8ac5-b575a1f4cdef",
-      "nom": "Heineken",
-      "mode": "volume",
-      "volume": 33,
-      "poids": null,
-      "degre": 5,
-      "type": "autre"
     }
   ]
 }
