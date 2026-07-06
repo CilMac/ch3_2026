@@ -121,20 +121,9 @@
       "degre": 7.5,
       "type": "biere",
       "note": "Favori : Pélican"
-    },
-    {
-      "id": "ee2f6803-f49f-4902-9ab6-96f80d7e29bd",
-      "date": "2026-07-06T21:22:00.000Z",
-      "unites": 3.3,
-      "mode": "poids",
-      "volume": null,
-      "poids": 60,
-      "degre": 55,
-      "type": "spiritueux",
-      "note": "Favori : Mojito"
     }
   ],
-  "updatedAt": "2026-07-06T21:22:39.437Z",
+  "updatedAt": "2026-07-06T21:23:44.460Z",
   "_lot1Test": {
     "message": "ping de validation Lot 1",
     "device": "appareil sans nom",
