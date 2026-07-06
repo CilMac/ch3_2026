@@ -3,9 +3,9 @@
 
 export function ensureShape(data) {
   if (data && typeof data === 'object' && Array.isArray(data.entries)) {
-    return data;
+    return { ...data, favoris: Array.isArray(data.favoris) ? data.favoris : [] };
   }
-  return { version: 1, entries: [] };
+  return { version: 1, entries: [], favoris: [] };
 }
 
 export function buildEntry({ date, unites, volume, poids, degre, mode, type, note }) {
@@ -33,5 +33,35 @@ export function addEntry(current, entry) {
     ...base,
     updatedAt: new Date().toISOString(),
     entries: [...base.entries, entry],
+  };
+}
+
+export function buildFavori({ nom, mode, volume, poids, degre, type }) {
+  return {
+    id: (crypto.randomUUID && crypto.randomUUID()) || `${Date.now()}-${Math.random().toString(16).slice(2)}`,
+    nom: nom.trim(),
+    mode,
+    volume: mode === 'volume' ? volume : null,
+    poids: mode === 'poids' ? poids : null,
+    degre,
+    type: type || 'autre',
+  };
+}
+
+export function addFavori(current, favori) {
+  const base = ensureShape(current);
+  return {
+    ...base,
+    updatedAt: new Date().toISOString(),
+    favoris: [...base.favoris, favori],
+  };
+}
+
+export function removeFavori(current, id) {
+  const base = ensureShape(current);
+  return {
+    ...base,
+    updatedAt: new Date().toISOString(),
+    favoris: base.favoris.filter((f) => f.id !== id),
   };
 }

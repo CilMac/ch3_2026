@@ -8,7 +8,7 @@ import { getSession, addToSession, resetSession } from './session.js';
 import { typeLabel, sortEntries, removeEntry } from './entries.js';
 import { filterByPeriod, computeStats } from './stats.js';
 import { iconePourConsoHebdo, iconePourConsoJour, ICONES } from './constants.js';
-import { ensureShape, isValidDataShape } from './dataStore.js';
+import { ensureShape, isValidDataShape, buildFavori, addFavori, removeFavori } from './dataStore.js';
 import { mondayOf, addDays, isSameDay, groupByWeek, weekDetail, deuxJoursConsecutifsSans } from './bilans.js';
 import { weeklyBarChartSvg } from './chart.js';
 import { CONSO_SEMAINE_MAX } from './constants.js';
@@ -136,6 +136,187 @@ calcInfoBtn.addEventListener('click', () => {
 applyMode('volume');
 degreInput.value = getState().degre;
 renderResult();
+
+// ── Favoris (conso récurrentes) ──
+
+const favorisList = document.getElementById('favoris-list');
+const favorisStatus = document.getElementById('favoris-status');
+const favoriNomInput = document.getElementById('favori-nom');
+const favoriModeVolumeBtn = document.getElementById('favori-mode-volume-btn');
+const favoriModePoidsBtn = document.getElementById('favori-mode-poids-btn');
+const favoriQtyLabel = document.getElementById('favori-qty-label');
+const favoriQtyInput = document.getElementById('favori-qty');
+const favoriDegreInput = document.getElementById('favori-degre');
+const favoriTypeSelect = document.getElementById('favori-type');
+const favoriAddBtn = document.getElementById('favori-add-btn');
+
+let favoris = [];
+let favorisLoaded = false;
+let favoriMode = 'volume';
+
+function applyFavoriMode(mode) {
+  favoriMode = mode === 'poids' ? 'poids' : 'volume';
+  const isVolume = favoriMode === 'volume';
+  favoriModeVolumeBtn.classList.toggle('active', isVolume);
+  favoriModePoidsBtn.classList.toggle('active', !isVolume);
+  favoriQtyLabel.textContent = isVolume ? 'Volume (cl)' : 'Poids (g)';
+}
+
+favoriModeVolumeBtn.addEventListener('click', () => applyFavoriMode('volume'));
+favoriModePoidsBtn.addEventListener('click', () => applyFavoriMode('poids'));
+
+function refreshFavorisButtonState() {
+  favoriAddBtn.disabled = !getToken();
+  document.querySelectorAll('.favori-delete-btn').forEach((b) => { b.disabled = !getToken(); });
+}
+
+function applyFavori(fav) {
+  applyMode(fav.mode);
+  qtyInput.value = fav.mode === 'volume' ? fav.volume : fav.poids;
+  qtyInput.dispatchEvent(new Event('input'));
+  degreInput.value = fav.degre;
+  degreInput.dispatchEvent(new Event('input'));
+  entryTypeSelect.value = fav.type;
+  favorisStatus.textContent = `« ${fav.nom} » appliqué au calculateur ci-dessus — vérifie puis archive dans l’onglet Archivage.`;
+  favorisStatus.className = 'status ok';
+}
+
+function renderFavoris() {
+  favorisList.innerHTML = '';
+
+  if (favoris.length === 0) {
+    const li = document.createElement('li');
+    li.className = 'entry-empty';
+    li.textContent = 'Aucun favori pour l’instant.';
+    favorisList.appendChild(li);
+    return;
+  }
+
+  favoris.forEach((fav) => {
+    const li = document.createElement('li');
+    li.className = 'entry-item';
+
+    const qty = fav.mode === 'poids' ? `${formatFr(fav.poids ?? 0, 0)} g` : `${formatFr(fav.volume ?? 0, 0)} cl`;
+
+    li.innerHTML = `
+      <div class="entry-main">
+        <span class="entry-date">${fav.nom}</span>
+        <span class="entry-unites">${qty} à ${formatFr(fav.degre, 1)}°</span>
+      </div>
+      <div class="entry-sub">
+        <span>${typeLabel(fav.type)}</span>
+      </div>
+    `;
+
+    const btnRow = document.createElement('div');
+    btnRow.className = 'btn-row';
+
+    const applyBtn = document.createElement('button');
+    applyBtn.type = 'button';
+    applyBtn.className = 'btn-secondary btn-small';
+    applyBtn.textContent = 'Utiliser';
+    applyBtn.addEventListener('click', () => applyFavori(fav));
+
+    const deleteBtn = document.createElement('button');
+    deleteBtn.type = 'button';
+    deleteBtn.className = 'btn-secondary btn-small btn-danger favori-delete-btn';
+    deleteBtn.textContent = 'Supprimer';
+    deleteBtn.disabled = !getToken();
+    deleteBtn.addEventListener('click', () => deleteFavori(fav.id));
+
+    btnRow.appendChild(applyBtn);
+    btnRow.appendChild(deleteBtn);
+    li.appendChild(btnRow);
+
+    favorisList.appendChild(li);
+  });
+}
+
+async function loadFavoris() {
+  try {
+    const data = await readData();
+    favoris = (data && Array.isArray(data.favoris)) ? data.favoris : [];
+    favorisLoaded = true;
+    renderFavoris();
+  } catch (e) {
+    favorisStatus.textContent = `Erreur de lecture des favoris : ${e.message}`;
+    favorisStatus.className = 'status error';
+  }
+}
+
+favoriAddBtn.addEventListener('click', async () => {
+  const token = getToken();
+  if (!token) return;
+  const nom = favoriNomInput.value.trim();
+  if (!nom) {
+    favorisStatus.textContent = 'Donne un nom au favori avant de l’ajouter.';
+    favorisStatus.className = 'status warn';
+    return;
+  }
+
+  const favori = buildFavori({
+    nom,
+    mode: favoriMode,
+    volume: parseFloat(favoriQtyInput.value) || 0,
+    poids: parseFloat(favoriQtyInput.value) || 0,
+    degre: parseFloat(favoriDegreInput.value) || 0,
+    type: favoriTypeSelect.value,
+  });
+
+  favoriAddBtn.disabled = true;
+  favorisStatus.textContent = 'Ajout du favori…';
+  favorisStatus.className = 'status warn';
+  try {
+    const result = await writeData(
+      (current) => addFavori(current, favori),
+      { message: `favori : ${favori.nom}`, token }
+    );
+    favoris = result.data.favoris;
+    renderFavoris();
+    favorisStatus.textContent = `Favori « ${favori.nom} » ajouté.`;
+    favorisStatus.className = 'status ok';
+    favoriNomInput.value = '';
+    favoriQtyInput.value = '';
+    favoriDegreInput.value = '';
+  } catch (e) {
+    favorisStatus.textContent = `Erreur : ${e.message}`;
+    favorisStatus.className = 'status error';
+  } finally {
+    refreshFavorisButtonState();
+  }
+});
+
+async function deleteFavori(id) {
+  const token = getToken();
+  if (!token) return;
+  const favori = favoris.find((f) => f.id === id);
+  const confirmMsg = favori ? `Supprimer le favori « ${favori.nom} » ?` : 'Supprimer ce favori ?';
+  if (!confirm(confirmMsg)) return;
+
+  favorisStatus.textContent = 'Suppression…';
+  favorisStatus.className = 'status warn';
+  try {
+    const result = await writeData(
+      (current) => removeFavori(current, id),
+      { message: 'suppression favori', token }
+    );
+    favoris = result.data.favoris;
+    renderFavoris();
+    favorisStatus.textContent = 'Favori supprimé.';
+    favorisStatus.className = 'status ok';
+  } catch (e) {
+    favorisStatus.textContent = `Erreur de suppression : ${e.message}`;
+    favorisStatus.className = 'status error';
+  }
+}
+
+loadFavoris();
+
+onViewChange((name) => {
+  if (name === 'calcul' && !favorisLoaded) {
+    loadFavoris();
+  }
+});
 
 // ── Archivage ──
 
@@ -692,6 +873,7 @@ function refreshTokenStatus() {
   }
   refreshArchiveButtonState();
   refreshResetButtonState();
+  refreshFavorisButtonState();
   refreshConnBadge();
   document.querySelectorAll('.entry-delete-btn').forEach((b) => { b.disabled = !getToken(); });
 }
@@ -933,6 +1115,7 @@ resetConfirmBtn.addEventListener('click', async () => {
     renderChart();
     renderStreaks();
     detailLoaded = false;
+    syntheseLoaded = false;
     closeResetConfirm();
   } catch (e) {
     resetStatus.textContent = `Erreur : ${e.message}`;
