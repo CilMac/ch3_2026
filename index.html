@@ -173,13 +173,14 @@
           <button type="button" id="archive-btn" class="btn-primary" disabled>Archiver</button>
         </div>
         <p id="archive-status" class="status"></p>
+        <p id="pending-status" class="status warn" hidden></p>
       </div>
 
       <div class="panel">
         <h2>Cumul de session <span class="tag">pour alcoolémie</span></h2>
         <p class="hint">
-          Cumul temporaire (non enregistré) des unités consommées depuis le dernier RAZ — sert de base
-          au calcul d'alcoolémie ci-dessous.
+          Cumul temporaire (non enregistré) des unités archivées depuis le dernier RAZ — mis à jour
+          automatiquement à chaque archivage, sert de base au calcul d'alcoolémie ci-dessous.
         </p>
         <div class="result-block">
           <span class="result-label">Total cumulé</span>
@@ -187,8 +188,7 @@
           <span class="result-sub" id="session-count">0 verre</span>
         </div>
         <div class="btn-row">
-          <button type="button" id="cumul-btn" class="btn-secondary">Cumuler la conso actuelle</button>
-          <button type="button" id="raz-btn" class="btn-secondary">RAZ</button>
+          <button type="button" id="raz-btn" class="btn-secondary">RAZ (nouvelle soirée)</button>
         </div>
       </div>
 

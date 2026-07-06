@@ -31,6 +31,7 @@ js/config.js          jeton + nom d'appareil (localStorage)
 js/calc.js            calcul d'unités d'alcool (logique pure)
 js/dataStore.js        forme canonique des données, construction/validation d'une entrée
 js/session.js          cumul de session en mémoire (pour l'alcoolémie)
+js/offlineQueue.js      file d'attente localStorage des archivages échoués faute de réseau
 js/entries.js          tri/formatage des entrées (Détail)
 js/stats.js            filtrage par période + stats agrégées (Synthèse)
 js/bilans.js           regroupement par semaine calendaire (lundi-dimanche), pas par n° ISO
@@ -175,6 +176,32 @@ l'onglet qui n'a pas été rouvert affiche des données périmées jusqu'à un c
   calculé pour la période choisie dans **Stats** (`periodeType`/`getPeriodStats()`, factorisé et
   partagé entre `renderSynthese()` et `renderBilanGeneral()`) — se met à jour dès que la période
   change dans Stats, même si on regarde Bilan général à ce moment-là.
+
+## Cumul de session = archivage (plus de bouton "Cumuler" séparé)
+
+Le bouton "Cumuler la conso actuelle" a été supprimé : `archiveBtn` appelle `addToSession(entry.unites)`
+directement, **avant** la tentative d'écriture réseau (pas après), pour que l'estimation d'alcoolémie
+reste juste même si l'écriture échoue ou est mise en attente hors-ligne (voir section suivante). Le
+bouton "RAZ" reste le seul moyen de remettre le cumul à zéro (nouvelle soirée). Voir `js/session.js`.
+
+## File d'attente hors-ligne (`js/offlineQueue.js`)
+
+Si `archiveBtn` échoue avec une erreur qui n'est **pas** un `SyncError` (donc pas un problème
+d'authentification/droits/conflit — juste `fetch` qui échoue, typiquement pas de réseau), l'entrée est
+stockée dans `localStorage` (`getPendingEntries`/`queueEntry`/`removePendingEntry`) au lieu d'afficher
+une simple erreur. Un compteur (`#pending-status` dans Archivage) indique combien de conso attendent.
+
+`trySyncPending()` (verrouillé par `syncingPending` contre les exécutions concurrentes) retente
+l'écriture de chaque entrée en attente, dans l'ordre, et s'arrête au premier échec (réseau toujours
+coupé, ou jeton invalide — dans les deux cas l'entrée reste en file, jamais perdue). Déclenché : au
+chargement de la page, sur l'évènement `online`, et après tout archivage réussi (flush opportuniste).
+
+**`renderDetailList()` fusionne les entrées en attente avec l'historique synchronisé** (marquées
+"⏳ en attente", bouton "Retirer de la file" au lieu de "Supprimer" — pas besoin de jeton pour ça,
+rien n'est encore sur GitHub). Important : `loadDetail()` doit appeler `renderDetailList()` même dans
+son `catch` (lecture réseau échouée), sinon les conso en attente resteraient invisibles précisément
+dans le cas où c'est le plus utile (hors-ligne). Si un nouveau point d'écriture apparaît dans l'appli,
+il devrait suivre le même principe (tenter l'écriture, mettre en file sur échec non-`SyncError`).
 
 ## Backlog / pistes d'amélioration ergonomie (identifiées, pas encore faites)
 
