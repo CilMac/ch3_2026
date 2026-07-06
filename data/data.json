@@ -77,9 +77,20 @@
       "degre": 10,
       "type": "autre",
       "note": "Picon"
+    },
+    {
+      "id": "59c96e44-30f7-4e72-aa5e-355bc770e902",
+      "date": "2026-07-06T12:43:00.000Z",
+      "unites": 2.63,
+      "mode": "poids",
+      "volume": null,
+      "poids": 70,
+      "degre": 37.5,
+      "type": "spiritueux",
+      "note": ""
     }
   ],
-  "updatedAt": "2026-07-06T12:44:37.018Z",
+  "updatedAt": "2026-07-06T12:45:11.423Z",
   "_lot1Test": {
     "message": "ping de validation Lot 1",
     "device": "appareil sans nom",
