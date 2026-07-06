@@ -112,22 +112,13 @@
       "note": ""
     }
   ],
-  "updatedAt": "2026-07-06T21:16:31.354Z",
+  "updatedAt": "2026-07-06T21:16:37.050Z",
   "_lot1Test": {
     "message": "ping de validation Lot 1",
     "device": "appareil sans nom",
     "at": "2026-07-02T14:52:05.602Z"
   },
   "favoris": [
-    {
-      "id": "31035ad1-51ad-4ab9-a881-f8007ea79d1f",
-      "nom": "Mojito",
-      "mode": "poids",
-      "volume": null,
-      "poids": 60,
-      "degre": 55,
-      "type": "spiritueux"
-    },
     {
       "id": "20908033-0f05-46a4-bf4c-a44beba0bdc1",
       "nom": "1664",
