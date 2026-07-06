@@ -123,7 +123,7 @@
       "note": ""
     }
   ],
-  "updatedAt": "2026-07-06T13:17:36.185Z",
+  "updatedAt": "2026-07-06T13:18:16.333Z",
   "_lot1Test": {
     "message": "ping de validation Lot 1",
     "device": "appareil sans nom",
@@ -164,6 +164,15 @@
       "volume": 33,
       "poids": null,
       "degre": 5.5,
+      "type": "biere"
+    },
+    {
+      "id": "85ed6d5a-e64d-4af5-8acb-7056787fcf6f",
+      "nom": "Pélican",
+      "mode": "volume",
+      "volume": 33,
+      "poids": null,
+      "degre": 7.5,
       "type": "biere"
     }
   ]
