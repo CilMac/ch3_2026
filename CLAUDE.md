@@ -62,9 +62,25 @@ câblage DOM et appelle ces modules. Garder cette séparation pour tout ajout.
       "type": "biere|vin|sake|spiritueux|autre",
       "note": ""
     }
+  ],
+  "favoris": [
+    {
+      "id": "uuid",
+      "nom": "Sancerre blanc",
+      "mode": "volume|poids",
+      "volume": 12, "poids": null,
+      "degre": 13,
+      "type": "biere|vin|sake|spiritueux|autre"
+    }
   ]
 }
 ```
+
+`favoris` : conso récurrentes gérées par l'utilisateur (ajout/suppression) dans un panneau de
+l'onglet Calcul. Cliquer sur un favori pré-remplit le calculateur (mode/volume-ou-poids/degré/type)
+via les mêmes helpers que "Rejouer la dernière conso" — n'archive rien automatiquement.
+`ensureShape()` (`js/dataStore.js`) garantit que `favoris` est toujours un tableau, y compris sur
+un `data.json` créé avant l'existence de ce champ.
 
 ## Contrainte d'environnement importante
 

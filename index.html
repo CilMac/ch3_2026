@@ -95,6 +95,42 @@
           et au moins 2 jours consécutifs sans consommation.
         </p>
       </div>
+
+      <div class="panel">
+        <h2>Mes conso favorites</h2>
+        <p class="hint">Un clic sur un favori pré-remplit le calculateur ci-dessus (volume/poids, degré, type) — vérifie puis archive comme d'habitude dans l'onglet Archivage.</p>
+
+        <ul id="favoris-list" class="entry-list"></ul>
+        <p id="favoris-status" class="status"></p>
+
+        <h3>Ajouter un favori</h3>
+        <label for="favori-nom">Nom</label>
+        <input type="text" id="favori-nom" placeholder="ex. Sancerre blanc">
+
+        <div class="segmented" role="group" aria-label="Mode du favori">
+          <button type="button" class="seg-btn active" id="favori-mode-volume-btn" data-mode="volume">Volume (cl)</button>
+          <button type="button" class="seg-btn" id="favori-mode-poids-btn" data-mode="poids">Poids (g)</button>
+        </div>
+
+        <label for="favori-qty" id="favori-qty-label">Volume (cl)</label>
+        <input type="number" id="favori-qty" inputmode="decimal" min="0" step="1">
+
+        <label for="favori-degre">Degré d'alcool (°)</label>
+        <input type="number" id="favori-degre" inputmode="decimal" min="0" step="0.5">
+
+        <label for="favori-type">Type de boisson</label>
+        <select id="favori-type" class="select-input">
+          <option value="biere">Bière</option>
+          <option value="vin">Vin</option>
+          <option value="sake">Saké</option>
+          <option value="spiritueux">Spiritueux</option>
+          <option value="autre" selected>Autre</option>
+        </select>
+
+        <div class="btn-row">
+          <button type="button" id="favori-add-btn" class="btn-primary" disabled>Ajouter aux favoris</button>
+        </div>
+      </div>
     </section>
 
     <section class="view" data-view="archivage" hidden>
