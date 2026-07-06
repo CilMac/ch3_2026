@@ -1,7 +1,8 @@
 // Câblage DOM de l'appli : event listeners et rendu, pas de logique métier (voir les autres modules).
 
 import { getToken, setToken, clearToken, getDeviceLabel, setDeviceLabel, maskToken } from './config.js';
-import { readData, writeData } from './githubSync.js';
+import { readData, writeData, SyncError } from './githubSync.js';
+import { getPendingEntries, queueEntry, removePendingEntry } from './offlineQueue.js';
 import { getState, setMode, setVolume, setPoids, setDegre, formatFr } from './calc.js';
 import { buildEntry, addEntry } from './dataStore.js';
 import { getSession, addToSession, resetSession } from './session.js';
@@ -348,7 +349,6 @@ const archiveStatus = document.getElementById('archive-status');
 
 const sessionTotalEl = document.getElementById('session-total');
 const sessionCountEl = document.getElementById('session-count');
-const cumulBtn = document.getElementById('cumul-btn');
 const razBtn = document.getElementById('raz-btn');
 
 function toDatetimeLocalValue(date) {
@@ -421,18 +421,21 @@ archiveBtn.addEventListener('click', async () => {
   archiveBtn.disabled = true;
   archiveStatus.textContent = 'Écriture sur GitHub…';
   archiveStatus.className = 'status warn';
+  const calcState = getState();
+  const entry = buildEntry({
+    date,
+    unites: calcState.unites,
+    volume: calcState.volume,
+    poids: calcState.poids,
+    degre: calcState.degre,
+    mode: calcState.mode,
+    type: entryTypeSelect.value,
+    note: entryNoteInput.value,
+  });
   try {
-    const calcState = getState();
-    const entry = buildEntry({
-      date,
-      unites: calcState.unites,
-      volume: calcState.volume,
-      poids: calcState.poids,
-      degre: calcState.degre,
-      mode: calcState.mode,
-      type: entryTypeSelect.value,
-      note: entryNoteInput.value,
-    });
+    addToSession(entry.unites);
+    renderSession();
+    renderAlcoolemie();
     await writeData(
       (current) => addEntry(current, entry),
       { message: `archivage : ${formatFr(entry.unites, 2)} unités`, token }
@@ -443,13 +446,72 @@ archiveBtn.addEventListener('click', async () => {
     entryDatetimeInput.value = toDatetimeLocalValue(new Date());
     detailLoaded = false;
     syntheseLoaded = false;
+    trySyncPending();
   } catch (e) {
-    archiveStatus.textContent = `Erreur : ${e.message}`;
-    archiveStatus.className = 'status error';
+    if (e instanceof SyncError) {
+      archiveStatus.textContent = `Erreur : ${e.message}`;
+      archiveStatus.className = 'status error';
+    } else {
+      queueEntry(entry);
+      archiveStatus.textContent = 'Pas de réseau — conso mise en attente (visible dans Détail), sera synchronisée automatiquement dès que possible.';
+      archiveStatus.className = 'status warn';
+      entryNoteInput.value = '';
+      entryDatetimeInput.value = toDatetimeLocalValue(new Date());
+      detailLoaded = false;
+      syntheseLoaded = false;
+      renderPendingStatus();
+    }
   } finally {
     refreshArchiveButtonState();
   }
 });
+
+const pendingStatusEl = document.getElementById('pending-status');
+
+function renderPendingStatus() {
+  const pending = getPendingEntries();
+  if (pending.length === 0) {
+    pendingStatusEl.hidden = true;
+    pendingStatusEl.textContent = '';
+    return;
+  }
+  pendingStatusEl.hidden = false;
+  pendingStatusEl.textContent = pending.length > 1
+    ? `${pending.length} consommations en attente de synchronisation (visibles dans Détail).`
+    : '1 consommation en attente de synchronisation (visible dans Détail).';
+}
+
+let syncingPending = false;
+
+async function trySyncPending() {
+  if (syncingPending) return;
+  const token = getToken();
+  if (!token) return;
+  const pending = getPendingEntries();
+  if (pending.length === 0) return;
+
+  syncingPending = true;
+  for (const entry of pending) {
+    try {
+      await writeData(
+        (current) => addEntry(current, entry),
+        { message: `archivage (hors-ligne) : ${formatFr(entry.unites, 2)} unités`, token }
+      );
+      removePendingEntry(entry.id);
+      detailLoaded = false;
+      syntheseLoaded = false;
+    } catch {
+      break; // toujours hors-ligne (ou erreur) : on retentera plus tard, l'entrée reste en attente.
+    }
+  }
+  syncingPending = false;
+  renderPendingStatus();
+  renderDetailList();
+}
+
+window.addEventListener('online', trySyncPending);
+renderPendingStatus();
+trySyncPending();
 
 // ── Alcoolémie ──
 
@@ -480,12 +542,6 @@ function renderAlcoolemie() {
 poidsInput.addEventListener('input', renderAlcoolemie);
 aMangeCheckbox.addEventListener('change', renderAlcoolemie);
 seuilLegalInput.addEventListener('input', renderAlcoolemie);
-
-cumulBtn.addEventListener('click', () => {
-  addToSession(getState().unites);
-  renderSession();
-  renderAlcoolemie();
-});
 
 razBtn.addEventListener('click', () => {
   resetSession();
@@ -523,7 +579,9 @@ function formatEntryDate(iso) {
 }
 
 function renderDetailList() {
-  const sorted = sortEntries(detailEntries, detailSortOrder);
+  const pending = getPendingEntries();
+  const pendingIds = new Set(pending.map((e) => e.id));
+  const sorted = sortEntries([...detailEntries, ...pending], detailSortOrder);
   detailList.innerHTML = '';
 
   if (sorted.length === 0) {
@@ -537,6 +595,7 @@ function renderDetailList() {
   sorted.forEach((entry) => {
     const li = document.createElement('li');
     li.className = 'entry-item';
+    const isPending = pendingIds.has(entry.id);
 
     const qty = entry.mode === 'poids' ? `${formatFr(entry.poids ?? 0, 0)} g` : `${formatFr(entry.volume ?? 0, 0)} cl`;
 
@@ -546,6 +605,7 @@ function renderDetailList() {
         <span class="entry-unites">${formatFr(entry.unites, 2)} unités</span>
       </div>
       <div class="entry-sub">
+        ${isPending ? '<span class="tag">⏳ en attente</span>' : ''}
         <span>${typeLabel(entry.type)}</span>
         <span>${qty} à ${formatFr(entry.degre, 1)}°</span>
         ${entry.note ? `<span class="entry-note">« ${entry.note} »</span>` : ''}
@@ -555,13 +615,25 @@ function renderDetailList() {
     const deleteBtn = document.createElement('button');
     deleteBtn.type = 'button';
     deleteBtn.className = 'entry-delete-btn';
-    deleteBtn.textContent = 'Supprimer';
-    deleteBtn.disabled = !getToken();
-    deleteBtn.addEventListener('click', () => deleteEntry(entry.id));
+    if (isPending) {
+      deleteBtn.textContent = 'Retirer de la file';
+      deleteBtn.addEventListener('click', () => cancelPendingEntry(entry.id));
+    } else {
+      deleteBtn.textContent = 'Supprimer';
+      deleteBtn.disabled = !getToken();
+      deleteBtn.addEventListener('click', () => deleteEntry(entry.id));
+    }
     li.appendChild(deleteBtn);
 
     detailList.appendChild(li);
   });
+}
+
+function cancelPendingEntry(id) {
+  if (!confirm('Retirer cette consommation en attente ? Elle ne sera jamais archivée.')) return;
+  removePendingEntry(id);
+  renderPendingStatus();
+  renderDetailList();
 }
 
 async function loadDetail() {
@@ -577,6 +649,7 @@ async function loadDetail() {
   } catch (e) {
     detailStatus.textContent = `Erreur de lecture : ${e.message}`;
     detailStatus.className = 'status error';
+    renderDetailList();
   }
 }
 

@@ -1,6 +1,8 @@
-// Module isolé : cumul de session (en mémoire, non persisté), utilisé pour
-// préparer le futur calcul d'alcoolémie (lot ultérieur). Sans lien avec
-// l'archivage permanent dans data.json.
+// Module isolé : cumul de session (en mémoire, non persisté), utilisé pour le
+// calcul d'alcoolémie. Alimenté automatiquement dès qu'une conso est archivée
+// (voir archiveBtn dans app.js), avant même la tentative d'écriture réseau —
+// l'estimation d'alcoolémie doit rester à jour même si l'écriture échoue ou
+// est mise en attente (hors-ligne). Pas de bouton de cumul manuel séparé.
 
 const session = { total: 0, count: 0 };
 
