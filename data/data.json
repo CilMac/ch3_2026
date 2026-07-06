@@ -112,7 +112,7 @@
       "note": ""
     }
   ],
-  "updatedAt": "2026-07-06T21:16:24.648Z",
+  "updatedAt": "2026-07-06T21:16:31.354Z",
   "_lot1Test": {
     "message": "ping de validation Lot 1",
     "device": "appareil sans nom",
@@ -126,15 +126,6 @@
       "volume": null,
       "poids": 60,
       "degre": 55,
-      "type": "spiritueux"
-    },
-    {
-      "id": "eb82be82-3d70-44ae-8510-415cf7a5ab78",
-      "nom": "Gin tonic",
-      "mode": "poids",
-      "volume": null,
-      "poids": 70,
-      "degre": 37.5,
       "type": "spiritueux"
     },
     {
