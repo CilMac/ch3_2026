@@ -77,9 +77,20 @@
       "degre": 10,
       "type": "autre",
       "note": "Picon"
+    },
+    {
+      "id": "72b8dfad-67da-488c-ba25-4fe2b8b51f95",
+      "date": "2026-07-06T12:52:00.000Z",
+      "unites": 2.81,
+      "mode": "poids",
+      "volume": null,
+      "poids": 75,
+      "degre": 37.5,
+      "type": "spiritueux",
+      "note": "Favori : Gin tonic"
     }
   ],
-  "updatedAt": "2026-07-06T12:52:42.380Z",
+  "updatedAt": "2026-07-06T12:53:05.341Z",
   "_lot1Test": {
     "message": "ping de validation Lot 1",
     "device": "appareil sans nom",
