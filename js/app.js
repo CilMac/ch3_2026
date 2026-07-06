@@ -47,6 +47,9 @@ function refreshConnBadge() {
 
 const modeVolumeBtn = document.getElementById('mode-volume-btn');
 const modePoidsBtn = document.getElementById('mode-poids-btn');
+const modeFavorisBtn = document.getElementById('mode-favoris-btn');
+const calcPanelWrap = document.getElementById('calc-panel');
+const favorisPanelWrap = document.getElementById('favoris-panel');
 const qtyLabel = document.getElementById('qty-label');
 const qtyInput = document.getElementById('qty-input');
 const qtyMinusBtn = document.getElementById('qty-minus-btn');
@@ -76,8 +79,22 @@ function applyMode(mode) {
   renderResult();
 }
 
-modeVolumeBtn.addEventListener('click', () => applyMode('volume'));
-modePoidsBtn.addEventListener('click', () => applyMode('poids'));
+function showCalcSubview(target) {
+  const isFavoris = target === 'favoris';
+  calcPanelWrap.hidden = isFavoris;
+  favorisPanelWrap.hidden = !isFavoris;
+  modeFavorisBtn.classList.toggle('active', isFavoris);
+  if (isFavoris) {
+    modeVolumeBtn.classList.remove('active');
+    modePoidsBtn.classList.remove('active');
+  } else {
+    applyMode(target);
+  }
+}
+
+modeVolumeBtn.addEventListener('click', () => showCalcSubview('volume'));
+modePoidsBtn.addEventListener('click', () => showCalcSubview('poids'));
+modeFavorisBtn.addEventListener('click', () => showCalcSubview('favoris'));
 
 qtyInput.addEventListener('input', () => {
   const value = parseFloat(qtyInput.value) || 0;
@@ -133,7 +150,7 @@ calcInfoBtn.addEventListener('click', () => {
   calcInfoText.hidden = !calcInfoText.hidden;
 });
 
-applyMode('volume');
+showCalcSubview('volume');
 degreInput.value = getState().degre;
 renderResult();
 
@@ -171,12 +188,13 @@ function refreshFavorisButtonState() {
 }
 
 function applyFavori(fav) {
-  applyMode(fav.mode);
+  showCalcSubview(fav.mode);
   qtyInput.value = fav.mode === 'volume' ? fav.volume : fav.poids;
   qtyInput.dispatchEvent(new Event('input'));
   degreInput.value = fav.degre;
   degreInput.dispatchEvent(new Event('input'));
   entryTypeSelect.value = fav.type;
+  entryNoteInput.value = `Favori : ${fav.nom}`;
   favorisStatus.textContent = `« ${fav.nom} » appliqué au calculateur ci-dessus — vérifie puis archive dans l’onglet Archivage.`;
   favorisStatus.className = 'status ok';
 }
@@ -357,7 +375,7 @@ replayLastBtn.addEventListener('click', async () => {
       return;
     }
     const [last] = sortEntries(entries, 'desc');
-    applyMode(last.mode);
+    showCalcSubview(last.mode);
     qtyInput.value = last.mode === 'volume' ? last.volume : last.poids;
     qtyInput.dispatchEvent(new Event('input'));
     degreInput.value = last.degre;
