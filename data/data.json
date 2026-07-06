@@ -123,7 +123,7 @@
       "note": ""
     }
   ],
-  "updatedAt": "2026-07-06T13:15:34.422Z",
+  "updatedAt": "2026-07-06T13:15:59.290Z",
   "_lot1Test": {
     "message": "ping de validation Lot 1",
     "device": "appareil sans nom",
@@ -147,15 +147,6 @@
       "poids": 70,
       "degre": 37.5,
       "type": "spiritueux"
-    },
-    {
-      "id": "c4e9a39d-edb0-48bc-b29d-f3f14506b207",
-      "nom": "Picon",
-      "mode": "volume",
-      "volume": 50,
-      "poids": null,
-      "degre": 12,
-      "type": "autre"
     }
   ]
 }
