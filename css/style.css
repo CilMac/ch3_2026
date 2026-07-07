@@ -616,6 +616,42 @@ input[type="datetime-local"] {
 
 /* ── Synthèse ── */
 
+input[type="range"] {
+  width: 100%;
+  margin: 6px 0 4px;
+  accent-color: var(--wood-dk);
+  height: 28px;
+}
+input[type="range"]::-webkit-slider-runnable-track {
+  height: 6px;
+  border-radius: 999px;
+  background: rgba(90,52,24,.2);
+}
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  margin-top: -9px;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: var(--wood-dk);
+  border: 2px solid #fffaf0;
+  box-shadow: 0 1px 4px rgba(26,16,8,.35);
+}
+input[type="range"]::-moz-range-track {
+  height: 6px;
+  border-radius: 999px;
+  background: rgba(90,52,24,.2);
+}
+input[type="range"]::-moz-range-thumb {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: var(--wood-dk);
+  border: 2px solid #fffaf0;
+  box-shadow: 0 1px 4px rgba(26,16,8,.35);
+}
+
 input[type="date"] {
   width: 100%;
   font-family: 'Shippori Mincho', serif;

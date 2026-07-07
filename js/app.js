@@ -486,6 +486,15 @@ onViewChange((name) => {
   }
 });
 
+// Le badge "Cette semaine" est un compteur en mémoire, jamais décrémenté par un changement fait
+// ailleurs (autre appareil, suppression via l'API GitHub) — on le refait à neuf chaque fois que
+// l'app revient au premier plan, pour éviter qu'il dérive en silence sur un appareil resté ouvert.
+document.addEventListener('visibilitychange', () => {
+  if (document.visibilityState === 'visible') {
+    loadFavoris();
+  }
+});
+
 // ── Archivage ──
 
 const calcSummaryText = document.getElementById('calc-summary-text');
@@ -668,8 +677,10 @@ trySyncPending();
 // ── Alcoolémie ──
 
 const poidsInput = document.getElementById('poids-input');
+const poidsValueEl = document.getElementById('poids-value');
 const aMangeCheckbox = document.getElementById('a-mange-checkbox');
 const seuilLegalInput = document.getElementById('seuil-legal-input');
+const seuilLegalValueEl = document.getElementById('seuil-legal-value');
 const tauxHommeEl = document.getElementById('taux-homme');
 const tauxFemmeEl = document.getElementById('taux-femme');
 const delaiHommeEl = document.getElementById('delai-homme');
@@ -679,6 +690,8 @@ function renderAlcoolemie() {
   const { total } = getSession();
   const poidsKg = parseFloat(poidsInput.value) || 0;
   const seuilLegal = parseFloat(seuilLegalInput.value) || 0;
+  poidsValueEl.textContent = formatFr(poidsKg, 0);
+  seuilLegalValueEl.textContent = formatFr(seuilLegal, 1);
   const { tauxHomme, tauxFemme, delaiHomme, delaiFemme } = calculAlcoolemie({
     unitesCumulees: total,
     poidsKg,
@@ -811,7 +824,9 @@ function renderDetailList() {
 
 function cancelPendingEntry(id) {
   if (!confirm('Retirer cette consommation en attente ? Elle ne sera jamais archivée.')) return;
+  const entry = getPendingEntries().find((e) => e.id === id);
   removePendingEntry(id);
+  if (entry) bumpWeekBadge(new Date(entry.date), -entry.unites);
   renderPendingStatus();
   renderDetailList();
 }
@@ -854,6 +869,7 @@ async function deleteEntry(id) {
     detailStatus.className = 'status ok';
     renderDetailList();
     syntheseLoaded = false;
+    if (entry) bumpWeekBadge(new Date(entry.date), -entry.unites);
   } catch (e) {
     detailStatus.textContent = `Erreur de suppression : ${e.message}`;
     detailStatus.className = 'status error';
@@ -1334,6 +1350,7 @@ importBtn.addEventListener('click', async () => {
     importFileInput.value = '';
     syntheseLoaded = false;
     detailLoaded = false;
+    favorisLoaded = false;
   } catch (e) {
     exportImportStatus.textContent = `Erreur d’import : ${e.message}`;
     exportImportStatus.className = 'status error';
@@ -1412,6 +1429,8 @@ resetConfirmBtn.addEventListener('click', async () => {
     renderStreaks();
     detailLoaded = false;
     syntheseLoaded = false;
+    favorisLoaded = false;
+    renderWeekBadge(0);
     closeResetConfirm();
   } catch (e) {
     resetStatus.textContent = `Erreur : ${e.message}`;
