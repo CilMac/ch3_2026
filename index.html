@@ -221,22 +221,17 @@
         <p class="hint hint-safety">⚠️ Ne remplace pas un éthylotest homologué — en cas de doute, ne prends pas le volant.</p>
         <p id="alcoolemie-info-text" class="hint" hidden>
           Estimation indicative (formule de Widmark simplifiée) à partir du cumul de session
-          ci-dessus.
+          ci-dessus. « J'ai mangé » : décochée, l'absorption est plus rapide mais le délai avant
+          le pic est plus court.
         </p>
 
         <label for="poids-input">Poids : <span id="poids-value">85</span> kg</label>
         <input type="range" id="poids-input" value="85" min="50" max="110" step="1">
 
-        <div class="checkbox-row">
-          <label class="checkbox-row-label">
-            <input type="checkbox" id="a-mange-checkbox" checked>
-            J'ai mangé
-          </label>
-          <button type="button" class="info-toggle-btn info-toggle-btn-small" id="mange-info-btn" aria-label="Plus d'infos">ⓘ</button>
-        </div>
-        <p id="mange-info-text" class="hint hint-inline" hidden>
-          Décochée : l'absorption est plus rapide, mais le délai avant le pic est plus court.
-        </p>
+        <label class="checkbox-row">
+          <input type="checkbox" id="a-mange-checkbox" checked>
+          J'ai mangé
+        </label>
 
         <label for="seuil-legal-input">Seuil visé : <span id="seuil-legal-value">0,5</span> g/L</label>
         <input type="range" id="seuil-legal-input" value="0.5" min="0.1" max="1.5" step="0.1">

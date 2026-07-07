@@ -481,28 +481,6 @@ input[type="datetime-local"] {
   font-size: .85rem;
   line-height: 1;
   flex-shrink: 0;
-  background: #f0ebe0;
-  border: 1px solid rgba(90,52,24,.3);
-  border-radius: 8px;
-  color: var(--wood-dk);
-}
-.info-toggle-btn-small {
-  padding: 1px 7px;
-  font-size: .68rem;
-}
-
-.checkbox-row-label {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  margin: 0;
-  font-size: inherit;
-  color: inherit;
-}
-
-.hint-inline {
-  margin: 4px 0 0;
-  font-size: .74rem;
 }
 
 .result-block-row {

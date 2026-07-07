@@ -688,12 +688,6 @@ alcoolemieInfoBtn.addEventListener('click', () => {
   alcoolemieInfoText.hidden = !alcoolemieInfoText.hidden;
 });
 
-const mangeInfoBtn = document.getElementById('mange-info-btn');
-const mangeInfoText = document.getElementById('mange-info-text');
-mangeInfoBtn.addEventListener('click', () => {
-  mangeInfoText.hidden = !mangeInfoText.hidden;
-});
-
 const poidsInput = document.getElementById('poids-input');
 const poidsValueEl = document.getElementById('poids-value');
 const aMangeCheckbox = document.getElementById('a-mange-checkbox');
