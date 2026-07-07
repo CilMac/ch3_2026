@@ -27,6 +27,17 @@ export function isSameDay(a, b) {
   return dateOnly(a).getTime() === dateOnly(b).getTime();
 }
 
+// Numéro de semaine ISO 8601, uniquement pour l'affichage (le regroupement lui-même reste basé
+// sur le lundi de la semaine, voir commentaire en tête de fichier) — calcul pur déterministe,
+// sans dépendance à une API de calendrier système.
+export function isoWeekNumber(date) {
+  const d = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()));
+  const dayNum = d.getUTCDay() || 7;
+  d.setUTCDate(d.getUTCDate() + 4 - dayNum);
+  const yearStart = new Date(Date.UTC(d.getUTCFullYear(), 0, 1));
+  return Math.ceil(((d - yearStart) / 86400000 + 1) / 7);
+}
+
 function weekKey(date) {
   const m = mondayOf(date);
   const pad = (n) => String(n).padStart(2, '0');

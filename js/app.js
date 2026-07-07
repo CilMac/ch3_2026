@@ -10,7 +10,7 @@ import { typeLabel, sortEntries, removeEntry } from './entries.js';
 import { filterByPeriod, computeStats, statsParJourSemaine, statsParType, JOURS_SEMAINE } from './stats.js';
 import { iconePourConsoHebdo, iconePourConsoJour, ICONES } from './constants.js';
 import { ensureShape, isValidDataShape, buildFavori, addFavori, removeFavori } from './dataStore.js';
-import { mondayOf, addDays, isSameDay, groupByWeek, weekDetail, deuxJoursConsecutifsSans } from './bilans.js';
+import { mondayOf, addDays, isSameDay, groupByWeek, weekDetail, deuxJoursConsecutifsSans, isoWeekNumber } from './bilans.js';
 import { weeklyBarChartSvg, categoryBarChartSvg } from './chart.js';
 import { CONSO_SEMAINE_MAX } from './constants.js';
 import { calculAlcoolemie, formatDelai } from './alcoolemie.js';
@@ -803,7 +803,7 @@ function renderDetailList() {
 
     const summary = document.createElement('summary');
     summary.innerHTML = `
-      <span class="week-accordion-label">Semaine du ${formatDateFr(week.weekStart)} au ${formatDateFr(addDays(week.weekStart, 6))}</span>
+      <span class="week-accordion-label">Semaine ${isoWeekNumber(week.weekStart)} (du ${formatDateFr(week.weekStart)} au ${formatDateFr(addDays(week.weekStart, 6))})</span>
       <span class="week-accordion-total">${formatFr(week.total, 2)} unités ${iconePourConsoHebdo(week.total)}</span>
     `;
     details.appendChild(summary);
@@ -1001,7 +1001,7 @@ function renderBilanHebdo() {
   const { days, total, maxJour } = weekDetail(syntheseEntries, bilanWeekStart);
   const today = new Date();
 
-  bilanHebdoLabel.textContent = `Semaine du ${formatDateFr(bilanWeekStart)} au ${formatDateFr(addDays(bilanWeekStart, 6))}`;
+  bilanHebdoLabel.textContent = `Semaine ${isoWeekNumber(bilanWeekStart)} (du ${formatDateFr(bilanWeekStart)} au ${formatDateFr(addDays(bilanWeekStart, 6))})`;
   bilanTotalEl.textContent = `${formatFr(total, 2)} ${iconePourConsoHebdo(total)}`;
   bilanMaxEl.textContent = `${formatFr(maxJour, 2)} ${iconePourConsoJour(maxJour)}`;
 
@@ -1045,7 +1045,7 @@ function renderBilanGeneral() {
     li.className = 'entry-item';
     li.innerHTML = `
       <div class="entry-main">
-        <span class="entry-date">Semaine du ${formatDateFr(w.weekStart)} au ${formatDateFr(addDays(w.weekStart, 6))}</span>
+        <span class="entry-date">Semaine ${isoWeekNumber(w.weekStart)} (du ${formatDateFr(w.weekStart)} au ${formatDateFr(addDays(w.weekStart, 6))})</span>
         <span class="entry-unites">${formatFr(w.total, 2)} ${iconePourConsoHebdo(w.total)}</span>
       </div>
     `;
