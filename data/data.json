@@ -88,9 +88,20 @@
       "degre": 15.5,
       "type": "autre",
       "note": "Favori : RECUP HISTORIQUE"
+    },
+    {
+      "id": "54f88afd-f15a-455e-a525-556d17db9cdd",
+      "date": "2026-07-07T20:25:55.042Z",
+      "unites": 1.45,
+      "mode": "volume",
+      "volume": 33,
+      "poids": null,
+      "degre": 5.5,
+      "type": "autre",
+      "note": "Favori : RECUP HISTORIQUE"
     }
   ],
-  "updatedAt": "2026-07-07T12:30:18.255Z",
+  "updatedAt": "2026-07-07T20:25:55.466Z",
   "_lot1Test": {
     "message": "ping de validation Lot 1",
     "device": "appareil sans nom",
