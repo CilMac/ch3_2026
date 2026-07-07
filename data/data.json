@@ -198,9 +198,20 @@
       "degre": 7.5,
       "type": "biere",
       "note": "Favori : Picon"
+    },
+    {
+      "id": "cf928409-9573-4492-8671-7e2266483eed",
+      "date": "2026-07-07T08:57:56.180Z",
+      "unites": 1.45,
+      "mode": "volume",
+      "volume": 33,
+      "poids": null,
+      "degre": 5.5,
+      "type": "biere",
+      "note": "Favori : 1664"
     }
   ],
-  "updatedAt": "2026-07-07T08:53:31.185Z",
+  "updatedAt": "2026-07-07T08:57:56.673Z",
   "_lot1Test": {
     "message": "ping de validation Lot 1",
     "device": "appareil sans nom",
