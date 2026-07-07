@@ -614,7 +614,7 @@ archiveBtn.addEventListener('click', async () => {
       archiveStatus.className = 'status error';
     } else {
       queueEntry(entry);
-      archiveStatus.textContent = 'Pas de réseau — conso mise en attente (visible dans Détail), sera synchronisée automatiquement dès que possible.';
+      archiveStatus.textContent = 'Pas de réseau — conso mise en attente (visible dans Journal), sera synchronisée automatiquement dès que possible.';
       archiveStatus.className = 'status warn';
       entryNoteInput.value = '';
       entryDatetimeInput.value = toDatetimeLocalValue(new Date());
@@ -638,8 +638,8 @@ function renderPendingStatus() {
   }
   pendingStatusEl.hidden = false;
   pendingStatusEl.textContent = pending.length > 1
-    ? `${pending.length} consommations en attente de synchronisation (visibles dans Détail).`
-    : '1 consommation en attente de synchronisation (visible dans Détail).';
+    ? `${pending.length} consommations en attente de synchronisation (visibles dans Journal).`
+    : '1 consommation en attente de synchronisation (visible dans Journal).';
 }
 
 let syncingPending = false;
@@ -728,7 +728,7 @@ onViewChange((name) => {
 renderSession();
 renderAlcoolemie();
 
-// ── Détail / historique ──
+// ── Journal / historique ──
 
 const detailRefreshBtn = document.getElementById('detail-refresh-btn');
 const detailSortBtn = document.getElementById('detail-sort-btn');
