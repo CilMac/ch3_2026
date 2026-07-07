@@ -192,29 +192,37 @@
 
     </section>
 
-    <section class="view" data-view="soiree" hidden>
+    <section class="view view-soiree" data-view="soiree" hidden>
 
       <div class="panel">
-        <h2>Cumul de session <span class="tag">pour alcoolémie</span></h2>
-        <p class="hint">
+        <div class="panel-header-row">
+          <h2>Cumul de session <span class="tag">pour alcoolémie</span></h2>
+          <button type="button" class="btn-icon info-toggle-btn" id="cumul-info-btn" aria-label="Plus d'infos">ⓘ</button>
+        </div>
+        <p id="cumul-info-text" class="hint" hidden>
           Cumul temporaire (non enregistré) des unités archivées depuis le dernier RAZ — mis à jour
           automatiquement à chaque archivage, sert de base au calcul d'alcoolémie ci-dessous.
         </p>
-        <div class="result-block">
-          <span class="result-label">Total cumulé</span>
-          <span id="session-total" class="result-value">0,00</span>
-          <span class="result-sub" id="session-count">0 verre</span>
-        </div>
-        <div class="btn-row">
-          <button type="button" id="raz-btn" class="btn-secondary">RAZ (nouvelle soirée)</button>
+        <div class="result-block result-block-row">
+          <div>
+            <span class="result-label">Total cumulé</span>
+            <span id="session-total" class="result-value">0,00</span>
+            <span class="result-sub" id="session-count">0 verre</span>
+          </div>
+          <button type="button" id="raz-btn" class="btn-secondary btn-small">RAZ</button>
         </div>
       </div>
 
       <div class="panel">
-        <h2>Taux d'alcoolémie estimé</h2>
-        <p class="hint">
-          Estimation indicative (formule de Widmark simplifiée) à partir du cumul de session ci-dessus.
-          <strong>Ne remplace pas un éthylotest homologué — en cas de doute, ne prends pas le volant.</strong>
+        <div class="panel-header-row">
+          <h2>Taux d'alcoolémie estimé</h2>
+          <button type="button" class="btn-icon info-toggle-btn" id="alcoolemie-info-btn" aria-label="Plus d'infos">ⓘ</button>
+        </div>
+        <p class="hint hint-safety">⚠️ Ne remplace pas un éthylotest homologué — en cas de doute, ne prends pas le volant.</p>
+        <p id="alcoolemie-info-text" class="hint" hidden>
+          Estimation indicative (formule de Widmark simplifiée) à partir du cumul de session
+          ci-dessus. « J'ai mangé » : décochée, l'absorption est plus rapide mais le délai avant
+          le pic est plus court.
         </p>
 
         <label for="poids-input">Poids : <span id="poids-value">85</span> kg</label>
@@ -222,27 +230,27 @@
 
         <label class="checkbox-row">
           <input type="checkbox" id="a-mange-checkbox" checked>
-          J'ai mangé (sinon, absorption plus rapide mais délai de pic plus court)
+          J'ai mangé
         </label>
 
         <label for="seuil-legal-input">Seuil visé : <span id="seuil-legal-value">0,5</span> g/L</label>
         <input type="range" id="seuil-legal-input" value="0.5" min="0.1" max="1.5" step="0.1">
 
-        <div class="stat-grid">
+        <div class="stat-grid stat-grid-compact">
           <div class="stat-item">
-            <span class="stat-label">Taux estimé — homme</span>
+            <span class="stat-label">Taux — homme</span>
             <span class="stat-value" id="taux-homme">—</span>
           </div>
           <div class="stat-item">
-            <span class="stat-label">Taux estimé — femme</span>
+            <span class="stat-label">Taux — femme</span>
             <span class="stat-value" id="taux-femme">—</span>
           </div>
           <div class="stat-item">
-            <span class="stat-label">Retour sous le seuil — homme</span>
+            <span class="stat-label">Retour seuil — homme</span>
             <span class="stat-value" id="delai-homme">—</span>
           </div>
           <div class="stat-item">
-            <span class="stat-label">Retour sous le seuil — femme</span>
+            <span class="stat-label">Retour seuil — femme</span>
             <span class="stat-value" id="delai-femme">—</span>
           </div>
         </div>

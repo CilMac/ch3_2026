@@ -467,6 +467,43 @@ input[type="datetime-local"] {
   color: var(--ink);
 }
 
+/* ── Soirée ── */
+
+.hint-safety {
+  font-weight: bold;
+  color: var(--red);
+  font-size: .74rem;
+  margin-bottom: 10px;
+}
+
+.info-toggle-btn {
+  padding: 5px 10px;
+  font-size: .85rem;
+  line-height: 1;
+  flex-shrink: 0;
+}
+
+.result-block-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  text-align: left;
+  padding: 12px 14px;
+}
+.result-block-row .result-value { font-size: 1.6rem; }
+.result-block-row .result-label { margin-bottom: 2px; }
+.result-block-row .result-sub { margin-top: 2px; }
+
+.stat-grid-compact { margin: 8px 0; gap: 6px; }
+.stat-grid-compact .stat-item { padding: 7px 8px; }
+.stat-grid-compact .stat-label { font-size: .65rem; margin-bottom: 2px; }
+.stat-grid-compact .stat-value { font-size: 1.05rem; }
+
+.view-soiree label { margin: 8px 0 3px; }
+.view-soiree input[type="range"] { margin: 4px 0 2px; }
+.view-soiree .checkbox-row { margin-top: 8px; }
+
 /* ── Détail / historique ── */
 
 .entry-list {

@@ -676,6 +676,18 @@ trySyncPending();
 
 // ── Alcoolémie ──
 
+const cumulInfoBtn = document.getElementById('cumul-info-btn');
+const cumulInfoText = document.getElementById('cumul-info-text');
+cumulInfoBtn.addEventListener('click', () => {
+  cumulInfoText.hidden = !cumulInfoText.hidden;
+});
+
+const alcoolemieInfoBtn = document.getElementById('alcoolemie-info-btn');
+const alcoolemieInfoText = document.getElementById('alcoolemie-info-text');
+alcoolemieInfoBtn.addEventListener('click', () => {
+  alcoolemieInfoText.hidden = !alcoolemieInfoText.hidden;
+});
+
 const poidsInput = document.getElementById('poids-input');
 const poidsValueEl = document.getElementById('poids-value');
 const aMangeCheckbox = document.getElementById('a-mange-checkbox');
