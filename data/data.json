@@ -154,9 +154,20 @@
       "degre": 5,
       "type": "biere",
       "note": "Favori : Heineken"
+    },
+    {
+      "id": "7b78ab0a-704d-43a4-89c1-873e90deea80",
+      "date": "2026-03-05T06:44:00.000Z",
+      "unites": 2,
+      "mode": "volume",
+      "volume": 33.3,
+      "poids": null,
+      "degre": 7.5,
+      "type": "biere",
+      "note": "Favori : Picon"
     }
   ],
-  "updatedAt": "2026-07-07T05:44:23.494Z",
+  "updatedAt": "2026-07-07T05:47:14.852Z",
   "_lot1Test": {
     "message": "ping de validation Lot 1",
     "device": "appareil sans nom",
