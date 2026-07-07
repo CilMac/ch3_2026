@@ -90,17 +90,6 @@
       "note": "Favori : Pélican"
     },
     {
-      "id": "8f59b601-6a46-4384-a0ea-330f53d63f64",
-      "date": "2026-04-23T05:41:00.000Z",
-      "unites": 1.98,
-      "mode": "volume",
-      "volume": 33,
-      "poids": null,
-      "degre": 7.5,
-      "type": "biere",
-      "note": ""
-    },
-    {
       "id": "4547df7f-7f26-42d1-b62e-acf5ea5dc58a",
       "date": "2026-07-07T12:20:00.000Z",
       "unites": 0.24,
@@ -123,7 +112,7 @@
       "note": "Favori : RECUP HISTORIQUE"
     }
   ],
-  "updatedAt": "2026-07-07T12:29:43.745Z",
+  "updatedAt": "2026-07-07T12:29:51.139Z",
   "_lot1Test": {
     "message": "ping de validation Lot 1",
     "device": "appareil sans nom",
