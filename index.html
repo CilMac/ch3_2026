@@ -23,7 +23,7 @@
 
   <nav class="tab-nav" aria-label="Navigation principale">
     <button class="tab-btn active" data-target="calcul">Calcul</button>
-    <button class="tab-btn" data-target="archivage">Archivage</button>
+    <button class="tab-btn" data-target="soiree">Soirée</button>
     <button class="tab-btn" data-target="detail">Détail</button>
     <button class="tab-btn" data-target="synthese">Synthèse</button>
     <button class="tab-btn tab-btn-icon" data-target="info" aria-label="Info">ℹ️</button>
@@ -44,10 +44,58 @@
 
     <section class="view" data-view="calcul">
 
+      <div class="panel" id="favoris-panel">
+        <h2>Mes favoris</h2>
+        <p class="hint">Archive une conso récurrente en un tap, ou modifie-la avant d'archiver.</p>
+
+        <div class="calc-summary" id="favori-archive-confirm" hidden>
+          <span id="favori-archive-confirm-text">—</span>
+          <button type="button" id="favori-archive-undo-btn" class="btn-secondary btn-small btn-danger">Annuler</button>
+        </div>
+
+        <ul id="favoris-list" class="entry-list"></ul>
+        <p id="favoris-status" class="status"></p>
+
+        <details class="favori-add-details">
+          <summary>+ Ajouter un favori</summary>
+
+          <label for="favori-nom">Nom</label>
+          <input type="text" id="favori-nom" placeholder="ex. Sancerre blanc">
+
+          <div class="segmented" role="group" aria-label="Mode du favori">
+            <button type="button" class="seg-btn active" id="favori-mode-volume-btn" data-mode="volume">Volume (cl)</button>
+            <button type="button" class="seg-btn" id="favori-mode-poids-btn" data-mode="poids">Poids (g)</button>
+          </div>
+
+          <label for="favori-qty" id="favori-qty-label">Volume (cl)</label>
+          <input type="number" id="favori-qty" inputmode="decimal" min="0" step="1">
+
+          <label for="favori-degre">Degré d'alcool (°)</label>
+          <input type="number" id="favori-degre" inputmode="decimal" min="0" step="0.5">
+
+          <div class="result-block">
+            <span class="result-label">Unités d'alcool</span>
+            <span id="favori-unites-preview" class="result-value">0,00</span>
+          </div>
+
+          <label for="favori-type">Type de boisson</label>
+          <select id="favori-type" class="select-input">
+            <option value="biere">Bière</option>
+            <option value="vin">Vin</option>
+            <option value="sake">Saké</option>
+            <option value="spiritueux">Spiritueux</option>
+            <option value="autre" selected>Autre</option>
+          </select>
+
+          <div class="btn-row">
+            <button type="button" id="favori-add-btn" class="btn-primary" disabled>Ajouter aux favoris</button>
+          </div>
+        </details>
+      </div>
+
       <div class="segmented" role="group" aria-label="Mode de saisie">
         <button type="button" class="seg-btn active" id="mode-volume-btn" data-mode="volume">Volume (cl)</button>
         <button type="button" class="seg-btn" id="mode-poids-btn" data-mode="poids">Poids (g)</button>
-        <button type="button" class="seg-btn" id="mode-favoris-btn" data-mode="favoris">Favoris</button>
       </div>
 
       <div id="calc-panel">
@@ -105,59 +153,11 @@
         </div>
       </div>
 
-      <div id="favoris-panel" hidden>
-        <div class="panel">
-          <h2>Mes conso favorites</h2>
-          <p class="hint">Un clic sur un favori pré-remplit le calculateur (volume/poids, degré, type) — vérifie puis archive comme d'habitude dans l'onglet Archivage.</p>
-
-          <ul id="favoris-list" class="entry-list"></ul>
-          <p id="favoris-status" class="status"></p>
-
-          <h3>Ajouter un favori</h3>
-          <label for="favori-nom">Nom</label>
-          <input type="text" id="favori-nom" placeholder="ex. Sancerre blanc">
-
-          <div class="segmented" role="group" aria-label="Mode du favori">
-            <button type="button" class="seg-btn active" id="favori-mode-volume-btn" data-mode="volume">Volume (cl)</button>
-            <button type="button" class="seg-btn" id="favori-mode-poids-btn" data-mode="poids">Poids (g)</button>
-          </div>
-
-          <label for="favori-qty" id="favori-qty-label">Volume (cl)</label>
-          <input type="number" id="favori-qty" inputmode="decimal" min="0" step="1">
-
-          <label for="favori-degre">Degré d'alcool (°)</label>
-          <input type="number" id="favori-degre" inputmode="decimal" min="0" step="0.5">
-
-          <div class="result-block">
-            <span class="result-label">Unités d'alcool</span>
-            <span id="favori-unites-preview" class="result-value">0,00</span>
-          </div>
-
-          <label for="favori-type">Type de boisson</label>
-          <select id="favori-type" class="select-input">
-            <option value="biere">Bière</option>
-            <option value="vin">Vin</option>
-            <option value="sake">Saké</option>
-            <option value="spiritueux">Spiritueux</option>
-            <option value="autre" selected>Autre</option>
-          </select>
-
-          <div class="btn-row">
-            <button type="button" id="favori-add-btn" class="btn-primary" disabled>Ajouter aux favoris</button>
-          </div>
-        </div>
-      </div>
-
-    </section>
-
-    <section class="view" data-view="archivage" hidden>
-
       <div class="panel">
-        <h2>Archiver une consommation</h2>
+        <h2>Enregistrer cette consommation</h2>
 
         <div class="calc-summary" id="calc-summary">
           <span id="calc-summary-text">—</span>
-          <button type="button" class="btn-secondary btn-small" data-target="calcul">Modifier dans Calcul</button>
         </div>
 
         <div class="btn-row">
@@ -185,6 +185,10 @@
         <p id="archive-status" class="status"></p>
         <p id="pending-status" class="status warn" hidden></p>
       </div>
+
+    </section>
+
+    <section class="view" data-view="soiree" hidden>
 
       <div class="panel">
         <h2>Cumul de session <span class="tag">pour alcoolémie</span></h2>
@@ -421,13 +425,16 @@
         <p class="hint">
           Calcule les unités d'alcool d'une consommation à partir du volume (ou du poids) et du
           degré, avec des presets pour les boissons courantes (bière, vin, saké, porto,
-          spiritueux…).
+          spiritueux…). Propose aussi les favoris en accès direct — un tap archive la conso
+          récurrente immédiatement, ou tu peux la modifier avant d'archiver — et permet
+          d'enregistrer la consommation dans l'historique (date, type de boisson, note), le tout
+          sur un seul écran.
         </p>
 
-        <h3>Archivage</h3>
+        <h3>Soirée</h3>
         <p class="hint">
-          Enregistre une consommation dans l'historique (date, type de boisson, note). Permet
-          aussi de cumuler les verres de la soirée pour une estimation d'alcoolémie indicative.
+          Cumule les verres de la soirée en cours et estime indicativement l'alcoolémie (formule
+          de Widmark simplifiée).
         </p>
 
         <h3>Détail</h3>

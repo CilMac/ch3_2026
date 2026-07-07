@@ -66,9 +66,6 @@ function bumpWeekBadge(date, unites) {
 
 const modeVolumeBtn = document.getElementById('mode-volume-btn');
 const modePoidsBtn = document.getElementById('mode-poids-btn');
-const modeFavorisBtn = document.getElementById('mode-favoris-btn');
-const calcPanelWrap = document.getElementById('calc-panel');
-const favorisPanelWrap = document.getElementById('favoris-panel');
 const qtyLabel = document.getElementById('qty-label');
 const qtyInput = document.getElementById('qty-input');
 const qtyMinusBtn = document.getElementById('qty-minus-btn');
@@ -98,22 +95,8 @@ function applyMode(mode) {
   renderResult();
 }
 
-function showCalcSubview(target) {
-  const isFavoris = target === 'favoris';
-  calcPanelWrap.hidden = isFavoris;
-  favorisPanelWrap.hidden = !isFavoris;
-  modeFavorisBtn.classList.toggle('active', isFavoris);
-  if (isFavoris) {
-    modeVolumeBtn.classList.remove('active');
-    modePoidsBtn.classList.remove('active');
-  } else {
-    applyMode(target);
-  }
-}
-
-modeVolumeBtn.addEventListener('click', () => showCalcSubview('volume'));
-modePoidsBtn.addEventListener('click', () => showCalcSubview('poids'));
-modeFavorisBtn.addEventListener('click', () => showCalcSubview('favoris'));
+modeVolumeBtn.addEventListener('click', () => applyMode('volume'));
+modePoidsBtn.addEventListener('click', () => applyMode('poids'));
 
 qtyInput.addEventListener('input', () => {
   const value = parseFloat(qtyInput.value) || 0;
@@ -169,7 +152,7 @@ calcInfoBtn.addEventListener('click', () => {
   calcInfoText.hidden = !calcInfoText.hidden;
 });
 
-showCalcSubview('volume');
+applyMode('volume');
 degreInput.value = getState().degre;
 renderResult();
 
@@ -218,18 +201,132 @@ favoriDegreInput.addEventListener('input', renderFavoriUnitesPreview);
 function refreshFavorisButtonState() {
   favoriAddBtn.disabled = !getToken();
   document.querySelectorAll('.favori-delete-btn').forEach((b) => { b.disabled = !getToken(); });
+  document.querySelectorAll('.favori-archive-btn').forEach((b) => { b.disabled = !getToken(); });
 }
 
 function applyFavori(fav) {
-  showCalcSubview(fav.mode);
+  applyMode(fav.mode);
   qtyInput.value = fav.mode === 'volume' ? fav.volume : fav.poids;
   qtyInput.dispatchEvent(new Event('input'));
   degreInput.value = fav.degre;
   degreInput.dispatchEvent(new Event('input'));
   entryTypeSelect.value = fav.type;
   entryNoteInput.value = `Favori : ${fav.nom}`;
-  favorisStatus.textContent = `« ${fav.nom} » appliqué au calculateur ci-dessus — vérifie puis archive dans l’onglet Archivage.`;
+  renderCalcSummary();
+  favorisStatus.textContent = `« ${fav.nom} » appliqué au calculateur ci-dessous — vérifie puis clique Archiver.`;
   favorisStatus.className = 'status ok';
+  document.getElementById('calc-panel').scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+// ── Archivage direct d'un favori (avec fenêtre d'annulation) ──
+
+const favoriArchiveConfirm = document.getElementById('favori-archive-confirm');
+const favoriArchiveConfirmText = document.getElementById('favori-archive-confirm-text');
+const favoriArchiveUndoBtn = document.getElementById('favori-archive-undo-btn');
+
+let favoriArchiveConfirmTimer = null;
+let favoriArchiveConfirmState = null;
+
+function hideFavoriArchiveConfirm() {
+  favoriArchiveConfirm.hidden = true;
+  favoriArchiveConfirmState = null;
+  if (favoriArchiveConfirmTimer) {
+    clearTimeout(favoriArchiveConfirmTimer);
+    favoriArchiveConfirmTimer = null;
+  }
+}
+
+function showFavoriArchiveConfirm(fav, entry, state) {
+  favoriArchiveConfirmState = state;
+  const heure = new Date(entry.date).toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' });
+  favoriArchiveConfirmText.textContent = `Archivé : « ${fav.nom} » — ${formatFr(entry.unites, 2)} unité(s) à ${heure}.`;
+  favoriArchiveConfirm.hidden = false;
+  if (favoriArchiveConfirmTimer) clearTimeout(favoriArchiveConfirmTimer);
+  favoriArchiveConfirmTimer = setTimeout(hideFavoriArchiveConfirm, 7000);
+}
+
+async function undoWrittenFavoriEntry(id) {
+  const token = getToken();
+  if (!token) return;
+  try {
+    await writeData((current) => removeEntry(current, id), { message: 'annulation archivage favori', token });
+    detailLoaded = false;
+    syntheseLoaded = false;
+    renderDetailList();
+  } catch (e) {
+    favorisStatus.textContent = `Erreur lors de l’annulation : ${e.message}`;
+    favorisStatus.className = 'status error';
+  }
+}
+
+favoriArchiveUndoBtn.addEventListener('click', () => {
+  const state = favoriArchiveConfirmState;
+  if (!state) return;
+  state.cancelled = true;
+  if (state.resolved === 'written') {
+    undoWrittenFavoriEntry(state.entry.id);
+  } else if (state.resolved === 'queued') {
+    removePendingEntry(state.entry.id);
+    renderPendingStatus();
+    renderDetailList();
+  }
+  favorisStatus.textContent = `Archivage de « ${state.fav.nom} » annulé.`;
+  favorisStatus.className = 'status warn';
+  hideFavoriArchiveConfirm();
+});
+
+function archiveFavoriDirect(fav, btn) {
+  const token = getToken();
+  if (!token) return;
+
+  const date = new Date();
+  const unites = computeUnitesFrom({ mode: fav.mode, volume: fav.volume, poids: fav.poids, degre: fav.degre });
+  const entry = buildEntry({
+    date,
+    unites,
+    volume: fav.volume,
+    poids: fav.poids,
+    degre: fav.degre,
+    mode: fav.mode,
+    type: fav.type,
+    note: `Favori : ${fav.nom}`,
+  });
+
+  addToSession(entry.unites);
+  renderSession();
+  renderAlcoolemie();
+  bumpWeekBadge(date, entry.unites);
+
+  const state = { entry, fav, cancelled: false, resolved: null };
+  showFavoriArchiveConfirm(fav, entry, state);
+
+  btn.disabled = true;
+  writeData(
+    (current) => addEntry(current, entry),
+    { message: `archivage : ${formatFr(entry.unites, 2)} unités`, token }
+  ).then(() => {
+    state.resolved = 'written';
+    detailLoaded = false;
+    syntheseLoaded = false;
+    trySyncPending();
+    if (state.cancelled) undoWrittenFavoriEntry(entry.id);
+  }).catch((e) => {
+    if (e instanceof SyncError) {
+      state.resolved = 'error';
+      if (!state.cancelled) {
+        favorisStatus.textContent = `Erreur : ${e.message}`;
+        favorisStatus.className = 'status error';
+      }
+    } else if (!state.cancelled) {
+      queueEntry(entry);
+      state.resolved = 'queued';
+      detailLoaded = false;
+      syntheseLoaded = false;
+      renderPendingStatus();
+    }
+  }).finally(() => {
+    btn.disabled = !getToken();
+  });
 }
 
 function renderFavoris() {
@@ -261,25 +358,34 @@ function renderFavoris() {
       </div>
     `;
 
-    const btnRow = document.createElement('div');
-    btnRow.className = 'btn-row';
+    const archiveBtnRow = document.createElement('div');
+    archiveBtnRow.className = 'btn-row';
+    const archiveFavBtn = document.createElement('button');
+    archiveFavBtn.type = 'button';
+    archiveFavBtn.className = 'btn-primary btn-small favori-archive-btn';
+    archiveFavBtn.textContent = 'Archiver';
+    archiveFavBtn.disabled = !getToken();
+    archiveFavBtn.addEventListener('click', () => archiveFavoriDirect(fav, archiveFavBtn));
+    archiveBtnRow.appendChild(archiveFavBtn);
+    li.appendChild(archiveBtnRow);
 
-    const applyBtn = document.createElement('button');
-    applyBtn.type = 'button';
-    applyBtn.className = 'btn-secondary btn-small';
-    applyBtn.textContent = 'Utiliser';
-    applyBtn.addEventListener('click', () => applyFavori(fav));
+    const editLink = document.createElement('button');
+    editLink.type = 'button';
+    editLink.className = 'favori-edit-link';
+    editLink.textContent = 'Modifier avant d’archiver';
+    editLink.addEventListener('click', () => applyFavori(fav));
+    li.appendChild(editLink);
 
+    const deleteBtnRow = document.createElement('div');
+    deleteBtnRow.className = 'btn-row';
     const deleteBtn = document.createElement('button');
     deleteBtn.type = 'button';
     deleteBtn.className = 'btn-secondary btn-small btn-danger favori-delete-btn';
     deleteBtn.textContent = 'Supprimer';
     deleteBtn.disabled = !getToken();
     deleteBtn.addEventListener('click', () => deleteFavori(fav.id));
-
-    btnRow.appendChild(applyBtn);
-    btnRow.appendChild(deleteBtn);
-    li.appendChild(btnRow);
+    deleteBtnRow.appendChild(deleteBtn);
+    li.appendChild(deleteBtnRow);
 
     favorisList.appendChild(li);
   });
@@ -416,7 +522,7 @@ replayLastBtn.addEventListener('click', async () => {
       return;
     }
     const [last] = sortEntries(entries, 'desc');
-    showCalcSubview(last.mode);
+    applyMode(last.mode);
     qtyInput.value = last.mode === 'volume' ? last.volume : last.poids;
     qtyInput.dispatchEvent(new Event('input'));
     degreInput.value = last.degre;
@@ -450,6 +556,8 @@ function refreshEntryDatetimeMax() {
 
 entryDatetimeInput.value = toDatetimeLocalValue(new Date());
 refreshEntryDatetimeMax();
+renderCalcSummary();
+refreshArchiveButtonState();
 
 archiveBtn.addEventListener('click', async () => {
   const token = getToken();
@@ -592,10 +700,12 @@ razBtn.addEventListener('click', () => {
 });
 
 onViewChange((name) => {
-  if (name === 'archivage') {
+  if (name === 'calcul') {
     renderCalcSummary();
     refreshArchiveButtonState();
     refreshEntryDatetimeMax();
+  }
+  if (name === 'soiree') {
     renderAlcoolemie();
   }
 });

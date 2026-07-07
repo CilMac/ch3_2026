@@ -536,6 +536,42 @@ input[type="datetime-local"] {
 .entry-note {
   font-style: italic;
 }
+.favori-edit-link {
+  display: inline-block;
+  margin-top: 8px;
+  font-size: .74rem;
+  color: var(--wood-mid);
+  text-decoration: underline;
+  background: none;
+  border: none;
+  padding: 0;
+}
+.favori-edit-link:hover { color: var(--wood-dk); }
+
+.favori-add-details {
+  margin-top: 16px;
+  padding-top: 12px;
+  border-top: 1px dashed rgba(90,52,24,.25);
+}
+.favori-add-details summary {
+  cursor: pointer;
+  font-family: 'Shippori Mincho', serif;
+  font-size: .88rem;
+  color: var(--wood-dk);
+  list-style: none;
+}
+.favori-add-details summary::-webkit-details-marker { display: none; }
+.favori-add-details summary::before {
+  content: '▸ ';
+  color: var(--wood-mid);
+}
+.favori-add-details[open] summary::before {
+  content: '▾ ';
+}
+.favori-add-details[open] summary {
+  margin-bottom: 10px;
+}
+
 .entry-delete-btn {
   margin-top: 8px;
   font-size: .72rem;
