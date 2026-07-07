@@ -57,17 +57,6 @@
       "note": ""
     },
     {
-      "id": "a34d2ac9-80d5-4026-85ec-54c17dbbcadc",
-      "date": "2026-05-07T09:38:00.000Z",
-      "unites": 4.75,
-      "mode": "volume",
-      "volume": 33,
-      "poids": null,
-      "degre": 18,
-      "type": "autre",
-      "note": ""
-    },
-    {
       "id": "6ebdd6c7-9aa2-49b1-9dce-6cb6fa2a8852",
       "date": "2026-07-05T20:55:00.000Z",
       "unites": 2,
@@ -200,7 +189,7 @@
       "note": "Favori : RECUP HISTORIQUE"
     }
   ],
-  "updatedAt": "2026-07-07T12:27:38.755Z",
+  "updatedAt": "2026-07-07T12:28:49.404Z",
   "_lot1Test": {
     "message": "ping de validation Lot 1",
     "device": "appareil sans nom",
