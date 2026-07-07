@@ -83,15 +83,22 @@ via les mêmes helpers que "Rejouer la dernière conso" — n'archive rien autom
 `ensureShape()` (`js/dataStore.js`) garantit que `favoris` est toujours un tableau, y compris sur
 un `data.json` créé avant l'existence de ce champ.
 
-**Structure de l'onglet Calcul** : le bandeau "Mode de saisie" (`#mode-volume-btn`/`#mode-poids-btn`)
-a été étendu à 3 boutons en ajoutant `#mode-favoris-btn`, pour éviter d'avoir à scroller vers le
-panneau favoris sur mobile. `showCalcSubview('volume'|'poids'|'favoris')` (`js/app.js`) bascule
-entre deux conteneurs frères (`#calc-panel` / `#favoris-panel`) et appelle `applyMode()` pour les
-deux premiers modes. Toute action qui modifie l'état du calculateur en arrière-plan (bouton
-"Utiliser" d'un favori, "Rejouer la dernière conso" dans Archivage) doit appeler `showCalcSubview()`
-et non `applyMode()` directement, sinon le résultat reste caché derrière le panneau resté actif.
-"Utiliser" un favori pré-remplit aussi la note d'Archivage avec `Favori : <nom>` (modifiable avant
-d'archiver), pour retrouver l'origine de l'entrée dans Détail.
+**Structure de l'onglet Calcul (écran fusionné)** : Calcul et Archivage ont été fusionnés sur un
+seul écran (`data-view="calcul"`), dans cet ordre : bloc "Mes favoris" (toujours visible, replié
+par défaut dans un `<details id="favoris-list-details">` avec un résumé "Mes favoris (N)"),
+calculateur (`#calc-panel`, sélecteur Volume/Poids `#mode-volume-btn`/`#mode-poids-btn` placé sur
+la même ligne que le titre "Calcul d'unités" via `.panel-header-row`), puis bloc "Enregistrer cette
+consommation" (ex-panneau Archivage : résumé, rejouer la dernière conso, date/type/note,
+`#archive-btn`). L'ancien mode "Favoris" du sélecteur segmenté (3 boutons) et `showCalcSubview()`
+ont disparu : chaque favori a maintenant sa propre carte avec 3 actions sur une seule ligne
+(`.btn-row`) — **Archiver** (bouton primaire, archive directement via `archiveFavoriDirect()`, même
+pattern que l'ancien `archiveBtn` : cumul de session, badge semaine, écriture GitHub, mise en file
+hors-ligne, avec une bannière de confirmation `#favori-archive-confirm` + bouton Annuler actif
+~7s), **Modifier avant d'archiver** (lien discret, appelle `applyFavori()` qui préremplit le
+calculateur et scrolle vers `#calc-panel`, sans changer d'onglet), et **Supprimer**. L'ancien
+onglet "Archivage" est devenu **"Soirée"** (`data-view="soiree"`) : ne garde que cumul de session
++ alcoolémie ; `renderAlcoolemie()` s'y déclenche via `onViewChange`, tandis que résumé/bouton
+archiver/date-max se rafraîchissent à l'affichage de "calcul".
 
 ## Déploiement
 
@@ -138,7 +145,7 @@ redevenue un écran de consultation pure.
 
 ## Navigation : 6 onglets
 
-`Calcul | Archivage | Détail | Synthèse | ℹ️ Info | ⚙️ Configuration`. Info et Configuration sont
+`Calcul | Soirée | Détail | Synthèse | ℹ️ Info | ⚙️ Configuration`. Info et Configuration sont
 des boutons icône seule (classe `.tab-btn-icon`, `aria-label` pour l'accessibilité puisqu'il n'y a
 pas de texte visible) — pas de logique JS spécifique, ils passent par le même mécanisme générique
 `[data-target]` / `.view[data-view]` que les autres onglets. Info contient deux panneaux : la
@@ -215,7 +222,15 @@ double usage : favoris + badge semaine, pour ne pas dupliquer la lecture réseau
 `data.entries` avec `getPendingEntries()` (sinon une conso hors-ligne non encore synchronisée
 sous-compterait le badge). `bumpWeekBadge(date, unites)` l'incrémente en mémoire immédiatement à
 l'archivage (même logique "avant l'écriture réseau" que le cumul de session) — jamais recalculé une
-deuxième fois par `trySyncPending()`, pour ne pas compter deux fois la même entrée.
+deuxième fois par `trySyncPending()`, pour ne pas compter deux fois la même entrée. `bumpWeekBadge`
+est aussi appelé avec un delta **négatif** à toute suppression (`deleteEntry` dans Détail,
+`cancelPendingEntry` pour une conso en attente) et le badge est remis à `0` directement après une
+réinitialisation complète — sans ça, un appareil resté ouvert longtemps dérivait silencieusement
+(bug réel observé : Mac et iPhone affichaient des totaux différents après des suppressions faites
+sur un seul des deux appareils). Comme ce compteur ne peut de toute façon pas savoir ce qui change
+sur *d'autres* appareils ou directement via l'API GitHub, un listener `visibilitychange` relance
+`loadFavoris()` (donc un refetch complet + recalcul du badge) à chaque retour au premier plan de
+l'app — le seul filet de sécurité vraiment fiable contre la dérive inter-appareils.
 
 Dans Synthèse → Tendance, deux panneaux sous le graphique 12 semaines : "Par jour de la semaine"
 (`statsParJourSemaine`) et "Par type de boisson" (`statsParType`), tous deux dans `js/stats.js`,
@@ -258,6 +273,16 @@ semaines mais rendait illisibles les libellés plus longs des graphiques par jou
 "Spiritueux"). Toujours vérifier visuellement (capture d'écran ou preview) après un changement de
 taille de police dans un SVG généré par `chart.js`, la largeur de barre disponible dépend du nombre
 de catégories.
+
+## Sliders Poids / Seuil visé (onglet Soirée)
+
+`#poids-input` (50-110 kg, défaut 85) et `#seuil-legal-input` (0,1-1,5 g/L, défaut 0,5) sont des
+`<input type="range">` plutôt que des champs numériques — plus rapides à régler au doigt sur
+mobile. La valeur choisie s'affiche en direct dans le `<label>` (`#poids-value`/`#seuil-legal-value`,
+mis à jour dans `renderAlcoolemie()`, pas besoin de listener séparé). Style custom en CSS
+(`input[type="range"]::-webkit-slider-thumb` / `::-moz-range-thumb`) pour matcher la palette
+bois/ambre — les sliders natifs ne suivent pas `accent-color` de façon assez fine sur tous les
+navigateurs.
 
 ## Backlog / pistes d'amélioration ergonomie (identifiées, pas encore faites)
 
