@@ -79,17 +79,6 @@
       "note": "Picon"
     },
     {
-      "id": "72b8dfad-67da-488c-ba25-4fe2b8b51f95",
-      "date": "2026-07-06T12:52:00.000Z",
-      "unites": 2.81,
-      "mode": "poids",
-      "volume": null,
-      "poids": 75,
-      "degre": 37.5,
-      "type": "spiritueux",
-      "note": "Favori : Gin tonic"
-    },
-    {
       "id": "39b09df7-587f-427c-8e55-f276b1235a44",
       "date": "2026-04-09T13:08:00.000Z",
       "unites": 2.4,
@@ -123,8 +112,8 @@
       "note": ""
     },
     {
-      "id": "6e70519a-5a17-4813-a75c-b89c30ae9be6",
-      "date": "2026-07-06T14:16:00.000Z",
+      "id": "c4a7b632-08e2-40ee-8dbf-bd2e7e5ea62c",
+      "date": "2026-04-22T05:39:00.000Z",
       "unites": 1.98,
       "mode": "volume",
       "volume": 33,
@@ -134,51 +123,68 @@
       "note": "Favori : Pélican"
     },
     {
-      "id": "ce4d8860-4514-4eae-87aa-f8c24815e2c0",
-      "date": "2026-07-06T14:47:00.000Z",
-      "unites": 2.4,
+      "id": "8f59b601-6a46-4384-a0ea-330f53d63f64",
+      "date": "2026-04-23T05:41:00.000Z",
+      "unites": 1.98,
       "mode": "volume",
-      "volume": 25,
+      "volume": 33,
       "poids": null,
-      "degre": 12,
-      "type": "autre",
+      "degre": 7.5,
+      "type": "biere",
       "note": ""
+    },
+    {
+      "id": "138d7da3-b152-40dc-a73b-dd270cd9ca73",
+      "date": "2026-03-21T06:42:00.000Z",
+      "unites": 1.45,
+      "mode": "volume",
+      "volume": 33,
+      "poids": null,
+      "degre": 5.5,
+      "type": "biere",
+      "note": "Favori : 1664"
+    },
+    {
+      "id": "e78f8c7e-68b4-46f2-bd55-dd367c6fdfd9",
+      "date": "2026-03-24T06:43:00.000Z",
+      "unites": 1.32,
+      "mode": "volume",
+      "volume": 33,
+      "poids": null,
+      "degre": 5,
+      "type": "biere",
+      "note": "Favori : Heineken"
+    },
+    {
+      "id": "7b78ab0a-704d-43a4-89c1-873e90deea80",
+      "date": "2026-03-05T06:44:00.000Z",
+      "unites": 2,
+      "mode": "volume",
+      "volume": 33.3,
+      "poids": null,
+      "degre": 7.5,
+      "type": "biere",
+      "note": "Favori : Picon"
+    },
+    {
+      "id": "107270ff-6e96-4dac-bef5-e62096a92532",
+      "date": "2026-03-02T06:47:00.000Z",
+      "unites": 1.98,
+      "mode": "volume",
+      "volume": 33,
+      "poids": null,
+      "degre": 7.5,
+      "type": "biere",
+      "note": "Favori : Pélican"
     }
   ],
-  "updatedAt": "2026-07-06T14:48:44.095Z",
+  "updatedAt": "2026-07-07T05:48:10.791Z",
   "_lot1Test": {
     "message": "ping de validation Lot 1",
     "device": "appareil sans nom",
     "at": "2026-07-02T14:52:05.602Z"
   },
   "favoris": [
-    {
-      "id": "31035ad1-51ad-4ab9-a881-f8007ea79d1f",
-      "nom": "Mojito",
-      "mode": "poids",
-      "volume": null,
-      "poids": 60,
-      "degre": 55,
-      "type": "spiritueux"
-    },
-    {
-      "id": "eb82be82-3d70-44ae-8510-415cf7a5ab78",
-      "nom": "Gin tonic",
-      "mode": "poids",
-      "volume": null,
-      "poids": 70,
-      "degre": 37.5,
-      "type": "spiritueux"
-    },
-    {
-      "id": "a222ed42-9f9c-45a3-a225-859c540324cc",
-      "nom": "Picon",
-      "mode": "volume",
-      "volume": 25,
-      "poids": null,
-      "degre": 10,
-      "type": "autre"
-    },
     {
       "id": "20908033-0f05-46a4-bf4c-a44beba0bdc1",
       "nom": "1664",
@@ -196,6 +202,33 @@
       "poids": null,
       "degre": 7.5,
       "type": "biere"
+    },
+    {
+      "id": "8c27ebc4-347c-47b7-b665-286161edf8e7",
+      "nom": "Heineken",
+      "mode": "volume",
+      "volume": 33,
+      "poids": null,
+      "degre": 5,
+      "type": "biere"
+    },
+    {
+      "id": "f864ec33-05f2-47fc-9b7b-17b597c37171",
+      "nom": "Picon",
+      "mode": "volume",
+      "volume": 33.3,
+      "poids": null,
+      "degre": 7.5,
+      "type": "biere"
+    },
+    {
+      "id": "97af189e-1ac0-48ce-b352-9739cd4ce5b6",
+      "nom": "Mojito",
+      "mode": "poids",
+      "volume": null,
+      "poids": 60,
+      "degre": 55,
+      "type": "spiritueux"
     }
   ]
 }
