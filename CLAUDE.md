@@ -134,14 +134,19 @@ le run est vert.
 
 ## Sous-écrans de Synthèse
 
-Synthèse est découpée en 4 sous-écrans via une sous-navigation locale (`#synthese-subnav`,
-boutons `[data-subview]`, cf. `js/app.js`) plutôt qu'un seul long scroll : **Stats** (stats
-globales + filtre de période + Séries), **Bilan hebdo** (semaine sélectionnée, navigation
-préc/suiv), **Tendance** (graphique 12 semaines), **Bilan général** (liste complète par semaine).
-Le filtre de période ne s'affiche que dans l'onglet Stats, ce qui évite l'ambiguïté qu'il y avait
-avant (il ne s'appliquait qu'aux stats du haut mais apparaissait au-dessus de tout). Réinitialisation
-a été déplacée dans Configuration (entre Export/Import et Test de synchronisation) — Synthèse est
-redevenue un écran de consultation pure.
+Synthèse est découpée en 3 sous-écrans via une sous-navigation locale (`#synthese-subnav`,
+boutons `[data-subview]`, cf. `js/app.js`) plutôt qu'un seul long scroll : **Vue d'ensemble**
+(`data-subview="stats"`, attribut inchangé pour ne rien casser côté JS/CSS malgré le libellé
+renommé — stats globales + filtre de période + Séries + Bilan général, dans cet ordre, empilés
+sur le même écran), **Bilan hebdo** (semaine sélectionnée, navigation préc/suiv), **Tendance**
+(graphique 12 semaines + graphiques par jour/type). Anciennement 4 sous-écrans avec "Stats" et
+"Bilan général" séparés ; fusionnés en juillet 2026 car ils partageaient déjà le même filtre de
+période et se rendaient toujours ensemble (`onPeriodeChange()`) — la séparation en deux onglets
+n'apportait plus rien, seulement un clic de navigation en plus. Le filtre de période ne s'affiche
+que dans Vue d'ensemble, ce qui évite l'ambiguïté qu'il y avait avant (il ne s'appliquait qu'aux
+stats du haut mais apparaissait au-dessus de tout). Réinitialisation a été déplacée dans
+Configuration (entre Export/Import et Test de synchronisation) — Synthèse est redevenue un écran
+de consultation pure.
 
 ## Navigation : 6 onglets
 
@@ -182,9 +187,9 @@ l'onglet qui n'a pas été rouvert affiche des données périmées jusqu'à un c
   côté JS avant tout `writeData` (le `max` HTML seul ne suffit pas à garantir la règle sur tous
   les navigateurs/dates saisies au clavier).
 - La ligne "Moyenne hebdo sur *(période)*" en haut de **Bilan général** reprend le `consoHebdoMoy`
-  calculé pour la période choisie dans **Stats** (`periodeType`/`getPeriodStats()`, factorisé et
-  partagé entre `renderSynthese()` et `renderBilanGeneral()`) — se met à jour dès que la période
-  change dans Stats, même si on regarde Bilan général à ce moment-là.
+  calculé pour la période choisie dans **Vue d'ensemble** (`periodeType`/`getPeriodStats()`,
+  factorisé et partagé entre `renderSynthese()` et `renderBilanGeneral()`) — se met à jour dès que
+  la période change, même écran désormais (fusion Stats/Bilan général, voir plus haut).
 
 ## Cumul de session = archivage (plus de bouton "Cumuler" séparé)
 
@@ -236,7 +241,7 @@ Dans Synthèse → Tendance, deux panneaux sous le graphique 12 semaines : "Par 
 (`statsParJourSemaine`) et "Par type de boisson" (`statsParType`), tous deux dans `js/stats.js`,
 rendus via `categoryBarChartSvg` (`js/chart.js`, générique, sans ligne de seuil contrairement à
 `weeklyBarChartSvg`). Contrairement au graphique 12-semaines (périmètre fixe), ces deux-là suivent
-le filtre de période de Stats (même `getPeriodStats()`, qui expose maintenant aussi `filtered` en
+le filtre de période de Vue d'ensemble (même `getPeriodStats()`, qui expose maintenant aussi `filtered` en
 plus de `stats`/`start`/`end`) — la fonction partagée `onPeriodeChange()` fait le lien entre les 3
 boutons de période et les 4 rendus concernés (`renderSynthese`, `renderBilanGeneral`,
 `renderChartJour`, `renderChartType`), pour éviter de recopier ces 4 appels à chaque point d'entrée.

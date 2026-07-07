@@ -269,10 +269,9 @@
     <section class="view" data-view="synthese" hidden>
 
       <div class="segmented" role="group" aria-label="Sous-écran Synthèse" id="synthese-subnav">
-        <button type="button" class="seg-btn active" data-subview="stats">Stats</button>
+        <button type="button" class="seg-btn active" data-subview="stats">Vue d'ensemble</button>
         <button type="button" class="seg-btn" data-subview="bilan-hebdo">Bilan hebdo</button>
         <button type="button" class="seg-btn" data-subview="tendance">Tendance</button>
-        <button type="button" class="seg-btn" data-subview="bilan-general">Bilan général</button>
       </div>
 
       <div class="subview" data-subview="stats">
@@ -354,6 +353,19 @@
           <p class="hint">Jours consécutifs sans consommation, jusqu'à aujourd'hui inclus (sur tout l'historique, indépendamment du filtre de période ci-dessus).</p>
         </div>
 
+        <div class="panel">
+          <h2>Bilan général <span class="tag">par semaine</span></h2>
+
+          <div class="result-block">
+            <span class="result-label">Moyenne hebdo <span id="bilan-general-periode-tag">—</span></span>
+            <span id="bilan-general-moyenne-value" class="result-value">—</span>
+            <span class="result-sub" id="bilan-general-detail">—</span>
+          </div>
+          <p class="hint">Basé sur la période sélectionnée ci-dessus.</p>
+
+          <ul id="bilan-general-list" class="entry-list"></ul>
+        </div>
+
       </div>
 
       <div class="subview" data-subview="bilan-hebdo" hidden>
@@ -404,21 +416,6 @@
         </div>
       </div>
 
-      <div class="subview" data-subview="bilan-general" hidden>
-        <div class="panel">
-          <h2>Bilan général <span class="tag">par semaine</span></h2>
-
-          <div class="result-block">
-            <span class="result-label">Moyenne hebdo <span id="bilan-general-periode-tag">—</span></span>
-            <span id="bilan-general-moyenne-value" class="result-value">—</span>
-            <span class="result-sub" id="bilan-general-detail">—</span>
-          </div>
-          <p class="hint">Réglable dans l'onglet Stats.</p>
-
-          <ul id="bilan-general-list" class="entry-list"></ul>
-        </div>
-      </div>
-
     </section>
 
     <section class="view" data-view="info" hidden>
@@ -449,9 +446,10 @@
 
         <h3>Synthèse</h3>
         <p class="hint">
-          Stats globales et séries sans consommation, bilan de la semaine sélectionnée, tendance
-          sur les 12 dernières semaines, et bilan général par semaine — répartis en sous-écrans
-          pour rester lisibles sur mobile.
+          Trois sous-écrans pour rester lisible sur mobile : "Vue d'ensemble" (stats globales,
+          séries sans consommation, et bilan général par semaine, avec un filtre de période
+          commun), "Bilan hebdo" (semaine sélectionnée) et "Tendance" (graphiques sur les 12
+          dernières semaines).
         </p>
 
         <h3>Configuration</h3>
