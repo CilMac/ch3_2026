@@ -159,6 +159,7 @@ renderResult();
 // ── Favoris (conso récurrentes) ──
 
 const favorisList = document.getElementById('favoris-list');
+const favorisListSummary = document.getElementById('favoris-list-summary');
 const favorisStatus = document.getElementById('favoris-status');
 const favoriNomInput = document.getElementById('favori-nom');
 const favoriModeVolumeBtn = document.getElementById('favori-mode-volume-btn');
@@ -331,6 +332,9 @@ function archiveFavoriDirect(fav, btn) {
 
 function renderFavoris() {
   favorisList.innerHTML = '';
+  favorisListSummary.textContent = favoris.length > 0
+    ? `Mes favoris (${favoris.length})`
+    : 'Mes favoris';
 
   if (favoris.length === 0) {
     const li = document.createElement('li');
@@ -358,35 +362,33 @@ function renderFavoris() {
       </div>
     `;
 
-    const archiveBtnRow = document.createElement('div');
-    archiveBtnRow.className = 'btn-row';
+    const btnRow = document.createElement('div');
+    btnRow.className = 'btn-row';
+
     const archiveFavBtn = document.createElement('button');
     archiveFavBtn.type = 'button';
     archiveFavBtn.className = 'btn-primary btn-small favori-archive-btn';
     archiveFavBtn.textContent = 'Archiver';
     archiveFavBtn.disabled = !getToken();
     archiveFavBtn.addEventListener('click', () => archiveFavoriDirect(fav, archiveFavBtn));
-    archiveBtnRow.appendChild(archiveFavBtn);
-    li.appendChild(archiveBtnRow);
+    btnRow.appendChild(archiveFavBtn);
 
     const editLink = document.createElement('button');
     editLink.type = 'button';
     editLink.className = 'favori-edit-link';
     editLink.textContent = 'Modifier avant d’archiver';
     editLink.addEventListener('click', () => applyFavori(fav));
-    li.appendChild(editLink);
+    btnRow.appendChild(editLink);
 
-    const deleteBtnRow = document.createElement('div');
-    deleteBtnRow.className = 'btn-row';
     const deleteBtn = document.createElement('button');
     deleteBtn.type = 'button';
     deleteBtn.className = 'btn-secondary btn-small btn-danger favori-delete-btn';
     deleteBtn.textContent = 'Supprimer';
     deleteBtn.disabled = !getToken();
     deleteBtn.addEventListener('click', () => deleteFavori(fav.id));
-    deleteBtnRow.appendChild(deleteBtn);
-    li.appendChild(deleteBtnRow);
+    btnRow.appendChild(deleteBtn);
 
+    li.appendChild(btnRow);
     favorisList.appendChild(li);
   });
 }

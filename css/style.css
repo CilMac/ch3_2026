@@ -200,6 +200,7 @@ input::placeholder {
 
 .btn-row {
   display: flex;
+  align-items: center;
   gap: 8px;
   margin-top: 10px;
   flex-wrap: wrap;
@@ -537,38 +538,43 @@ input[type="datetime-local"] {
   font-style: italic;
 }
 .favori-edit-link {
-  display: inline-block;
-  margin-top: 8px;
   font-size: .74rem;
   color: var(--wood-mid);
   text-decoration: underline;
   background: none;
   border: none;
-  padding: 0;
+  padding: 6px 2px;
 }
 .favori-edit-link:hover { color: var(--wood-dk); }
 
-.favori-add-details {
+.favori-add-details,
+.favoris-list-details {
   margin-top: 16px;
   padding-top: 12px;
   border-top: 1px dashed rgba(90,52,24,.25);
 }
-.favori-add-details summary {
+.favoris-list-details { margin-top: 0; }
+.favori-add-details summary,
+.favoris-list-details summary {
   cursor: pointer;
   font-family: 'Shippori Mincho', serif;
   font-size: .88rem;
   color: var(--wood-dk);
   list-style: none;
 }
-.favori-add-details summary::-webkit-details-marker { display: none; }
-.favori-add-details summary::before {
+.favori-add-details summary::-webkit-details-marker,
+.favoris-list-details summary::-webkit-details-marker { display: none; }
+.favori-add-details summary::before,
+.favoris-list-details summary::before {
   content: '▸ ';
   color: var(--wood-mid);
 }
-.favori-add-details[open] summary::before {
+.favori-add-details[open] summary::before,
+.favoris-list-details[open] summary::before {
   content: '▾ ';
 }
-.favori-add-details[open] summary {
+.favori-add-details[open] summary,
+.favoris-list-details[open] summary {
   margin-bottom: 10px;
 }
 
