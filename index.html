@@ -464,20 +464,54 @@
       <div class="panel">
         <h2>Sous le capot</h2>
         <p class="hint">
-          CH3-CH2-OH — suivi personnel de consommation d'alcool. Page statique hébergée sur GitHub
-          Pages ; les données vivent uniquement dans <code>data/data.json</code> de ce dépôt,
-          synchronisées via l'API GitHub. Aucun tiers, aucun tracker.
+          Page statique hébergée sur GitHub Pages, sans backend ni compte : les données vivent
+          uniquement dans <code>data/data.json</code> de ce dépôt, synchronisées via l'API GitHub.
+          Aucun tiers, aucun tracker.
         </p>
-        <p class="hint">
-          HTML/CSS/JavaScript natif, sans framework ni backend : toute la logique tourne dans le
-          navigateur, la seule dépendance externe est l'API GitHub pour lire et écrire
-          <code>data/data.json</code>.
-        </p>
-        <p class="hint">
-          Calculs indicatifs : 1 unité = 10 g d'alcool pur (densité éthanol 0,8). L'alcoolémie
-          estimée utilise une formule de Widmark simplifiée — elle ne remplace pas un éthylotest
-          homologué.
-        </p>
+
+        <details class="info-tech-details">
+          <summary>+ Le détail technique</summary>
+
+          <h3>Architecture</h3>
+          <p class="hint">
+            HTML/CSS/JavaScript natif (modules ES), sans framework ni bibliothèque externe :
+            toute la logique tourne dans le navigateur. La seule dépendance externe est l'API
+            GitHub Contents, utilisée pour lire et écrire <code>data/data.json</code> — lecture
+            publique sans jeton, écriture avec un jeton fine-grained (scope
+            <code>Contents: write</code>, limité à ce dépôt) collé dans l'onglet Configuration et
+            stocké uniquement en local sur cet appareil, jamais transmis ailleurs qu'à GitHub.
+          </p>
+          <p class="hint">
+            Le code est découpé en petits modules isolés, chacun responsable d'une seule chose :
+            calcul des unités, forme des données, cumul de session, file d'attente hors-ligne,
+            tri de l'historique, statistiques par période, regroupement par semaine, génération
+            des graphiques, formule d'alcoolémie, séries sans consommation, seuils officiels. Un
+            seul fichier parle à l'API GitHub ; tous les autres ignorent complètement le réseau.
+          </p>
+
+          <h3>Hors-ligne</h3>
+          <p class="hint">
+            Si le réseau coupe au moment d'archiver, la consommation est mise de côté sur cet
+            appareil et resynchronisée automatiquement dès que la connexion revient (ou au
+            prochain archivage réussi) — rien n'est perdu, elle reste visible dans Détail avec un
+            badge « en attente » en attendant.
+          </p>
+
+          <h3>Calculs</h3>
+          <p class="hint">
+            1 unité d'alcool = 10 g d'alcool pur (densité éthanol 0,8). L'alcoolémie estimée
+            applique une formule de Widmark simplifiée au cumul de la soirée — indicative
+            uniquement, elle ne remplace pas un éthylotest homologué. Les semaines sont découpées
+            du lundi au dimanche ; le numéro affiché à côté (ex. « Semaine 28 ») suit la norme ISO
+            8601, à titre purement informatif.
+          </p>
+
+          <h3>Progressive Web App</h3>
+          <p class="hint">
+            Installable sur l'écran d'accueil (manifest + icônes) pour un lancement en plein
+            écran, sans barre d'adresse, comme une application native.
+          </p>
+        </details>
       </div>
 
     </section>

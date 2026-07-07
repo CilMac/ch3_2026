@@ -567,14 +567,16 @@ input[type="datetime-local"] {
 .favori-edit-link:hover { color: var(--wood-dk); }
 
 .favori-add-details,
-.favoris-list-details {
+.favoris-list-details,
+.info-tech-details {
   margin-top: 16px;
   padding-top: 12px;
   border-top: 1px dashed rgba(90,52,24,.25);
 }
 .favoris-list-details { margin-top: 0; }
 .favori-add-details summary,
-.favoris-list-details summary {
+.favoris-list-details summary,
+.info-tech-details summary {
   cursor: pointer;
   font-family: 'Shippori Mincho', serif;
   font-size: .88rem;
@@ -582,18 +584,22 @@ input[type="datetime-local"] {
   list-style: none;
 }
 .favori-add-details summary::-webkit-details-marker,
-.favoris-list-details summary::-webkit-details-marker { display: none; }
+.favoris-list-details summary::-webkit-details-marker,
+.info-tech-details summary::-webkit-details-marker { display: none; }
 .favori-add-details summary::before,
-.favoris-list-details summary::before {
+.favoris-list-details summary::before,
+.info-tech-details summary::before {
   content: '▸ ';
   color: var(--wood-mid);
 }
 .favori-add-details[open] summary::before,
-.favoris-list-details[open] summary::before {
+.favoris-list-details[open] summary::before,
+.info-tech-details[open] summary::before {
   content: '▾ ';
 }
 .favori-add-details[open] summary,
-.favoris-list-details[open] summary {
+.favoris-list-details[open] summary,
+.info-tech-details[open] summary {
   margin-bottom: 10px;
 }
 
