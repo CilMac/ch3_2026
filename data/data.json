@@ -57,17 +57,6 @@
       "note": ""
     },
     {
-      "id": "a34d2ac9-80d5-4026-85ec-54c17dbbcadc",
-      "date": "2026-05-07T09:38:00.000Z",
-      "unites": 4.75,
-      "mode": "volume",
-      "volume": 33,
-      "poids": null,
-      "degre": 18,
-      "type": "autre",
-      "note": ""
-    },
-    {
       "id": "6ebdd6c7-9aa2-49b1-9dce-6cb6fa2a8852",
       "date": "2026-07-05T20:55:00.000Z",
       "unites": 2,
@@ -79,106 +68,29 @@
       "note": "Picon"
     },
     {
-      "id": "39b09df7-587f-427c-8e55-f276b1235a44",
-      "date": "2026-04-09T13:08:00.000Z",
-      "unites": 2.4,
+      "id": "4547df7f-7f26-42d1-b62e-acf5ea5dc58a",
+      "date": "2026-07-07T12:20:00.000Z",
+      "unites": 0.24,
       "mode": "volume",
-      "volume": 25,
+      "volume": 6,
       "poids": null,
-      "degre": 12,
+      "degre": 5,
       "type": "autre",
       "note": "Test"
     },
     {
-      "id": "9a6b2042-5920-4a77-99b1-1c4d43384bd0",
-      "date": "2026-04-11T13:10:00.000Z",
-      "unites": 7.2,
+      "id": "07218a88-8efc-45b3-9100-0094450dd269",
+      "date": "2026-01-05T13:22:00.000Z",
+      "unites": 6.2,
       "mode": "volume",
       "volume": 50,
       "poids": null,
-      "degre": 18,
+      "degre": 15.5,
       "type": "autre",
-      "note": "TEST"
-    },
-    {
-      "id": "0c09bd4c-711e-46ff-baf2-ad2a0b5eecd6",
-      "date": "2026-04-09T13:11:00.000Z",
-      "unites": 6.75,
-      "mode": "poids",
-      "volume": null,
-      "poids": 75,
-      "degre": 90,
-      "type": "spiritueux",
-      "note": ""
-    },
-    {
-      "id": "c4a7b632-08e2-40ee-8dbf-bd2e7e5ea62c",
-      "date": "2026-04-22T05:39:00.000Z",
-      "unites": 1.98,
-      "mode": "volume",
-      "volume": 33,
-      "poids": null,
-      "degre": 7.5,
-      "type": "biere",
-      "note": "Favori : Pélican"
-    },
-    {
-      "id": "8f59b601-6a46-4384-a0ea-330f53d63f64",
-      "date": "2026-04-23T05:41:00.000Z",
-      "unites": 1.98,
-      "mode": "volume",
-      "volume": 33,
-      "poids": null,
-      "degre": 7.5,
-      "type": "biere",
-      "note": ""
-    },
-    {
-      "id": "138d7da3-b152-40dc-a73b-dd270cd9ca73",
-      "date": "2026-03-21T06:42:00.000Z",
-      "unites": 1.45,
-      "mode": "volume",
-      "volume": 33,
-      "poids": null,
-      "degre": 5.5,
-      "type": "biere",
-      "note": "Favori : 1664"
-    },
-    {
-      "id": "e78f8c7e-68b4-46f2-bd55-dd367c6fdfd9",
-      "date": "2026-03-24T06:43:00.000Z",
-      "unites": 1.32,
-      "mode": "volume",
-      "volume": 33,
-      "poids": null,
-      "degre": 5,
-      "type": "biere",
-      "note": "Favori : Heineken"
-    },
-    {
-      "id": "7b78ab0a-704d-43a4-89c1-873e90deea80",
-      "date": "2026-03-05T06:44:00.000Z",
-      "unites": 2,
-      "mode": "volume",
-      "volume": 33.3,
-      "poids": null,
-      "degre": 7.5,
-      "type": "biere",
-      "note": "Favori : Picon"
-    },
-    {
-      "id": "107270ff-6e96-4dac-bef5-e62096a92532",
-      "date": "2026-03-02T06:47:00.000Z",
-      "unites": 1.98,
-      "mode": "volume",
-      "volume": 33,
-      "poids": null,
-      "degre": 7.5,
-      "type": "biere",
-      "note": "Favori : Pélican"
+      "note": "Favori : RECUP HISTORIQUE"
     }
   ],
-  "updatedAt": "2026-07-07T09:02:31.176Z",
+  "updatedAt": "2026-07-07T12:30:18.255Z",
   "_lot1Test": {
     "message": "ping de validation Lot 1",
     "device": "appareil sans nom",
@@ -229,6 +141,15 @@
       "poids": 60,
       "degre": 55,
       "type": "spiritueux"
+    },
+    {
+      "id": "dd36f999-d76e-4aac-a811-f8a3fc9320e6",
+      "nom": "RECUP HISTORIQUE",
+      "mode": "volume",
+      "volume": 33,
+      "poids": null,
+      "degre": 5.5,
+      "type": "autre"
     }
   ]
 }
