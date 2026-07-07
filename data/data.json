@@ -79,17 +79,6 @@
       "note": "Test"
     },
     {
-      "id": "c4a7b632-08e2-40ee-8dbf-bd2e7e5ea62c",
-      "date": "2026-04-22T05:39:00.000Z",
-      "unites": 1.98,
-      "mode": "volume",
-      "volume": 33,
-      "poids": null,
-      "degre": 7.5,
-      "type": "biere",
-      "note": "Favori : Pélican"
-    },
-    {
       "id": "4547df7f-7f26-42d1-b62e-acf5ea5dc58a",
       "date": "2026-07-07T12:20:00.000Z",
       "unites": 0.24,
@@ -112,7 +101,7 @@
       "note": "Favori : RECUP HISTORIQUE"
     }
   ],
-  "updatedAt": "2026-07-07T12:29:51.139Z",
+  "updatedAt": "2026-07-07T12:29:56.708Z",
   "_lot1Test": {
     "message": "ping de validation Lot 1",
     "device": "appareil sans nom",
