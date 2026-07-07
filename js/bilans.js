@@ -38,9 +38,10 @@ export function groupByWeek(entries) {
   entries.forEach((e) => {
     const d = new Date(e.date);
     const key = weekKey(d);
-    if (!map.has(key)) map.set(key, { weekStart: mondayOf(d), total: 0 });
+    if (!map.has(key)) map.set(key, { weekStart: mondayOf(d), total: 0, entries: [] });
     const bucket = map.get(key);
     bucket.total = round2(bucket.total + e.unites);
+    bucket.entries.push(e);
   });
   return [...map.values()].sort((a, b) => b.weekStart - a.weekStart);
 }

@@ -252,7 +252,7 @@ function renderFavoris() {
 
     li.innerHTML = `
       <div class="entry-main">
-        <span class="entry-date">${fav.nom}</span>
+        <span class="favori-nom">${fav.nom}</span>
         <span class="entry-unites">${formatFr(unites, 2)} unités</span>
       </div>
       <div class="entry-sub">
@@ -620,13 +620,47 @@ function formatEntryDate(iso) {
   });
 }
 
+function buildEntryListItem(entry, isPending) {
+  const li = document.createElement('li');
+  li.className = 'entry-item';
+
+  const qty = entry.mode === 'poids' ? `${formatFr(entry.poids ?? 0, 0)} g` : `${formatFr(entry.volume ?? 0, 0)} cl`;
+
+  li.innerHTML = `
+    <div class="entry-main">
+      <span class="entry-date">${formatEntryDate(entry.date)}</span>
+      <span class="entry-unites">${formatFr(entry.unites, 2)} unités</span>
+    </div>
+    <div class="entry-sub">
+      ${isPending ? '<span class="tag">⏳ en attente</span>' : ''}
+      <span>${typeLabel(entry.type)}</span>
+      <span>${qty} à ${formatFr(entry.degre, 1)}°</span>
+      ${entry.note ? `<span class="entry-note">« ${entry.note} »</span>` : ''}
+    </div>
+  `;
+
+  const deleteBtn = document.createElement('button');
+  deleteBtn.type = 'button';
+  deleteBtn.className = 'entry-delete-btn';
+  if (isPending) {
+    deleteBtn.textContent = 'Retirer de la file';
+    deleteBtn.addEventListener('click', () => cancelPendingEntry(entry.id));
+  } else {
+    deleteBtn.textContent = 'Supprimer';
+    deleteBtn.disabled = !getToken();
+    deleteBtn.addEventListener('click', () => deleteEntry(entry.id));
+  }
+  li.appendChild(deleteBtn);
+  return li;
+}
+
 function renderDetailList() {
   const pending = getPendingEntries();
   const pendingIds = new Set(pending.map((e) => e.id));
-  const sorted = sortEntries([...detailEntries, ...pending], detailSortOrder);
+  const merged = [...detailEntries, ...pending];
   detailList.innerHTML = '';
 
-  if (sorted.length === 0) {
+  if (merged.length === 0) {
     const li = document.createElement('li');
     li.className = 'entry-empty';
     li.textContent = 'Aucune consommation archivée pour l’instant.';
@@ -634,39 +668,31 @@ function renderDetailList() {
     return;
   }
 
-  sorted.forEach((entry) => {
-    const li = document.createElement('li');
-    li.className = 'entry-item';
-    const isPending = pendingIds.has(entry.id);
+  const weeks = groupByWeek(merged);
+  const orderedWeeks = detailSortOrder === 'asc' ? [...weeks].reverse() : weeks;
 
-    const qty = entry.mode === 'poids' ? `${formatFr(entry.poids ?? 0, 0)} g` : `${formatFr(entry.volume ?? 0, 0)} cl`;
+  orderedWeeks.forEach((week, i) => {
+    const details = document.createElement('details');
+    details.className = 'week-accordion';
+    details.open = i === 0;
 
-    li.innerHTML = `
-      <div class="entry-main">
-        <span class="entry-date">${formatEntryDate(entry.date)}</span>
-        <span class="entry-unites">${formatFr(entry.unites, 2)} unités</span>
-      </div>
-      <div class="entry-sub">
-        ${isPending ? '<span class="tag">⏳ en attente</span>' : ''}
-        <span>${typeLabel(entry.type)}</span>
-        <span>${qty} à ${formatFr(entry.degre, 1)}°</span>
-        ${entry.note ? `<span class="entry-note">« ${entry.note} »</span>` : ''}
-      </div>
+    const summary = document.createElement('summary');
+    summary.innerHTML = `
+      <span class="week-accordion-label">Semaine du ${formatDateFr(week.weekStart)} au ${formatDateFr(addDays(week.weekStart, 6))}</span>
+      <span class="week-accordion-total">${formatFr(week.total, 2)} unités ${iconePourConsoHebdo(week.total)}</span>
     `;
+    details.appendChild(summary);
 
-    const deleteBtn = document.createElement('button');
-    deleteBtn.type = 'button';
-    deleteBtn.className = 'entry-delete-btn';
-    if (isPending) {
-      deleteBtn.textContent = 'Retirer de la file';
-      deleteBtn.addEventListener('click', () => cancelPendingEntry(entry.id));
-    } else {
-      deleteBtn.textContent = 'Supprimer';
-      deleteBtn.disabled = !getToken();
-      deleteBtn.addEventListener('click', () => deleteEntry(entry.id));
-    }
-    li.appendChild(deleteBtn);
+    const ul = document.createElement('ul');
+    ul.className = 'entry-list';
+    sortEntries(week.entries, detailSortOrder).forEach((entry) => {
+      ul.appendChild(buildEntryListItem(entry, pendingIds.has(entry.id)));
+    });
+    details.appendChild(ul);
 
+    const li = document.createElement('li');
+    li.className = 'week-accordion-item';
+    li.appendChild(details);
     detailList.appendChild(li);
   });
 }

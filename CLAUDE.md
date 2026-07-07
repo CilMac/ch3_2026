@@ -240,6 +240,25 @@ d'alcool" dans Calcul ou "Total cumulé" dans Archivage) plutôt qu'en simple te
 l'indicateur que l'utilisateur suit le plus, ça justifie le traitement visuel le plus visible de
 l'écran.
 
+## Historique en accordéon par semaine
+
+Détail groupe désormais les entrées par semaine (`<details class="week-accordion">` natif, pas de
+JS pour l'ouverture/fermeture) au lieu d'une liste plate — `groupByWeek()` (`js/bilans.js`) expose
+maintenant aussi `entries: []` par semaine (pas seulement `total`), réutilisé ici. Respecte le tri
+plus-récent/plus-ancien existant (`detailSortOrder`) à la fois pour l'ordre des semaines et pour
+l'ordre des entrées dans chaque semaine. Seule la première semaine (selon le tri courant) est
+ouverte par défaut. `buildEntryListItem()` a été extrait pour éviter de dupliquer le HTML d'une
+carte d'entrée entre ce nouveau code et l'ancien.
+
+## Lisibilité des graphiques (labels)
+
+`.chart-axis-label`/`.chart-value-label` sont passés de 9px à 12px (et couleur pleine `--wood-dk`
+plutôt qu'un ton clair peu contrasté) — 9px suffisait pour les dates courtes du graphique 12
+semaines mais rendait illisibles les libellés plus longs des graphiques par jour/type ("Dimanche",
+"Spiritueux"). Toujours vérifier visuellement (capture d'écran ou preview) après un changement de
+taille de police dans un SVG généré par `chart.js`, la largeur de barre disponible dépend du nombre
+de catégories.
+
 ## Backlog / pistes d'amélioration ergonomie (identifiées, pas encore faites)
 
 (vide pour l'instant — tous les points identifiés lors du dernier passage en revue ont été traités)

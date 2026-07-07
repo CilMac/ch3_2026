@@ -456,6 +456,48 @@ input[type="datetime-local"] {
   flex-direction: column;
   gap: 10px;
 }
+.week-accordion-item {
+  list-style: none;
+}
+.week-accordion {
+  border: 1px solid rgba(90,52,24,.2);
+  border-radius: 10px;
+  background: #fffaf0;
+  overflow: hidden;
+}
+.week-accordion summary {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 14px;
+  cursor: pointer;
+  list-style: none;
+}
+.week-accordion summary::-webkit-details-marker { display: none; }
+.week-accordion summary::after {
+  content: '▾';
+  color: var(--wood-mid);
+  flex-shrink: 0;
+  transition: transform .15s ease;
+}
+.week-accordion[open] summary::after {
+  transform: rotate(180deg);
+}
+.week-accordion-label {
+  font-family: 'DM Serif Display', serif;
+  font-size: .95rem;
+  color: var(--wood-dk);
+}
+.week-accordion-total {
+  font-size: .82rem;
+  color: var(--wood-dk);
+  white-space: nowrap;
+}
+.week-accordion .entry-list {
+  margin-top: 0;
+  padding: 0 14px 14px;
+}
 .entry-item {
   border: 1px solid rgba(90,52,24,.2);
   border-radius: 10px;
@@ -470,6 +512,12 @@ input[type="datetime-local"] {
 }
 .entry-date {
   font-size: .82rem;
+  color: var(--wood-dk);
+}
+.favori-nom {
+  font-family: 'DM Serif Display', serif;
+  font-size: 1rem;
+  font-weight: bold;
   color: var(--wood-dk);
 }
 .entry-unites {
@@ -588,12 +636,13 @@ input[type="date"] {
 }
 .chart-axis-label {
   font-family: 'Shippori Mincho', serif;
-  font-size: 9px;
-  fill: #8a7358;
+  font-size: 12px;
+  fill: var(--wood-dk);
 }
 .chart-value-label {
   font-family: 'Shippori Mincho', serif;
-  font-size: 9px;
+  font-weight: bold;
+  font-size: 12px;
   fill: var(--wood-dk);
 }
 .chart-threshold-line {
@@ -612,7 +661,7 @@ input[type="file"] {
 
 .chart-threshold-label {
   font-family: 'Shippori Mincho', serif;
-  font-size: 9px;
+  font-size: 11px;
   fill: var(--red);
   opacity: .8;
 }
