@@ -137,6 +137,25 @@ main {
   align-items: center;
   gap: 8px;
 }
+.panel-header-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+.panel-header-row h2 { margin-bottom: 0; }
+.segmented-inline {
+  margin-bottom: 0;
+  width: auto;
+  flex-shrink: 0;
+}
+.segmented-inline .seg-btn {
+  flex: 0 0 auto;
+  padding: 6px 10px;
+  font-size: .72rem;
+}
 .panel h3 {
   font-family: 'Shippori Mincho', serif;
   font-size: .9rem;

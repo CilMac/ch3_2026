@@ -971,6 +971,7 @@ const bilanDeuxJoursEl = document.getElementById('bilan-deuxjours');
 const bilanDaysList = document.getElementById('bilan-days');
 const bilanGeneralPeriodeTag = document.getElementById('bilan-general-periode-tag');
 const bilanGeneralMoyenneValue = document.getElementById('bilan-general-moyenne-value');
+const bilanGeneralDetail = document.getElementById('bilan-general-detail');
 const bilanGeneralList = document.getElementById('bilan-general-list');
 const chartContainer = document.getElementById('chart-container');
 const chartJourContainer = document.getElementById('chart-jour-container');
@@ -1007,6 +1008,9 @@ function renderBilanGeneral() {
   bilanGeneralPeriodeTag.textContent = PERIODE_LABELS[periodeType];
   bilanGeneralMoyenneValue.textContent = stats
     ? `${formatFr(stats.consoHebdoMoy, 2)} U ${iconePourConsoHebdo(stats.consoHebdoMoy)}`
+    : '—';
+  bilanGeneralDetail.textContent = stats
+    ? `${formatFr(stats.totalUnites, 2)} unités sur ${formatFr(stats.nbSemaines, 1)} semaine(s)`
     : '—';
 
   const weeks = groupByWeek(syntheseEntries);

@@ -96,14 +96,15 @@
         </details>
       </div>
 
-      <div class="segmented" role="group" aria-label="Mode de saisie">
-        <button type="button" class="seg-btn active" id="mode-volume-btn" data-mode="volume">Volume (cl)</button>
-        <button type="button" class="seg-btn" id="mode-poids-btn" data-mode="poids">Poids (g)</button>
-      </div>
-
       <div id="calc-panel">
         <div class="panel">
-          <h2>Calcul d'unités</h2>
+          <div class="panel-header-row">
+            <h2>Calcul d'unités</h2>
+            <div class="segmented segmented-inline" role="group" aria-label="Mode de saisie">
+              <button type="button" class="seg-btn active" id="mode-volume-btn" data-mode="volume">Volume (cl)</button>
+              <button type="button" class="seg-btn" id="mode-poids-btn" data-mode="poids">Poids (g)</button>
+            </div>
+          </div>
 
           <div class="field-block">
             <label id="qty-label" for="qty-input">Volume (cl)</label>
@@ -410,6 +411,7 @@
           <div class="result-block">
             <span class="result-label">Moyenne hebdo <span id="bilan-general-periode-tag">—</span></span>
             <span id="bilan-general-moyenne-value" class="result-value">—</span>
+            <span class="result-sub" id="bilan-general-detail">—</span>
           </div>
           <p class="hint">Réglable dans l'onglet Stats.</p>
 
