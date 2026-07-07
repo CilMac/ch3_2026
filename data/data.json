@@ -68,17 +68,6 @@
       "note": "Picon"
     },
     {
-      "id": "39b09df7-587f-427c-8e55-f276b1235a44",
-      "date": "2026-04-09T13:08:00.000Z",
-      "unites": 2.4,
-      "mode": "volume",
-      "volume": 25,
-      "poids": null,
-      "degre": 12,
-      "type": "autre",
-      "note": "Test"
-    },
-    {
       "id": "4547df7f-7f26-42d1-b62e-acf5ea5dc58a",
       "date": "2026-07-07T12:20:00.000Z",
       "unites": 0.24,
@@ -101,7 +90,7 @@
       "note": "Favori : RECUP HISTORIQUE"
     }
   ],
-  "updatedAt": "2026-07-07T12:29:56.708Z",
+  "updatedAt": "2026-07-07T12:30:18.255Z",
   "_lot1Test": {
     "message": "ping de validation Lot 1",
     "device": "appareil sans nom",
