@@ -187,9 +187,20 @@
       "degre": 5,
       "type": "autre",
       "note": "Test"
+    },
+    {
+      "id": "07218a88-8efc-45b3-9100-0094450dd269",
+      "date": "2026-01-05T13:22:00.000Z",
+      "unites": 6.2,
+      "mode": "volume",
+      "volume": 50,
+      "poids": null,
+      "degre": 15.5,
+      "type": "autre",
+      "note": "Favori : RECUP HISTORIQUE"
     }
   ],
-  "updatedAt": "2026-07-07T12:22:57.252Z",
+  "updatedAt": "2026-07-07T12:27:38.755Z",
   "_lot1Test": {
     "message": "ping de validation Lot 1",
     "device": "appareil sans nom",
