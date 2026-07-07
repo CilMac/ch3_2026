@@ -134,17 +134,6 @@
       "note": "Favori : Heineken"
     },
     {
-      "id": "107270ff-6e96-4dac-bef5-e62096a92532",
-      "date": "2026-03-02T06:47:00.000Z",
-      "unites": 1.98,
-      "mode": "volume",
-      "volume": 33,
-      "poids": null,
-      "degre": 7.5,
-      "type": "biere",
-      "note": "Favori : Pélican"
-    },
-    {
       "id": "4547df7f-7f26-42d1-b62e-acf5ea5dc58a",
       "date": "2026-07-07T12:20:00.000Z",
       "unites": 0.24,
@@ -167,7 +156,7 @@
       "note": "Favori : RECUP HISTORIQUE"
     }
   ],
-  "updatedAt": "2026-07-07T12:29:14.050Z",
+  "updatedAt": "2026-07-07T12:29:20.397Z",
   "_lot1Test": {
     "message": "ping de validation Lot 1",
     "device": "appareil sans nom",
