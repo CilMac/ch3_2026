@@ -99,9 +99,20 @@
       "degre": 5.5,
       "type": "autre",
       "note": "Favori : RECUP HISTORIQUE"
+    },
+    {
+      "id": "3c1c8412-01e4-4c8a-8f45-377630c0bb5e",
+      "date": "2026-07-08T20:29:14.914Z",
+      "unites": 1.98,
+      "mode": "volume",
+      "volume": 33,
+      "poids": null,
+      "degre": 7.5,
+      "type": "biere",
+      "note": "Favori : Pélican"
     }
   ],
-  "updatedAt": "2026-07-07T20:25:55.466Z",
+  "updatedAt": "2026-07-08T20:29:15.257Z",
   "_lot1Test": {
     "message": "ping de validation Lot 1",
     "device": "appareil sans nom",
