@@ -121,9 +121,20 @@
       "degre": 8.5,
       "type": "biere",
       "note": ""
+    },
+    {
+      "id": "0e23e31a-6c07-4a3f-80cb-0f7d84b6ca0d",
+      "date": "2026-07-09T11:23:00.000Z",
+      "unites": 1.58,
+      "mode": "volume",
+      "volume": 33,
+      "poids": null,
+      "degre": 6,
+      "type": "spiritueux",
+      "note": "Spritz"
     }
   ],
-  "updatedAt": "2026-07-09T09:29:42.497Z",
+  "updatedAt": "2026-07-09T11:24:03.739Z",
   "_lot1Test": {
     "message": "ping de validation Lot 1",
     "device": "appareil sans nom",
