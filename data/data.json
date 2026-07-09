@@ -132,9 +132,20 @@
       "degre": 6,
       "type": "spiritueux",
       "note": "Spritz"
+    },
+    {
+      "id": "18b937a5-d78a-41d7-9e4a-353e4f440ff6",
+      "date": "2026-07-09T11:24:00.000Z",
+      "unites": 1.15,
+      "mode": "volume",
+      "volume": 12,
+      "poids": null,
+      "degre": 12,
+      "type": "vin",
+      "note": ""
     }
   ],
-  "updatedAt": "2026-07-09T11:24:03.739Z",
+  "updatedAt": "2026-07-09T11:24:32.959Z",
   "_lot1Test": {
     "message": "ping de validation Lot 1",
     "device": "appareil sans nom",
