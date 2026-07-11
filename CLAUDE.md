@@ -276,6 +276,38 @@ l'ordre des entrées dans chaque semaine. Seule la première semaine (selon le t
 ouverte par défaut. `buildEntryListItem()` a été extrait pour éviter de dupliquer le HTML d'une
 carte d'entrée entre ce nouveau code et l'ancien.
 
+## Thème visuel (washi / classique)
+
+Attribut `data-theme` sur `<html>`, valeurs `"washi"` ou `"classique"` — préférence d'appareil
+(`localStorage`, clé `ch3_theme`, jamais dans `data/data.json`). `js/theme.js` expose
+`getTheme()`/`setTheme()`/`toggleTheme()` ; `getTheme()` retourne `"classique"` par défaut si
+rien n'est stocké (c'est le seul endroit où ce défaut se décide). Un petit script inline tout en
+haut de `<body>` (avant tout le reste du markup) applique le thème stocké avant le premier rendu
+visible, pour éviter un flash du mauvais thème au chargement — `app.js` seul serait trop tardif.
+
+`:root` garde les valeurs washi historiques ; `[data-theme="classique"]` (palette iOS : bleu
+`#007AFF`, vert `#34C759`, jaune `#FFCC00`, orange `#FF9500`, rouge `#FF3B30`) surcharge les mêmes
+variables sans toucher à `:root`. `--bg` et le bruit SVG de fond, ainsi que `--panel`, sont
+volontairement identiques dans les deux thèmes (pas de fond blanc/clair, resterait trop lumineux
+avec la texture washi) ; seuls accents, boutons, textes et graphiques changent. Les noms de
+variables historiques (`--wood-dk`, `--wood-mid`…) sont conservés tels quels même en thème
+classique où ils portent du bleu — renommer aurait touché ~40 occurrences pour rien.
+
+Quasiment toutes les couleurs de `style.css` passent par des variables CSS (y compris des
+variables `-rgb` compagnes, ex. `--wood-dk-rgb: 90,52,24`, pour les `rgba(var(--wood-dk-rgb), X)`
+utilisés dans les bordures/ombres semi-transparentes) — éviter de réintroduire du hex/rgba codé en
+dur hors de `:root` et du bloc `[data-theme="classique"]`.
+
+Les graphiques (`js/chart.js`) ont leurs propres variables `--chart-safe`/`--chart-mid`/
+`--chart-warn`/`--chart-over` (échelle de sévérité à 4 paliers de `barColor()`), découplées des
+couleurs d'accent UI générales pour que la palette classique ne soit pas contrainte par la
+sémantique du graphique. Le SVG référence `var(--xxx)` directement dans ses `fill`, donc la
+bascule de thème se répercute sans régénérer le graphique.
+
+Contrôle de bascule dans l'onglet Configuration (panneau "Apparence", pas sur l'écran d'accueil,
+pour ne pas le surcharger) : un `.segmented`/`.seg-btn` (même composant que le sélecteur de mode
+du Calculateur) plutôt qu'un bouton isolé.
+
 ## Lisibilité des graphiques (labels)
 
 `.chart-axis-label`/`.chart-value-label` sont passés de 9px à 12px (et couleur pleine `--wood-dk`

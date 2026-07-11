@@ -15,6 +15,7 @@ import { weeklyBarChartSvg, categoryBarChartSvg } from './chart.js';
 import { CONSO_SEMAINE_MAX } from './constants.js';
 import { calculAlcoolemie, formatDelai } from './alcoolemie.js';
 import { currentStreak, longestStreak } from './streaks.js';
+import { getTheme, setTheme } from './theme.js';
 
 // ── Navigation entre vues ──
 
@@ -61,6 +62,26 @@ function bumpWeekBadge(date, unites) {
     renderWeekBadge(currentWeekTotal + unites);
   }
 }
+
+// ── Thème ──
+
+const themeSwitch = document.getElementById('theme-switch');
+
+function refreshThemeSwitch() {
+  const current = getTheme();
+  themeSwitch.querySelectorAll('.seg-btn').forEach((btn) => {
+    btn.classList.toggle('active', btn.dataset.themeChoice === current);
+  });
+}
+
+themeSwitch.querySelectorAll('.seg-btn').forEach((btn) => {
+  btn.addEventListener('click', () => {
+    setTheme(btn.dataset.themeChoice);
+    refreshThemeSwitch();
+  });
+});
+
+refreshThemeSwitch();
 
 // ── Calculateur ──
 

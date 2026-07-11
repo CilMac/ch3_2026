@@ -16,6 +16,10 @@
 </head>
 <body>
 
+  <script>
+    document.documentElement.setAttribute('data-theme', localStorage.getItem('ch3_theme') || 'classique');
+  </script>
+
   <header class="app-header">
     <h1>CH3-CH2-OH</h1>
     <p class="subtitle">Suivi personnel de consommation</p>
@@ -530,6 +534,15 @@
     </section>
 
     <section class="view" data-view="config" hidden>
+
+      <div class="panel">
+        <h2>Apparence</h2>
+        <p class="hint">Choisis le thème de couleurs de l'application.</p>
+        <div class="segmented" id="theme-switch" role="group" aria-label="Thème de couleurs">
+          <button type="button" class="seg-btn" data-theme-choice="classique">Classique</button>
+          <button type="button" class="seg-btn" data-theme-choice="washi">Washi</button>
+        </div>
+      </div>
 
       <div class="panel">
         <h2>Configuration — synchronisation GitHub</h2>

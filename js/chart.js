@@ -20,10 +20,10 @@ export function weeklyBarChartSvg(weeks, { width = 600, height = 220, threshold 
   const thresholdY = yFor(threshold);
 
   const barColor = (total) => {
-    if (total <= threshold / 2) return 'var(--green)';
-    if (total <= threshold) return 'var(--wood-mid)';
-    if (total <= threshold * 1.1) return 'var(--amber)';
-    return 'var(--red)';
+    if (total <= threshold / 2) return 'var(--chart-safe)';
+    if (total <= threshold) return 'var(--chart-mid)';
+    if (total <= threshold * 1.1) return 'var(--chart-warn)';
+    return 'var(--chart-over)';
   };
 
   const bars = data.map((d, i) => {
