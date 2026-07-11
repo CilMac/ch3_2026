@@ -317,6 +317,14 @@ semaines mais rendait illisibles les libellés plus longs des graphiques par jou
 taille de police dans un SVG généré par `chart.js`, la largeur de barre disponible dépend du nombre
 de catégories.
 
+Le graphique "Tendance" (`weeklyBarChartSvg`) affiche sous chaque barre deux lignes : le numéro de
+semaine ISO 8601 en gras (`S28`, classe `.chart-axis-label-strong` en complément de
+`.chart-axis-label`, via `isoWeekNumber()` importé de `bilans.js`) puis la date de début de semaine
+en dessous — pour rappeler explicitement qu'il s'agit de totaux hebdomadaires et permettre de
+recouper avec "Semaine 28" affiché ailleurs (Bilan hebdo, Détail). `chart.js` dépend donc maintenant
+de `bilans.js`, mais reste un module pur (pas de DOM/réseau, `isoWeekNumber` est un calcul
+déterministe). Testé jusqu'à 12 barres sur 343px (largeur mobile réelle) sans chevauchement.
+
 ## Sliders Poids / Seuil visé (onglet Soirée)
 
 `#poids-input` (50-110 kg, défaut 85) et `#seuil-legal-input` (0,1-1,5 g/L, défaut 0,5) sont des

@@ -845,6 +845,9 @@ input[type="date"] {
   font-size: 12px;
   fill: var(--heading-ink);
 }
+.chart-axis-label-strong {
+  font-weight: bold;
+}
 .chart-value-label {
   font-family: 'Shippori Mincho', serif;
   font-weight: bold;
