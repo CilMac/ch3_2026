@@ -154,20 +154,9 @@
       "degre": 5.5,
       "type": "biere",
       "note": "Favori : 1664"
-    },
-    {
-      "id": "7971b812-afea-4909-98fe-8b85a9b341d1",
-      "date": "2026-07-11T14:55:00.611Z",
-      "unites": 1.32,
-      "mode": "volume",
-      "volume": 33,
-      "poids": null,
-      "degre": 5,
-      "type": "biere",
-      "note": "Favori : Heineken"
     }
   ],
-  "updatedAt": "2026-07-11T14:55:00.951Z",
+  "updatedAt": "2026-07-11T15:25:27.935Z",
   "_lot1Test": {
     "message": "ping de validation Lot 1",
     "device": "appareil sans nom",
