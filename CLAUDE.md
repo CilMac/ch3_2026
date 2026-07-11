@@ -12,7 +12,13 @@ Dépôt : `github.com/CilMac/ch3_2026` (public, owner CilMac).
   (`--wood-dk`, `--wood-mid`, `--amber`, etc.).
 - **Stockage : uniquement `data/data.json` sur GitHub**, pas de backend, pas de compte,
   pas de localStorage pour les données (seulement pour le jeton et les préférences d'appareil).
-  - Lecture : `GET /repos/CilMac/ch3_2026/contents/data/data.json` — publique, sans jeton.
+  - Lecture : `GET /repos/CilMac/ch3_2026/contents/data/data.json` — publique par nature (pas de
+    scope particulier requis), mais authentifiée avec le jeton configuré s'il y en a un (limite
+    5000 req/h au lieu de 60/h anonyme, partagée par IP — facile à atteindre avec plusieurs
+    appareils). Si ce jeton s'avère invalide/expiré, `readData()` (`js/githubSync.js`) retente
+    automatiquement en anonyme plutôt que d'échouer — un jeton cassé ne doit pas casser la
+    lecture, seulement faire perdre le bénéfice du quota élargi. Le message d'erreur 401/403
+    distingue les deux cas ("jeton invalide" seulement si un jeton a réellement été envoyé).
   - Écriture : `PUT` sur le même endpoint, avec le SHA courant (géré automatiquement, avec
     retry en cas de conflit de version). Nécessite un jeton fine-grained (`Contents: write`,
     limité à ce repo) que l'utilisateur colle dans l'onglet Configuration ; stocké en

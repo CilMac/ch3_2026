@@ -1,6 +1,8 @@
 // Module isolé : tous les appels à l'API GitHub Contents passent par ici.
 // Le reste de l'appli ne connaît que readData() / writeData().
 
+import { getToken } from './config.js';
+
 const OWNER = 'CilMac';
 const REPO = 'ch3_2026';
 const BRANCH = 'main';
@@ -45,7 +47,10 @@ async function fetchContents(token) {
     return { data: null, sha: null };
   }
   if (res.status === 401 || res.status === 403) {
-    throw new SyncError('AUTH_FAILED', `Jeton invalide, expiré, ou droits insuffisants (HTTP ${res.status})`, await safeJson(res));
+    const message = token
+      ? `Jeton invalide, expiré, ou droits insuffisants (HTTP ${res.status})`
+      : `Accès refusé par GitHub sans jeton (HTTP ${res.status}) — probablement la limite de requêtes anonymes (60/h) atteinte, pas un problème de jeton.`;
+    throw new SyncError('AUTH_FAILED', message, await safeJson(res));
   }
   if (!res.ok) {
     const body = await safeJson(res);
@@ -63,10 +68,22 @@ async function fetchContents(token) {
   return { data, sha: json.sha };
 }
 
-// Lecture publique, sans jeton.
+// Lecture publique par défaut (60 req/h anonymes) ; utilise le jeton configuré s'il y en a un
+// (5000 req/h authentifiées). Si ce jeton s'avère invalide/expiré, on retente une fois en
+// anonyme plutôt que d'échouer — la lecture reste publique par nature, un jeton cassé ne doit
+// pas la bloquer.
 export async function readData() {
-  const { data } = await fetchContents(null);
-  return data;
+  const token = getToken();
+  try {
+    const { data } = await fetchContents(token || null);
+    return data;
+  } catch (e) {
+    if (token && e instanceof SyncError && e.code === 'AUTH_FAILED') {
+      const { data } = await fetchContents(null);
+      return data;
+    }
+    throw e;
+  }
 }
 
 // Écriture avec gestion du conflit de version (sha obsolète) :

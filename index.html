@@ -489,7 +489,8 @@
             HTML/CSS/JavaScript natif (modules ES), sans framework ni bibliothèque externe :
             toute la logique tourne dans le navigateur. La seule dépendance externe est l'API
             GitHub Contents, utilisée pour lire et écrire <code>data/data.json</code> — lecture
-            publique sans jeton, écriture avec un jeton fine-grained (scope
+            publique (authentifiée avec le jeton si un est configuré, pour une limite de requêtes
+            plus large ; sinon anonyme), écriture avec un jeton fine-grained (scope
             <code>Contents: write</code>, limité à ce dépôt) collé dans l'onglet Configuration et
             stocké uniquement en local sur cet appareil, jamais transmis ailleurs qu'à GitHub.
           </p>
