@@ -418,24 +418,33 @@
 
       <div class="subview" data-subview="tendance" hidden>
         <div class="panel">
-          <h2>Tendance <span class="tag">12 dernières semaines</span></h2>
+          <div class="panel-header-row">
+            <h2>Tendance <span class="tag">12 dernières semaines</span></h2>
+            <button type="button" class="btn-icon info-toggle-btn" id="chart-tendance-info-btn" aria-label="Plus d'infos">ⓘ</button>
+          </div>
           <div id="chart-container" class="chart-container"></div>
-          <p class="hint">Chaque barre = total d'unités d'alcool consommées cette semaine-là (lundi-dimanche),
+          <p id="chart-tendance-info-text" class="hint" hidden>Chaque barre = total d'unités d'alcool consommées cette semaine-là (lundi-dimanche),
             identifiée par son numéro de semaine ISO 8601 (S28 = semaine 28). Ligne pointillée = seuil recommandé
             (10 U/semaine). Couleur = repère (vert/bois/ambre/rouge).</p>
         </div>
 
         <div class="panel">
-          <h2>Total par jour de la semaine <span class="tag" id="chart-jour-periode-tag">—</span></h2>
+          <div class="panel-header-row">
+            <h2>Total par jour de la semaine <span class="tag" id="chart-jour-periode-tag">—</span></h2>
+            <button type="button" class="btn-icon info-toggle-btn" id="chart-jour-info-btn" aria-label="Plus d'infos">ⓘ</button>
+          </div>
           <div id="chart-jour-container" class="chart-container"></div>
-          <p class="hint">Cumul des unités d'alcool sur la période, additionnées par jour de la semaine
+          <p id="chart-jour-info-text" class="hint" hidden>Cumul des unités d'alcool sur la période, additionnées par jour de la semaine
             (tous les lundis ensemble, tous les mardis ensemble, etc.).</p>
         </div>
 
         <div class="panel">
-          <h2>Total par type de boisson <span class="tag" id="chart-type-periode-tag">—</span></h2>
+          <div class="panel-header-row">
+            <h2>Total par type de boisson <span class="tag" id="chart-type-periode-tag">—</span></h2>
+            <button type="button" class="btn-icon info-toggle-btn" id="chart-type-info-btn" aria-label="Plus d'infos">ⓘ</button>
+          </div>
           <div id="chart-type-container" class="chart-container"></div>
-          <p class="hint">Cumul des unités d'alcool sur la période, par type de boisson.</p>
+          <p id="chart-type-info-text" class="hint" hidden>Cumul des unités d'alcool sur la période, par type de boisson.</p>
         </div>
       </div>
 

@@ -854,11 +854,16 @@ input[type="date"] {
   font-size: 12px;
   fill: var(--heading-ink);
 }
+.chart-threshold-line-halo {
+  stroke: var(--input-bg);
+  stroke-width: 5;
+  opacity: .9;
+}
 .chart-threshold-line {
   stroke: var(--red);
-  stroke-width: 1;
-  stroke-dasharray: 4 3;
-  opacity: .6;
+  stroke-width: 2.5;
+  stroke-dasharray: 7 5;
+  opacity: .95;
 }
 input[type="file"] {
   width: 100%;
@@ -872,5 +877,9 @@ input[type="file"] {
   font-family: 'Shippori Mincho', serif;
   font-size: 11px;
   fill: var(--red);
-  opacity: .8;
+  opacity: .9;
+  paint-order: stroke;
+  stroke: var(--input-bg);
+  stroke-width: 3px;
+  stroke-linejoin: round;
 }

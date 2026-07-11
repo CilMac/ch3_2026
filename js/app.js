@@ -1032,6 +1032,24 @@ const chartJourPeriodeTag = document.getElementById('chart-jour-periode-tag');
 const chartTypeContainer = document.getElementById('chart-type-container');
 const chartTypePeriodeTag = document.getElementById('chart-type-periode-tag');
 
+const chartTendanceInfoBtn = document.getElementById('chart-tendance-info-btn');
+const chartTendanceInfoText = document.getElementById('chart-tendance-info-text');
+chartTendanceInfoBtn.addEventListener('click', () => {
+  chartTendanceInfoText.hidden = !chartTendanceInfoText.hidden;
+});
+
+const chartJourInfoBtn = document.getElementById('chart-jour-info-btn');
+const chartJourInfoText = document.getElementById('chart-jour-info-text');
+chartJourInfoBtn.addEventListener('click', () => {
+  chartJourInfoText.hidden = !chartJourInfoText.hidden;
+});
+
+const chartTypeInfoBtn = document.getElementById('chart-type-info-btn');
+const chartTypeInfoText = document.getElementById('chart-type-info-text');
+chartTypeInfoBtn.addEventListener('click', () => {
+  chartTypeInfoText.hidden = !chartTypeInfoText.hidden;
+});
+
 let bilanWeekStart = mondayOf(new Date());
 
 function renderBilanHebdo() {

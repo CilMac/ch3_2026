@@ -45,9 +45,10 @@ export function weeklyBarChartSvg(weeks, { width = 600, height = 232, threshold 
 
   return `
     <svg viewBox="0 0 ${width} ${height}" class="weekly-chart" role="img" aria-label="Graphique de tendance hebdomadaire : total d'unités d'alcool consommées par semaine (lundi-dimanche)" preserveAspectRatio="xMidYMid meet">
+      ${bars}
+      <line x1="${padding.left}" y1="${thresholdY}" x2="${width - padding.right}" y2="${thresholdY}" class="chart-threshold-line-halo" />
       <line x1="${padding.left}" y1="${thresholdY}" x2="${width - padding.right}" y2="${thresholdY}" class="chart-threshold-line" />
       <text x="${width - padding.right}" y="${thresholdY - 5}" text-anchor="end" class="chart-threshold-label">${threshold} U</text>
-      ${bars}
     </svg>
   `;
 }
