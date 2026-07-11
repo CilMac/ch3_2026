@@ -43,7 +43,7 @@
 [data-theme="classique"] {
   --ink:      #1c1c1e;
   --wood-dk:  #2F6FB5;
-  --wood-mid: #5AC8FA;
+  --wood-mid: var(--wood-dk);
   --wood-lt:  #A7D8FF;
   --green:    #34C759;
   --red:      #FF3B30;
@@ -60,7 +60,7 @@
   --code-text:          #e5e5ea;
 
   --wood-dk-rgb:  47,111,181;
-  --wood-mid-rgb: 90,200,250;
+  --wood-mid-rgb: var(--wood-dk-rgb);
   --red-rgb:      255,59,48;
   --green-rgb:    52,199,89;
   --amber-rgb:    255,149,0;
