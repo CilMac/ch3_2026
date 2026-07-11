@@ -68,17 +68,6 @@
       "note": "Picon"
     },
     {
-      "id": "4547df7f-7f26-42d1-b62e-acf5ea5dc58a",
-      "date": "2026-07-07T12:20:00.000Z",
-      "unites": 0.24,
-      "mode": "volume",
-      "volume": 6,
-      "poids": null,
-      "degre": 5,
-      "type": "autre",
-      "note": "Test"
-    },
-    {
       "id": "07218a88-8efc-45b3-9100-0094450dd269",
       "date": "2026-01-05T13:22:00.000Z",
       "unites": 6.2,
@@ -88,9 +77,75 @@
       "degre": 15.5,
       "type": "autre",
       "note": "Favori : RECUP HISTORIQUE"
+    },
+    {
+      "id": "54f88afd-f15a-455e-a525-556d17db9cdd",
+      "date": "2026-07-07T20:25:55.042Z",
+      "unites": 1.45,
+      "mode": "volume",
+      "volume": 33,
+      "poids": null,
+      "degre": 5.5,
+      "type": "autre",
+      "note": "Favori : RECUP HISTORIQUE"
+    },
+    {
+      "id": "3c1c8412-01e4-4c8a-8f45-377630c0bb5e",
+      "date": "2026-07-08T20:29:14.914Z",
+      "unites": 1.98,
+      "mode": "volume",
+      "volume": 33,
+      "poids": null,
+      "degre": 7.5,
+      "type": "biere",
+      "note": "Favori : Pélican"
+    },
+    {
+      "id": "df9d9919-4561-4afd-bfcc-49961a36a9ef",
+      "date": "2026-07-09T09:29:00.000Z",
+      "unites": 3.4,
+      "mode": "volume",
+      "volume": 50,
+      "poids": null,
+      "degre": 8.5,
+      "type": "biere",
+      "note": ""
+    },
+    {
+      "id": "0e23e31a-6c07-4a3f-80cb-0f7d84b6ca0d",
+      "date": "2026-07-09T11:23:00.000Z",
+      "unites": 1.58,
+      "mode": "volume",
+      "volume": 33,
+      "poids": null,
+      "degre": 6,
+      "type": "spiritueux",
+      "note": "Spritz"
+    },
+    {
+      "id": "18b937a5-d78a-41d7-9e4a-353e4f440ff6",
+      "date": "2026-07-09T11:24:00.000Z",
+      "unites": 1.15,
+      "mode": "volume",
+      "volume": 12,
+      "poids": null,
+      "degre": 12,
+      "type": "vin",
+      "note": ""
+    },
+    {
+      "id": "f81ad134-3870-4beb-933c-75c03c33032e",
+      "date": "2026-07-10T18:07:00.000Z",
+      "unites": 1.98,
+      "mode": "volume",
+      "volume": 33,
+      "poids": null,
+      "degre": 7.5,
+      "type": "biere",
+      "note": "Favori : Pélican"
     }
   ],
-  "updatedAt": "2026-07-07T12:30:18.255Z",
+  "updatedAt": "2026-07-11T12:25:39.286Z",
   "_lot1Test": {
     "message": "ping de validation Lot 1",
     "device": "appareil sans nom",
