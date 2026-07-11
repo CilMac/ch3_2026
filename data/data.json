@@ -143,9 +143,20 @@
       "degre": 7.5,
       "type": "biere",
       "note": "Favori : Pélican"
+    },
+    {
+      "id": "b8ec751f-82f0-4bdd-b6b7-475a6869c04d",
+      "date": "2026-07-11T12:22:00.000Z",
+      "unites": 1.98,
+      "mode": "volume",
+      "volume": 33,
+      "poids": null,
+      "degre": 7.5,
+      "type": "biere",
+      "note": ""
     }
   ],
-  "updatedAt": "2026-07-10T23:08:06.228Z",
+  "updatedAt": "2026-07-11T12:24:40.092Z",
   "_lot1Test": {
     "message": "ping de validation Lot 1",
     "device": "appareil sans nom",
