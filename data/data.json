@@ -154,9 +154,20 @@
       "degre": 5.5,
       "type": "biere",
       "note": "Favori : 1664"
+    },
+    {
+      "id": "9ec7404f-e52d-47a9-b4c0-7663c6e2c792",
+      "date": "2026-07-11T15:35:00.000Z",
+      "unites": 2.2,
+      "mode": "volume",
+      "volume": 50,
+      "poids": null,
+      "degre": 5.5,
+      "type": "autre",
+      "note": ""
     }
   ],
-  "updatedAt": "2026-07-11T15:25:27.935Z",
+  "updatedAt": "2026-07-11T20:01:06.652Z",
   "_lot1Test": {
     "message": "ping de validation Lot 1",
     "device": "appareil sans nom",
