@@ -78,10 +78,17 @@ const degreFineStep = document.getElementById('degre-fine-step');
 const unitesResult = document.getElementById('unites-result');
 const calcInfoBtn = document.getElementById('calc-info-btn');
 const calcInfoText = document.getElementById('calc-info-text');
+const calcSummaryText = document.getElementById('calc-summary-text');
 
 function renderResult() {
   const { unites } = getState();
   unitesResult.textContent = formatFr(unites, 2);
+}
+
+function renderCalcSummary() {
+  const { mode, volume, poids, degre, unites } = getState();
+  const qty = mode === 'volume' ? `${formatFr(volume, 0)} cl` : `${formatFr(poids, 0)} g`;
+  calcSummaryText.textContent = `${qty} à ${formatFr(degre, 1)}° → ${formatFr(unites, 2)} unités`;
 }
 
 function applyMode(mode) {
@@ -93,6 +100,7 @@ function applyMode(mode) {
   volumePresets.hidden = !isVolume;
   qtyInput.value = isVolume ? getState().volume : getState().poids;
   renderResult();
+  renderCalcSummary();
 }
 
 modeVolumeBtn.addEventListener('click', () => applyMode('volume'));
@@ -103,6 +111,7 @@ qtyInput.addEventListener('input', () => {
   if (getState().mode === 'volume') setVolume(value);
   else setPoids(value);
   renderResult();
+  renderCalcSummary();
 });
 
 qtyMinusBtn.addEventListener('click', () => {
@@ -131,6 +140,7 @@ document.querySelectorAll('[data-degre]').forEach((btn) => {
 degreInput.addEventListener('input', () => {
   setDegre(parseFloat(degreInput.value) || 0);
   renderResult();
+  renderCalcSummary();
 });
 
 degreFineStep.addEventListener('change', () => {
@@ -155,6 +165,7 @@ calcInfoBtn.addEventListener('click', () => {
 applyMode('volume');
 degreInput.value = getState().degre;
 renderResult();
+renderCalcSummary();
 
 // ── Favoris (conso récurrentes) ──
 
@@ -497,7 +508,6 @@ document.addEventListener('visibilitychange', () => {
 
 // ── Archivage ──
 
-const calcSummaryText = document.getElementById('calc-summary-text');
 const replayLastBtn = document.getElementById('replay-last-btn');
 const entryDatetimeInput = document.getElementById('entry-datetime');
 const entryTypeSelect = document.getElementById('entry-type');
@@ -512,12 +522,6 @@ const razBtn = document.getElementById('raz-btn');
 function toDatetimeLocalValue(date) {
   const pad = (n) => String(n).padStart(2, '0');
   return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}T${pad(date.getHours())}:${pad(date.getMinutes())}`;
-}
-
-function renderCalcSummary() {
-  const { mode, volume, poids, degre, unites } = getState();
-  const qty = mode === 'volume' ? `${formatFr(volume, 0)} cl` : `${formatFr(poids, 0)} g`;
-  calcSummaryText.textContent = `${qty} à ${formatFr(degre, 1)}° → ${formatFr(unites, 2)} unités`;
 }
 
 replayLastBtn.addEventListener('click', async () => {
